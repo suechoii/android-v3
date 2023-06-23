@@ -162,7 +162,7 @@ class UnivTotalListAdapter : ListAdapter<PostResult, UnivTotalListAdapter.UnivTo
         if (!isFirst) {
             submitList(this.currentList + postList)
         } else {
-            submitList(this.currentList)
+            submitList(postList)
         }
     }
 }

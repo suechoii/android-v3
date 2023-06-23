@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.community.mingle.viewmodel.PostViewModel" />
+
+        <variable
+            name="item"
+            type="com.community.mingle.service.models.Comment2" />
+
+        <variable
+            name="position"
+            type="int" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/comment_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="28dp">
+
+        <TextView
+            android:id="@+id/comment_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{item.content}"
+            android:singleLine="false"
+            android:textSize="13sp"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/black"
+            android:layout_marginEnd="34dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/btn_comment_more"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:paddingLeft="4dp"
+            android:src="@drawable/ic_comment_more"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/comment_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/comment_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{item.nickname}"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="@color/grayOrange"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ImageView
+                android:id="@+id/comment_ellipse_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_ellipse"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/comment_nickname"
+                android:layout_marginTop="7dp"
+                android:layout_marginStart="4dp"/>
+
+            <TextView
+                android:id="@+id/comment_datetime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendard_regular"
+                android:textSize="12sp"
+                android:textColor="@color/gray_03"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/comment_ellipse_iv"
+                android:layout_marginStart="4dp"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/btn_comment_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="40dp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/comment_like_iv"
+                    android:layout_width="24dp"
+                    android:layout_height="20dp"
+                    android:paddingTop="2dp"
+                    android:src="@drawable/ic_comment_like"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/comment_like_count"
+                    android:layout_marginEnd="4dp"/>
+
+                <TextView
+                    android:id="@+id/comment_like_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="@{item.likeCount}"
+                    android:textSize="12sp"
+                    android:textColor="@color/gray_03"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="1dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="2dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/btn_comment_reply"
+                android:layout_width="24dp"
+                android:layout_height="20dp"
+                android:paddingTop="2dp"
+                android:paddingLeft="4dp"
+                android:src="@drawable/ic_comment_reply"
+                android:layout_marginEnd="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cocomment_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:nestedScrollingEnabled="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/comment_group"
+        tools:listitem="@layout/item_reply"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

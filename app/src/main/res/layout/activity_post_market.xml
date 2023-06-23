@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fitsSystemWindows="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="activity"
+            type="com.community.mingle.views.ui.market.MarketPostActivity" />
+
+        <variable
+            name="viewModel"
+            type="com.community.mingle.viewmodel.MarketPostViewModel" />
+
+        <variable
+            name="item"
+            type="com.community.mingle.service.models.ItemDetail" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".views.ui.board.PostActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/hidden_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/post_detail_toolbar_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStartWithNavigation="0dp">
+
+                <TextView
+                    android:id="@+id/board_name_tv_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textColor="@color/gray_03"
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/hidden_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="내가 가리기한 게시글입니다."
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:textColor="@color/gray_04"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/cancel_blind_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="가리기 취소"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:textColor="@color/orange_04"
+                    android:textSize="12sp"
+                    android:textAlignment="center"
+                    android:layout_marginTop="16dp"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/unhidden_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/post_detail_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStartWithNavigation="0dp">
+
+            <TextView
+                android:id="@+id/board_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="거래게시판"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="@color/gray_03"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/post_detail_toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/scrollview_postdetail"
+                    app:layout_constraintTop_toBottomOf="@id/post_detail_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/slider_vp"
+                        android:layout_width="match_parent"
+                        android:layout_height="320dp"
+                        app:layout_constraintDimensionRatio="328:176"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:paddingHorizontal="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </androidx.viewpager2.widget.ViewPager2>
+
+                    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                        android:id="@+id/dots_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        app:dotsColor="@color/gray_02"
+                        app:dotsCornerRadius="8dp"
+                        app:dotsSize="6dp"
+                        app:dotsSpacing="4dp"
+                        app:dotsWidthFactor="2.5"
+                        app:dotsElevation="2dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@id/slider_vp"
+                        app:progressMode="true"
+                        app:selectedDotColor="@color/white" />
+
+
+                    <TextView
+                        android:id="@+id/title_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="50dp"
+                        android:text="@{item.title}"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:letterSpacing="-0.01"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/slider_vp" />
+
+                    <TextView
+                        android:id="@+id/price_hkd_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="8dp"
+                        android:text="HKD"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:letterSpacing="-0.01"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/title_tv" />
+
+                    <TextView
+                        android:id="@+id/price_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="50dp"
+                        android:text="@{item.price}"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:letterSpacing="-0.01"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toEndOf="@id/price_hkd_tv"
+                        app:layout_constraintTop_toBottomOf="@id/title_tv" />
+
+                    <View
+                        android:id="@+id/line"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray_01"
+                        app:layout_constraintTop_toBottomOf="@id/price_tv"
+                        android:layout_marginTop="16dp"/>
+
+                    <TextView
+                        android:id="@+id/content_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="20dp"
+                        android:autoLink="web"
+                        android:textColorLink="@color/orange_02"
+                        android:text="@{item.content}"
+                        app:layout_constraintHorizontal_bias="0"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line" />
+
+                    <View
+                        android:id="@+id/line2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray_01"
+                        app:layout_constraintTop_toBottomOf="@id/content_tv"
+                        android:layout_marginTop="16dp"/>
+
+                    <TextView
+                        android:id="@+id/place_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="20dp"
+                        android:text="희망 거래장고/시간대"
+                        app:layout_constraintHorizontal_bias="0"
+                        android:textColor="@color/gray_03"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line2" />
+
+                    <TextView
+                        android:id="@+id/place_filled_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:paddingEnd="20dp"
+                        android:layout_marginStart="16dp"
+                        android:text="@{item.location}"
+                        app:layout_constraintHorizontal_bias="0"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/place_tv"
+                        app:layout_constraintTop_toTopOf="@id/place_tv" />
+
+                    <View
+                        android:id="@+id/line3"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray_01"
+                        app:layout_constraintTop_toBottomOf="@id/place_filled_tv"
+                        android:layout_marginTop="16dp"/>
+
+                    <TextView
+                        android:id="@+id/link_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:paddingEnd="20dp"
+                        android:paddingStart="20dp"
+                        android:text="오픈채팅방 링크"
+                        app:layout_constraintHorizontal_bias="0"
+                        android:textColor="@color/gray_03"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/line3" />
+
+                    <TextView
+                        android:id="@+id/link_filled_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:paddingEnd="20dp"
+                        android:layout_marginStart="16dp"
+                        android:text="@{item.chatUrl}"
+                        app:layout_constraintHorizontal_bias="0"
+                        android:autoLink="web"
+                        android:textColorLink="@color/orange_02"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/link_tv"
+                        app:layout_constraintTop_toTopOf="@id/link_tv" />
+
+                    <View
+                        android:id="@+id/line4"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/gray_01"
+                        app:layout_constraintTop_toBottomOf="@id/link_tv"
+                        android:layout_marginTop="16dp"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/nickname_group"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/line4"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:id="@+id/anon_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:textColor="@color/gray_03"
+                            android:text="@{item.nickname}"
+                            android:textSize="12sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
+
+                        <TextView
+                            android:id="@+id/anon_special_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_semibold"
+                            android:textColor="@color/gray_03"
+                            android:textSize="12sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/special_icon"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/ic_special_nickname"
+                            app:layout_constraintStart_toEndOf="@id/anon_special_tv"
+                            android:layout_marginStart="4dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:visibility="gone"/>
+
+                        <ImageView
+                            android:id="@+id/ellipse_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_ellipse"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/special_icon"
+                            android:layout_marginTop="7dp"
+                            android:layout_marginStart="4dp"
+                            android:visibility="gone"/>
+
+                        <TextView
+                            android:id="@+id/date_time_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:textSize="12sp"
+                            android:text="@{item.createdAt}"
+                            android:textColor="@color/gray_03"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/ellipse_iv"
+                            android:layout_marginStart="4dp"
+                            android:visibility="gone"/>
+
+                        <TextView
+                            android:id="@+id/eye_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="조회"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray_03"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/date_time_tv"
+                            android:layout_marginStart="4dp"
+                            android:visibility="gone"/>
+
+                        <TextView
+                            android:id="@+id/view_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:textSize="12sp"
+                            android:text="@{item.viewCount}"
+                            android:textColor="@color/gray_03"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/eye_tv"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginEnd="20dp"
+                            app:layout_constraintHorizontal_bias="0"
+                            android:visibility="gone"/>
+
+                        <ImageView
+                            android:id="@+id/ellipse2_iv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_ellipse"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/anon_tv"
+                            android:layout_marginTop="7dp"
+                            android:layout_marginStart="4dp"/>
+
+                        <TextView
+                            android:id="@+id/date_time2_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="@{item.createdAt}"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray_03"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/ellipse2_iv"
+                            android:layout_marginStart="4dp"/>
+
+                        <TextView
+                            android:id="@+id/eye2_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="조회"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray_03"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/date_time2_tv"
+                            android:layout_marginStart="4dp"/>
+
+                        <TextView
+                            android:id="@+id/view2_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_regular"
+                            android:text="@{item.viewCount}"
+                            android:textSize="12sp"
+                            android:textColor="@color/gray_03"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/eye2_tv"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginStart="2dp"
+                            android:layout_marginEnd="20dp"
+                            app:layout_constraintHorizontal_bias="0" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/like_comment_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="42dp"
+                        app:layout_constraintTop_toBottomOf="@id/nickname_group"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/border">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginStart="20dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintStart_toStartOf="parent">
+                                <TextView
+                                    android:id="@+id/like_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="찜"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/gray_04"
+                                    android:fontFamily="@font/pretendard_regular"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+                                <TextView
+                                    android:id="@+id/like_count_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{item.likeCount}"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/grayOrange"
+                                    android:fontFamily="@font/pretendard_regular"
+                                    android:layout_marginStart="4dp"
+                                    app:layout_constraintStart_toEndOf="@id/like_tv"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+
+                                <TextView
+                                    android:id="@+id/comment_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="댓글"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/gray_04"
+                                    android:fontFamily="@font/pretendard_regular"
+                                    android:layout_marginStart="16dp"
+                                    app:layout_constraintStart_toEndOf="@id/like_count_tv"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+                                <TextView
+                                    android:id="@+id/comment_count_tv"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{item.commentCount}"
+                                    android:textSize="14sp"
+                                    android:textColor="@color/grayOrange"
+                                    android:fontFamily="@font/pretendard_regular"
+                                    android:layout_marginStart="4dp"
+                                    app:layout_constraintStart_toEndOf="@id/comment_tv"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <ImageView
+                            android:id="@+id/btn_fav_post"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_fav_btn"
+                            android:background="@color/transparent"
+                            android:padding="9dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="20dp"/>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/guideline_msg"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/gray_01.5"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:lineSpacingMultiplier="1.3"
+                        android:paddingStart="15dp"
+                        android:paddingTop="12dp"
+                        android:paddingBottom="16dp"
+                        android:text="@string/guideline_post_detail"
+                        android:textColor="@color/gray_03"
+                        android:textSize="11sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/like_comment_group" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/comment_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="150dp"
+                        android:nestedScrollingEnabled="false"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/guideline_msg"
+                        app:layout_constraintVertical_bias="0.0"
+                        tools:listitem="@layout/item_comment" />
+
+                    <FrameLayout
+                        android:id="@+id/empty_frame"
+                        android:layout_width="match_parent"
+                        android:layout_height="468dp"
+                        app:layout_constraintTop_toBottomOf="@id/guideline_msg"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/empty_message"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="아직 모인 사람이 없어요."
+                            android:textSize="14sp"
+                            android:textColor="@color/gray_02"
+                            android:fontFamily="@font/pretendard_semibold"
+                            app:layout_constraintTop_toBottomOf="@id/guideline_msg"
+                            android:layout_marginTop="72dp"
+                            android:layout_gravity="center_horizontal"
+                            />
+
+                    </FrameLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/comment_msg_tv"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:background="@color/orange_03"
+                android:text="댓글 쓰는 중..."
+                android:fontFamily="@font/pretendard_medium"
+                android:textSize="11sp"
+                android:textColor="@color/gray_04"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/comment_box"
+                android:paddingStart="16dp"
+                android:paddingTop="9dp"
+                android:visibility="gone"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/comment_box"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@color/white">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/btn_anonymous"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="13dp">
+
+                    <TextView
+                        android:id="@+id/btn_anon_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="익명"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:textColor="@color/orange_02"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <ImageView
+                        android:id="@+id/btn_anon_tick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_anon_tick"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginStart="25dp"
+                        android:layout_marginTop="11.5dp"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <EditText
+                    android:id="@+id/write_comment_et"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="61dp"
+                    android:layout_marginEnd="49dp"
+                    android:src="@drawable/detail_textfield"
+                    android:text="@={viewModel.cmt_content}"
+                    android:hint="대화를 주고받아 보세요."
+                    android:paddingLeft="8dp"
+                    android:textColor="@color/gray_03"
+                    android:textSize="11sp"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:background="@drawable/detail_textfield"/>
+
+                <ImageView
+                    android:id="@+id/send_iv"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_detailsend"
+                    android:padding="8dp"
+                    android:enabled="@{writeCommentEt.text.length() > 0}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="9dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            android:id="@+id/layout_progress"
+            layout="@layout/progress_dialog_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

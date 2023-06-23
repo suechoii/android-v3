@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.community.mingle.viewmodel.PostWriteViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".views.ui.board.PostEditActivity"
+        android:layout_marginTop="44dp">
+
+    <FrameLayout
+        android:id="@+id/home_frm"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/post_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/gray_03"
+            android:layout_marginStart="4dp"
+            android:text="게시글 수정"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/post_return_iv" />
+
+        <ImageView
+            android:id="@+id/post_return_iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:layout_marginStart="8dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_close" />
+
+        <TextView
+            android:id="@+id/post_send_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:layout_marginEnd="13dp"
+            android:fontFamily="@font/pretendard_variable"
+            android:textColor="@color/gray_03"
+            android:text="게시"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/post_title_edit_et"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@null"
+            android:hint="제목을 입력해주세요"
+            android:text="@={viewModel.title}"
+            android:fontFamily="@font/pretendard_regular"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:inputType="text"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/post_tv"/>
+
+        <View
+            android:id="@+id/post_line_up_iv"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_01"
+            android:layout_marginTop="6dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/post_title_edit_et" />
+
+        <EditText
+            android:id="@+id/post_content_edit_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@null"
+            android:fontFamily="@font/pretendard_variable"
+            android:gravity="start"
+            android:text="@={viewModel.content}"
+            android:hint="나누고 싶은 이야기가 있나요?"
+            android:inputType="textMultiLine|textCapSentences"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/post_line_up_iv" />
+
+    <ImageView
+        android:id="@+id/post_line_middle_iv"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="170dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/ic_line_write" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

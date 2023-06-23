@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/post_detail_change_status"
+        android:title="판매상태 변경하기" />
+
+    <item
+        android:id="@+id/post_detail_edit"
+        android:title="수정하기" />
+
+    <item
+        android:id="@+id/post_detail_delete"
+        android:title="삭제하기" />
+
+    <item
+        android:id="@+id/post_detail_report"
+        android:title="신고하기" />
+    <item
+        android:id="@+id/post_detail_blind"
+        android:title="가리기" />
+</menu>

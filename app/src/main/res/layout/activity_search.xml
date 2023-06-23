@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fitsSystemWindows="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".views.ui.search.SearchActivity">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.community.mingle.viewmodel.SearchViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="21dp"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/return_iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginStart="6dp"
+            android:src="@drawable/ic_back"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/search_et"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@drawable/rounded_edittext"
+            android:maxLines="1"
+            android:inputType="text"
+            android:hint="무슨 일이 일어나고 있나요?"
+            android:fontFamily="@font/pretendard_regular"
+            android:textSize="11sp"
+            android:paddingHorizontal="8dp"
+            android:layout_marginStart="46dp"
+            android:layout_marginEnd="47dp"
+            android:layout_marginTop="6dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/return_iv"/>
+
+        <ImageView
+            android:id="@+id/remove_text_iv"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_close_filled"
+            android:padding="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="7dp"
+            android:layout_marginTop="4dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_search_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabIndicatorFullWidth="false"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        app:tabPaddingStart="10dp"
+        app:tabPaddingEnd="10dp"
+        app:tabTextAppearance="@style/tab_text"
+        app:tabTextColor="#686868"
+        app:tabIndicator="@drawable/tab_selector"
+        app:tabSelectedTextColor="@color/black"
+        app:tabIndicatorColor="@color/orange_02"
+        app:tabRippleColor="#00ff0000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/top_bar"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_line_down"
+        app:layout_constraintTop_toBottomOf="@id/tab_search_category"/>
+
+    <View
+        android:id="@+id/midview"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:minHeight="12dp"
+        android:maxHeight="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tab_search_category"/>
+
+        <TextView
+            android:id="@+id/begin_search__tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray_03"
+            android:fontFamily="@font/pretendard_semibold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/search_content_vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingHorizontal="8dp"
+        android:layout_marginBottom="48dp"
+        app:layout_constraintTop_toBottomOf="@id/midview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    <View
+        android:id="@+id/endview"
+        android:layout_width="16dp"
+        android:layout_height="match_parent"
+        android:maxWidth="20dp"
+        android:minWidth="12dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/botview2"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:maxHeight="20dp"
+        android:minHeight="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

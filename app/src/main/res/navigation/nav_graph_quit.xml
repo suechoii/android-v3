@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_signup"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/quitCheckFragment">
+
+    <fragment
+        android:id="@+id/quitCheckFragment"
+        android:name="com.community.mingle.views.ui.settings.QuitCheckFragment"
+        android:label="fragment_quit_check"
+        tools:layout="@layout/fragment_quit_check" >
+        <action
+            android:id="@+id/action_quitCheckFragment_to_quitUserFragment"
+            app:destination="@id/quitUserFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/quitUserFragment"
+        android:name="com.community.mingle.views.ui.settings.QuitUserFragment"
+        android:label="fragment_quit_user"
+        tools:layout="@layout/fragment_quit_user" >
+        <action
+            android:id="@+id/action_quitUserFragment_to_quitCompleteFragment"
+            app:destination="@id/quitCompleteFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/quitCompleteFragment"
+        android:name="com.community.mingle.views.ui.settings.QuitCompleteFragment"
+        android:label="fragment_quit_complete"
+        tools:layout="@layout/fragment_quit_complete">
+    </fragment>
+
+
+</navigation>

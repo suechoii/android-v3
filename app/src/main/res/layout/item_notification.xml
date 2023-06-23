@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/noti_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/unreadnoti">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/noti_bar"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp">
+
+        <ImageView
+            android:id="@+id/noti_iv"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_comment"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="4dp"/>
+        <TextView
+            android:id="@+id/noti_title"
+            android:layout_width="wrap_content"
+            android:layout_height="19dp"
+            app:layout_constraintStart_toEndOf="@id/noti_iv"
+            android:layout_marginStart="6dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="새로운 댓글이 달렸어요."
+            android:textSize="12sp"
+            android:textColor="#534A4A"
+            android:lineSpacingExtra="5sp"
+            android:fontFamily="@font/pretendard_variable"/>
+        <TextView
+            android:id="@+id/noti_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/noti_title"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="댓글 내용 댓글 내용 댓글 내용 댓글 내용 댓글 내용 댓글 내용 댓글 내용 댓글 내용 댓글 내용 댓글 내용"
+            android:textSize="14sp"
+            android:letterSpacing="-0.01"
+            android:textColor="#000000"
+            android:fontFamily="@font/pretendard_variable"
+            android:lineHeight="17sp"
+            android:gravity="top"
+            android:lineSpacingExtra="5sp"
+            android:translationY="-2.44sp"
+
+            android:singleLine="true"/>
+        <TextView
+            android:id="@+id/tab_name"
+            android:layout_width="wrap_content"
+            android:layout_height="19dp"
+            app:layout_constraintTop_toBottomOf="@id/noti_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="광장"
+            android:fontFamily="@font/pretendard_variable"
+            android:textSize="12sp"
+            android:textColor="#686868"
+            android:lineSpacingExtra="5sp"/>
+        <View
+            android:id="@+id/dot"
+            android:layout_width="2dp"
+            android:layout_height="2dp"
+            app:layout_constraintStart_toEndOf="@id/tab_name"
+            android:layout_marginStart="4dp"
+            app:layout_constraintTop_toBottomOf="@id/noti_content"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/ic_ellipse_118"/>
+        <TextView
+            android:id="@+id/tab_id"
+            android:layout_width="wrap_content"
+            android:layout_height="19dp"
+            app:layout_constraintTop_toTopOf="@id/tab_name"
+            app:layout_constraintBottom_toBottomOf="@id/tab_name"
+            app:layout_constraintStart_toEndOf="@id/dot"
+            android:layout_marginStart="4dp"
+            android:text="게시판 이름"
+            android:fontFamily="@font/pretendard_variable"
+            android:textSize="12sp"
+            android:textColor="#686868"
+            android:lineSpacingExtra="5sp"/>
+
+
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/ic_notiline"
+        app:layout_constraintTop_toBottomOf="@id/noti_bar"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"/>
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/titletext"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="가독성을 확인하기 위한 제목"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        android:textSize="14sp"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/contenttext"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="가독성을 확인하기 위한 제목 밑에 가독성을 확인하기 위한 본문..."-->
+    <!--        android:textColor="#686868"-->
+    <!--        android:singleLine="true"-->
+    <!--        android:textSize="12sp"-->
+    <!--        android:layout_marginTop="4dp"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/titletext"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        android:layout_marginEnd="20dp" />-->
+
+
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--        android:id="@+id/detail_cl"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/contenttext"-->
+    <!--        android:layout_marginTop="2dp">-->
+    <!--        <TextView-->
+    <!--            android:id="@+id/anonymous"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="익명"-->
+    <!--            android:textColor="#AB9F9D"-->
+    <!--            android:textSize="11sp"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
+    <!--        <ImageView-->
+    <!--            android:id="@+id/dot"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:src="@drawable/ic_ellipse_118"-->
+    <!--            android:layout_marginStart="4dp"-->
+    <!--            app:layout_constraintStart_toEndOf="@id/anonymous"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/time"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="15:03"-->
+    <!--            android:textColor="#AB9F9D"-->
+    <!--            android:textSize="11sp"-->
+    <!--            app:layout_constraintStart_toEndOf="@id/dot"-->
+    <!--            android:layout_marginStart="4dp"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
+    <!--        <ImageView-->
+    <!--            android:id="@+id/likeimg"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:src="@drawable/ic_interaction_like"-->
+    <!--            android:layout_marginEnd="4dp"-->
+    <!--            app:layout_constraintEnd_toStartOf="@id/liketext"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/liketext"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="67"-->
+    <!--            android:textSize="13sp"-->
+    <!--            android:textColor="#AB9F9D"-->
+    <!--            android:layout_marginEnd="8dp"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintEnd_toStartOf="@id/commentimg"/>-->
+
+    <!--        <ImageView-->
+    <!--            android:id="@+id/commentimg"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:src="@drawable/ic_interaction_comment"-->
+    <!--            app:layout_constraintEnd_toStartOf="@id/commenttext"-->
+    <!--            android:layout_marginEnd="2dp"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"/>-->
+    <!--        <TextView-->
+    <!--            android:id="@+id/commenttext"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="10"-->
+    <!--            android:textColor="#AB9F9D"-->
+    <!--            android:textSize="13sp"-->
+    <!--            android:layout_marginEnd="20dp"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent" />-->
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/baseline"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:src="@drawable/ic_line"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/detail_cl"/>-->
+    <!--    <View-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="8dp"-->
+    <!--        android:maxHeight="8dp"-->
+    <!--        android:minHeight="6dp"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/baseline"/>-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

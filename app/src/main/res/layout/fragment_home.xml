@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/backgroundGray">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.community.mingle.viewmodel.HomeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/top_box"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:maxHeight="48dp"
+                    android:minHeight="44dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/mypage"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_home_mypage"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/top_box" />
+
+                    <ImageView
+                        android:id="@+id/search"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_home_search"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/bell"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/bell"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="8dp"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_home_notification"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="55dp"
+                    app:layout_constraintTop_toBottomOf="@id/top_box"
+                    tools:layout_editor_absoluteX="-16dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/scrollview_home"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/slider_vp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:paddingHorizontal="8dp"
+                            app:layout_constraintDimensionRatio="328:176"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                        </androidx.viewpager2.widget.ViewPager2>
+
+                        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                            android:id="@+id/dots_indicator"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            app:dotsColor="@color/orange_04"
+                            app:dotsCornerRadius="8dp"
+                            app:dotsSize="6dp"
+                            app:dotsSpacing="4dp"
+                            app:dotsWidthFactor="2.5"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/slider_vp"
+                            app:progressMode="true"
+                            app:selectedDotColor="@color/orange_04" />
+
+                        <View
+                            android:id="@+id/blankbox2"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:maxHeight="40dp"
+                            android:minHeight="24dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/dots_indicator" />
+
+                        <!--소식 바로 보기-->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/quickclick_box"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/blankbox2">
+
+                            <TextView
+                                android:id="@+id/quickclick_box_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="top"
+                                android:text="소식 바로 보기"
+                                android:textAppearance="@style/quickclick_box_title"
+                                app:layout_constraintStart_toStartOf="@id/quickclick_box"
+                                app:layout_constraintTop_toTopOf="@id/quickclick_box" />
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/quickclick_button"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/quickclick_box_title">
+
+                                <!--학생회버튼-->
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/quickclick_student_union"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/home_textbox"
+                                    android:paddingVertical="10dp"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintWidth_percent="0.49">
+
+                                    <TextView
+                                        android:id="@+id/student_union_title"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="12dp"
+                                        android:text="학생회"
+                                        android:textAppearance="@style/home_direct"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                    <ImageView
+                                        android:id="@+id/imageView"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_marginEnd="4dp"
+                                        android:paddingStart="9dp"
+                                        android:paddingTop="7dp"
+                                        android:paddingEnd="7dp"
+                                        android:paddingBottom="9dp"
+                                        android:src="@drawable/ic_vector_3"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/link"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    app:layout_constraintStart_toEndOf="@id/quickclick_student_union"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintWidth_percent="0.02" />
+
+                                <!--밍글소식-->
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:id="@+id/quickclick_mingle_news"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/home_textbox"
+                                    android:paddingVertical="10dp"
+                                    app:layout_constraintStart_toEndOf="@id/link"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintWidth_percent="0.49">
+
+
+                                    <TextView
+                                        android:id="@+id/mingle_news_box"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="12dp"
+                                        android:text="밍글소식"
+                                        android:textAppearance="@style/home_direct"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                    <ImageView
+                                        android:id="@+id/imageView2"
+                                        android:layout_width="24dp"
+                                        android:layout_height="24dp"
+                                        android:layout_marginEnd="4dp"
+                                        android:paddingStart="9dp"
+                                        android:paddingTop="7dp"
+                                        android:paddingEnd="7dp"
+                                        android:paddingBottom="9dp"
+                                        android:src="@drawable/ic_vector_3"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent" />
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/blankbox3"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:maxHeight="40dp"
+                            android:minHeight="24dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/quickclick_box" />
+
+
+                        <!--지금 광장에서는-->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/now_total"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="32dp"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/blankbox3">
+
+                            <LinearLayout
+                                android:id="@+id/now_total_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                app:layout_constraintStart_toStartOf="@id/now_total"
+                                app:layout_constraintTop_toTopOf="@id/now_total">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top"
+                                    android:text="지금 광장에서는"
+                                    android:textAppearance="@style/home_title" />
+
+                                <ImageView
+                                    android:id="@+id/now_total_iv"
+                                    android:layout_width="6dp"
+                                    android:layout_height="10dp"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginStart="9dp"
+                                    android:background="@drawable/ic_vector_3"
+                                    app:layout_constraintStart_toEndOf="@id/now_total_title"
+                                    app:layout_constraintTop_toTopOf="@id/now_total_title" />
+
+                            </LinearLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/now_total_posts"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:background="@drawable/home_textbox"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/now_total_title">
+
+                                <View
+                                    android:id="@+id/topview3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:maxHeight="20dp"
+                                    android:minHeight="16dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/now_total_rv"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_marginEnd="12dp"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/topview3"
+                                    tools:listitem="@layout/item_home" />
+
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/blankbox5"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:maxHeight="40dp"
+                            android:minHeight="24dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/now_total" />
+
+
+                        <!--지금 잔디밭에서는-->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/now_univ"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="32dp"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/blankbox5">
+
+                            <LinearLayout
+                                android:id="@+id/now_univ_title"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp"
+                                app:layout_constraintStart_toStartOf="@id/now_univ"
+                                app:layout_constraintTop_toTopOf="@id/now_univ">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="top"
+                                    android:text="지금 잔디밭에서는"
+                                    android:textAppearance="@style/home_title" />
+
+                                <ImageView
+                                    android:id="@+id/now_univ_iv"
+                                    android:layout_width="6dp"
+                                    android:layout_height="10dp"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginStart="9dp"
+                                    android:background="@drawable/ic_vector_3" />
+                            </LinearLayout>
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/now_univ_posts"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:background="@drawable/home_textbox"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/now_univ_title">
+                                <!--                    //transparent 어떻게 하는거지..?-->
+
+                                <View
+                                    android:id="@+id/topview1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:maxHeight="20dp"
+                                    android:minHeight="16dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/now_univ_rv"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_marginEnd="12dp"
+                                    android:orientation="vertical"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@id/topview1"
+                                    tools:listitem="@layout/item_home" />
+
+                                <View
+                                    android:id="@+id/botview1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="20dp"
+                                    android:maxHeight="20dp"
+                                    android:minHeight="16dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/blankbox6"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:maxHeight="40dp"
+                            android:minHeight="24dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/now_total" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.core.widget.NestedScrollView>
+
+                <include
+                    android:id="@+id/layout_progress"
+                    layout="@layout/progress_dialog_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

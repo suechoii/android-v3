@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/schoolname_tv"
+    android:layout_width="170dp"
+    android:layout_height="wrap_content"
+    android:paddingStart="12.09dp"
+    android:paddingTop="7dp"
+    android:paddingBottom="8dp"
+    android:ellipsize="end"
+    android:maxLines="1"
+    android:fontFamily="@font/pretendard_regular"
+    android:text="학교명"
+    android:textSize="14sp"
+    android:textColor="@color/black" />
+
+

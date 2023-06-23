@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home_selector"
+        android:title="홈" />
+
+    <item
+        android:id="@+id/totalFragment"
+        android:icon="@drawable/ic_gwangjang_selector"
+        android:title="광장" />
+
+    <item
+        android:id="@+id/univFragment"
+        android:icon="@drawable/ic_school_selector"
+        android:title="잔디밭" />
+
+    <item
+        android:id="@+id/marketFragment"
+        android:icon="@drawable/ic_market_selector"
+        android:title="중고마켓" />
+
+</menu>

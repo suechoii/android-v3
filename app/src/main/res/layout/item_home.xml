@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="item"
+            type="com.community.mingle.service.models.HomeResult" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/titletext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@{item.title}"
+        android:fontFamily="@font/pretendard_regular"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:singleLine="true"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="4dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/contenttext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@{item.contents}"
+        android:fontFamily="@font/pretendard_regular"
+        android:textColor="@color/gray_05"
+        android:singleLine="true"
+        android:textSize="12sp"
+        android:maxLines="1"
+        android:layout_marginTop="6dp"
+        app:layout_constraintTop_toBottomOf="@id/titletext"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp" />
+
+    <ImageView
+        android:id="@+id/photo"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_interaction_ic_"
+        android:layout_marginEnd="18dp"
+        app:layout_constraintTop_toTopOf="@id/titletext"
+        app:layout_constraintBottom_toBottomOf="@id/titletext"
+        app:layout_constraintStart_toEndOf="@id/titletext"
+        android:layout_marginStart="2dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/detail_cl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="4dp"
+        app:layout_constraintTop_toBottomOf="@id/contenttext"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="4dp">
+        <TextView
+            android:id="@+id/anonymous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.nickname}"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="#AB9F9D"
+            android:textSize="11sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <ImageView
+            android:id="@+id/dot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_ellipse_118"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toEndOf="@id/anonymous"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        // 나중에 viewmodel이랑 연결 시켜서 현재 시간으로 바꾸기
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.createdAt}"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="#AB9F9D"
+            android:textSize="11sp"
+            app:layout_constraintStart_toEndOf="@id/dot"
+            android:layout_marginStart="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <ImageView
+            android:id="@+id/likeimg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_interaction_like"
+            android:layout_marginEnd="4dp"
+            app:layout_constraintEnd_toStartOf="@id/liketext"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/liketext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.likeCount}"
+            android:fontFamily="@font/pretendard_regular"
+            android:textSize="13sp"
+            android:textColor="@color/grayOrange"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/commentimg"/>
+
+        <ImageView
+            android:id="@+id/commentimg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_interaction_comment"
+            app:layout_constraintEnd_toStartOf="@id/commenttext"
+            android:layout_marginEnd="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/commenttext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.commentCount}"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/grayOrange"
+            android:textSize="13sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/blinded_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="내가 가리기한 게시글입니다."
+            android:fontFamily="@font/pretendard_semibold"
+            android:textSize="14sp"
+            android:textColor="@color/gray_03"
+            android:layout_marginStart="2dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/cancel_blind_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="가리기 취소"
+            android:fontFamily="@font/pretendard_semibold"
+            android:textSize="12sp"
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/orange_04"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

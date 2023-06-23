@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/status_one"
+        android:title="판매중" />
+    <item
+        android:id="@+id/status_two"
+        android:title="예약중"/>
+    <item
+        android:id="@+id/status_three"
+        android:title="판매완료"/>
+</menu>

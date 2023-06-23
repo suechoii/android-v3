@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".views.ui.member.SignUpSchoolFragment">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.community.mingle.viewmodel.MyPageViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/school_layout"
+        android:layout_marginTop="30dp">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25"/>
+
+    <View
+        android:id="@+id/progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:background="@color/gray_02"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="4dp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="76dp"
+        android:layout_marginStart="32dp">
+
+        <TextView
+            android:id="@+id/question_school_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="재학 중인 학교가\n어디신가요?"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:letterSpacing="-0.01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/desc_question_tv"/>
+
+        <TextView
+            android:id="@+id/desc_question_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="원활한 앱 이용을 위해 재학 정보가 필요해요."
+            android:textColor="@color/gray_03"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/question_school_tv"
+            app:layout_constraintTop_toBottomOf="@id/question_school_tv" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="207dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/school_iv"
+            android:layout_width="130dp"
+            android:layout_height="120dp"
+            android:src="@drawable/img_school"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/drop_down_layout"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/drop_down_layout"
+            style="@style/DropDownTextInputLayoutStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:endIconDrawable="@drawable/ic_down"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/school_iv">
+
+            <AutoCompleteTextView
+                android:id="@+id/typesFilter"
+                android:layout_width="170dp"
+                android:layout_height="44dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_regular"
+                android:inputType="none"
+                android:maxLines="1"
+                android:paddingStart="12dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="13dp"
+                android:singleLine="true"
+                android:text="학교 선택"
+                android:textColor="@color/gray_03"
+                android:textSize="14sp"
+                tools:ignore="LabelFor" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <ImageView
+        android:id="@+id/close_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="12dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/next_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_btn_signup_next_disabled"
+        android:gravity="center"
+        android:text="다음으로"
+        android:enabled="false"
+        android:fontFamily="@font/pretendard_regular"
+        android:textColor="@color/gray_04"
+        android:textSize="14sp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>

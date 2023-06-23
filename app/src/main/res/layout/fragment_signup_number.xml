@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".views.ui.member.SignUpNumberFragment">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.community.mingle.viewmodel.SignupViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25"/>
+
+    <View
+        android:id="@+id/progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:background="@color/gray_02"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="4dp"/>
+
+    <ImageView
+        android:id="@+id/return_iv"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="13dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="32dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="76dp">
+
+        <TextView
+            android:id="@+id/enter_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="인증번호를\n입력해 주세요."
+            android:textSize="24sp"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/black"
+            android:letterSpacing="-0.01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/checkmail_inst_tv"/>
+
+        <TextView
+            android:id="@+id/checkmail_inst_tv"
+            android:layout_width="0dp"
+            android:layout_height="17dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="1dp"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/gray_03"
+            android:text="메일함을 확인하세요."
+            app:layout_constraintTop_toBottomOf="@id/enter_tv"
+            app:layout_constraintStart_toStartOf="@id/enter_tv"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/textfield_cl"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="207dp">
+
+        <EditText
+            android:id="@+id/enter_code"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:hint="인증번호 작성"
+            android:text="@={viewModel.code}"
+            android:fontFamily="@font/pretendard_regular"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:textColor="#000000"
+            android:background="@color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.006756756757"/>
+
+        <View
+            android:id="@+id/number_red"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="@id/textfield_cl"
+            app:layout_constraintStart_toStartOf="@id/textfield_cl"
+            app:layout_constraintVertical_bias="0.9772727273"
+            android:background="@color/orange_01"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/number_grey"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toBottomOf="@id/textfield_cl"
+            app:layout_constraintStart_toStartOf="@id/textfield_cl"
+            app:layout_constraintVertical_bias="0.9772727273"
+            android:background="@color/gray_03" />
+
+        <ImageView
+            android:id="@+id/incorrect_cross"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_wrong"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/text_detail_cl"
+        android:layout_width="0dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/textfield_cl"
+        app:layout_constraintStart_toStartOf="@id/textfield_cl"
+        app:layout_constraintEnd_toEndOf="@id/textfield_cl">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/timeleft_cl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="14dp"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+            <TextView
+                android:id="@+id/timeleft_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="잔여시간"
+                android:gravity="top"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="@color/gray_03"
+                android:textSize="12sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+            <Chronometer
+                android:id="@+id/chronometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/gray_04"
+                android:countDown="true"
+                android:letterSpacing="0"
+                android:gravity="top"
+                android:fontFamily="@font/pretendard_medium"
+                app:layout_constraintStart_toEndOf="@id/timeleft_tv"
+                android:layout_marginStart="4dp"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/touchsection_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:id="@+id/resend_number_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="14dp"
+                android:text="인증문자 재발송"
+                android:gravity="top"
+                android:textColor="@color/gray_05"
+                android:fontFamily="@font/pretendard_regular"
+                android:textSize="12sp"
+                android:layout_marginStart="5dp"
+                app:layout_constraintStart_toStartOf="parent" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:layout_constraintStart_toEndOf="@id/resend_number_tv"
+                android:src="@drawable/ic_next"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="10dp"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/incorrect_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/error_red"
+        android:fontFamily="@font/pretendard_regular"
+        android:gravity="top"
+        app:layout_constraintTop_toTopOf="@id/text_detail_cl"
+        app:layout_constraintStart_toStartOf="@id/text_detail_cl"
+        android:layout_marginTop="39dp"
+        />
+    <TextView
+        android:id="@+id/resend_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/resend_number"
+        android:textSize="12sp"
+        android:textColor="@color/gray_04"
+        android:fontFamily="@font/pretendard_regular"
+        android:bufferType="spannable"
+        android:lineSpacingExtra="0sp"
+        android:translationY="-0.1sp"
+        android:gravity="top"
+        app:layout_constraintTop_toTopOf="@id/text_detail_cl"
+        app:layout_constraintStart_toStartOf="@id/text_detail_cl"
+        android:layout_marginTop="39dp"
+        android:visibility="gone"
+        />
+
+
+    <TextView
+        android:id="@+id/next_btn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_btn_signup_next_disabled"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:text="다음으로"
+        android:fontFamily="@font/pretendard_regular"
+        android:enabled="false"
+        android:textSize="14sp"
+        android:textColor="@color/gray_04"
+        android:gravity="center"
+        />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

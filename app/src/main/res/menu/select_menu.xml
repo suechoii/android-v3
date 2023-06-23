@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/boardtype_one"
+        android:title="자유" />
+    <item
+        android:id="@+id/boardtype_two"
+        android:title="질문"/>
+    <item
+        android:id="@+id/boardtype_three"
+        android:title="진로"/>
+    <item
+        android:id="@+id/boardtype_four"
+        android:title="학생회"/>
+</menu>

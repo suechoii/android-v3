@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical"
+    android:background="@drawable/round_dialog"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<!--    TODO: Text view 사이즈 말고 PostWriteActivity에 있는 bottomSheetDialog 자체 사이즈로 설정하고 텍뷰마다 layout_weight =1 layout_height=0dp 로 두기-->
+    <TextView
+        android:id="@+id/post_type_one_tv"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:clickable="true"
+        android:text="자유"
+        android:fontFamily="@font/pretendard_semibold"
+        android:textSize="16sp"
+        android:textColor="@color/post_type_color_selector"/>
+    <TextView
+        android:id="@+id/post_type_two_tv"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:clickable="true"
+        android:text="질문"
+        android:fontFamily="@font/pretendard_semibold"
+        android:textSize="16sp"
+        android:textColor="@color/post_type_color_selector"/>
+    <TextView
+        android:id="@+id/post_type_three_tv"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:clickable="true"
+        android:text="진로"
+        android:fontFamily="@font/pretendard_semibold"
+        android:textSize="16sp"
+        android:textColor="@color/post_type_color_selector"/>
+    <TextView
+        android:id="@+id/post_type_four_tv"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:clickable="true"
+        android:text="학생회"
+        android:fontFamily="@font/pretendard_semibold"
+        android:visibility="gone"
+        android:textSize="16sp"
+        android:textColor="@color/post_type_color_selector"/>
+</LinearLayout>

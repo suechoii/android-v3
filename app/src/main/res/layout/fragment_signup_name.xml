@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".views.ui.member.SignUpNameFragment">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.community.mingle.viewmodel.SignupViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="1"/>
+
+    <View
+        android:id="@+id/progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="4dp"
+        android:background="@color/gray_02"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="4dp"/>
+
+    <ImageView
+        android:id="@+id/return_iv"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="13dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="32dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="76dp">
+
+        <TextView
+            android:id="@+id/name_inst_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="다 왔어요!\n닉네임을 지어주세요."
+            android:textSize="24sp"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/black"
+            android:letterSpacing="-0.01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/name_desc_tv"/>
+
+        <TextView
+            android:id="@+id/name_desc_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="1dp"
+            android:textSize="14sp"
+            android:fontFamily="@font/pretendard_regular"
+            android:textColor="@color/gray_03"
+            android:text="닉네임과 상관없이 익명으로 활동할 수 있어요."
+            app:layout_constraintTop_toBottomOf="@id/name_inst_tv"
+            app:layout_constraintStart_toStartOf="@id/name_inst_tv"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/next_btn"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="32dp"
+        android:background="@drawable/bg_btn_signup_next_disabled"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:text="시작하기"
+        android:textSize="14sp"
+        android:textColor="#686868"
+        android:gravity="center" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/textfield_cl"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+       android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="215dp">
+
+        <EditText
+            android:id="@+id/name_edit"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:hint="닉네임 작성"
+            android:text="@={viewModel.nickname}"
+            android:fontFamily="@font/pretendard_regular"
+            android:inputType="text"
+            android:maxLength="10"
+            android:textSize="14sp"
+            android:textColor="@color/black"
+            android:background="@color/transparent"
+            app:layout_constraintStart_toStartOf="@id/textfield_cl"
+            app:layout_constraintTop_toTopOf="@id/textfield_cl"/>
+
+        <View
+            android:id="@+id/name_orange"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/orange_01"
+            app:layout_constraintBottom_toBottomOf="@id/textfield_cl"
+            app:layout_constraintEnd_toEndOf="@id/textfield_cl"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/textfield_cl"
+            app:layout_constraintTop_toTopOf="@id/textfield_cl"
+            app:layout_constraintVertical_bias="1.0"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/name_grey"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray_03"
+            app:layout_constraintBottom_toBottomOf="@id/textfield_cl"
+            app:layout_constraintEnd_toEndOf="@id/textfield_cl"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@id/textfield_cl"
+            app:layout_constraintTop_toTopOf="@id/textfield_cl"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="0/10"
+            android:textSize="14sp"
+            android:textColor="@color/gray_04"
+            app:layout_constraintTop_toTopOf="@id/textfield_cl"
+            app:layout_constraintBottom_toBottomOf="@id/textfield_cl"
+            app:layout_constraintEnd_toEndOf="@id/textfield_cl"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/exist_id_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:textColor="@color/error_red"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textfield_cl" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

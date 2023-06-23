@@ -24,8 +24,6 @@ class UnivTotalListAdapter : ListAdapter<PostResult, UnivTotalListAdapter.UnivTo
     }
 ) {
 
-    private var univTotalList = ArrayList<PostResult>()
-
     // 클릭 인터페이스 정의
     interface MyItemClickListener {
 
@@ -40,7 +38,7 @@ class UnivTotalListAdapter : ListAdapter<PostResult, UnivTotalListAdapter.UnivTo
         mItemClickListener = itemClickListener
     }
 
-    override fun getItemCount(): Int = univTotalList.size
+    override fun getItemCount(): Int = currentList.size
 
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
@@ -56,12 +54,12 @@ class UnivTotalListAdapter : ListAdapter<PostResult, UnivTotalListAdapter.UnivTo
     }
 
     override fun onBindViewHolder(holder: UnivTotalViewHolder, position: Int) {
-        holder.bind(univTotalList[position], position)
+        holder.bind(getItem(position))
     }
 
     inner class UnivTotalViewHolder(val binding: ItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(postResult: PostResult, position: Int) {
+        fun bind(postResult: PostResult) {
             binding.setVariable(BR.item, postResult)
 
             if (postResult.blinded) {
@@ -80,7 +78,13 @@ class UnivTotalListAdapter : ListAdapter<PostResult, UnivTotalListAdapter.UnivTo
                 binding.cancelBlindTv.visibility = View.VISIBLE
 
                 binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(postResult, position, true, false, null)
+                    mItemClickListener.onItemClick(
+                        post = postResult,
+                        position = absoluteAdapterPosition,
+                        isBlind = true,
+                        isReported = false,
+                        reportText = null,
+                    )
                 }
             } else if (postResult.reported) {
                 binding.likeimg.visibility = View.INVISIBLE
@@ -98,7 +102,13 @@ class UnivTotalListAdapter : ListAdapter<PostResult, UnivTotalListAdapter.UnivTo
                 binding.blindedText.text = postResult.title
 
                 binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(postResult, position, false, true, postResult.title)
+                    mItemClickListener.onItemClick(
+                        post = postResult,
+                        position = absoluteAdapterPosition,
+                        isBlind = false,
+                        isReported = true,
+                        reportText = postResult.title
+                    )
                 }
             } else {
                 val fileattached = postResult.fileAttached
@@ -122,29 +132,37 @@ class UnivTotalListAdapter : ListAdapter<PostResult, UnivTotalListAdapter.UnivTo
                 binding.cancelBlindTv.visibility = View.GONE
 
                 binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(postResult, position, false, false, null)
+                    mItemClickListener.onItemClick(
+                        post = postResult,
+                        position = absoluteAdapterPosition,
+                        isBlind = false,
+                        isReported = false,
+                        reportText = null
+                    )
                 }
             }
 
             binding.cancelBlindTv.setOnClickListener {
-                mItemClickListener.onCancelClick(postResult, position)
+                mItemClickListener.onCancelClick(
+                    post = postResult,
+                    position = absoluteAdapterPosition
+                )
             }
 
             binding.executePendingBindings()
 
         }
     }
-//
-//    fun clearUnivTotalList() {
-//        this.univTotalList.clear()
-//        notifyDataSetChanged()
-//    }
-//
-//    fun addUnivTotalList(postList: List<PostResult>, isFirst: Boolean) {
-//        if (isFirst) {
-//            this.univTotalList.clear()
-//        }
-//        this.univTotalList.addAll(postList)
-//        notifyDataSetChanged()
-//    }
+
+    fun clearUnivTotalList() {
+        this.submitList(emptyList())
+    }
+
+    fun addUnivTotalList(postList: List<PostResult>, isFirst: Boolean) {
+        if (!isFirst) {
+            submitList(this.currentList + postList)
+        } else {
+            submitList(this.currentList)
+        }
+    }
 }

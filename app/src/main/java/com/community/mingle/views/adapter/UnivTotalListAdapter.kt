@@ -4,18 +4,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.BR
 import com.community.mingle.R
 import com.community.mingle.databinding.ItemPostBinding
 import com.community.mingle.service.models.PostResult
 
+class UnivTotalListAdapter : ListAdapter<PostResult, UnivTotalListAdapter.UnivTotalViewHolder>(
+    object : DiffUtil.ItemCallback<PostResult>() {
+        override fun areItemsTheSame(oldItem: PostResult, newItem: PostResult): Boolean {
+            return oldItem.postId == newItem.postId
+        }
 
-class UnivTotalListAdapter : RecyclerView.Adapter<UnivTotalListAdapter.UnivTotalViewHolder>() {
-    private var univTotalList = ArrayList<PostResult>()
+        override fun areContentsTheSame(oldItem: PostResult, newItem: PostResult): Boolean {
+            return oldItem == newItem
+        }
+    }
+) {
 
     // 클릭 인터페이스 정의
-    interface MyItemClickListener{
+    interface MyItemClickListener {
+
         fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?)
         fun onCancelClick(post: PostResult, position: Int)
     }
@@ -23,34 +34,35 @@ class UnivTotalListAdapter : RecyclerView.Adapter<UnivTotalListAdapter.UnivTotal
     // 리스너 객체를 전달받는 함수랑 리스너 객체를 저장할 변수
     private lateinit var mItemClickListener: MyItemClickListener
 
-    fun setMyItemClickListener(itemClickListener: MyItemClickListener){
+    fun setMyItemClickListener(itemClickListener: MyItemClickListener) {
         mItemClickListener = itemClickListener
     }
 
-    override fun getItemCount(): Int = univTotalList.size
+    override fun getItemCount(): Int = currentList.size
 
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
         viewType: Int,
     ): UnivTotalListAdapter.UnivTotalViewHolder {
-        val binding : ItemPostBinding = DataBindingUtil.inflate(
+        val binding: ItemPostBinding = DataBindingUtil.inflate(
             LayoutInflater.from(viewGroup.context),
             R.layout.item_post,
             viewGroup,
-            false)
+            false
+        )
         return UnivTotalViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: UnivTotalViewHolder, position: Int) {
-        holder.bind(univTotalList[position], position)
+        holder.bind(getItem(position))
     }
 
-    inner class UnivTotalViewHolder(val binding : ItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(postResult: PostResult, position: Int) {
+    inner class UnivTotalViewHolder(val binding: ItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(postResult: PostResult) {
             binding.setVariable(BR.item, postResult)
 
             if (postResult.blinded) {
-
                 binding.likeimg.visibility = View.INVISIBLE
                 binding.commentimg.visibility = View.INVISIBLE
                 binding.photo.visibility = View.INVISIBLE
@@ -66,11 +78,15 @@ class UnivTotalListAdapter : RecyclerView.Adapter<UnivTotalListAdapter.UnivTotal
                 binding.cancelBlindTv.visibility = View.VISIBLE
 
                 binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(postResult, position, true, false, null)
+                    mItemClickListener.onItemClick(
+                        post = postResult,
+                        position = absoluteAdapterPosition,
+                        isBlind = true,
+                        isReported = false,
+                        reportText = null,
+                    )
                 }
-            }
-
-            else if (postResult.reported) {
+            } else if (postResult.reported) {
                 binding.likeimg.visibility = View.INVISIBLE
                 binding.commentimg.visibility = View.INVISIBLE
                 binding.photo.visibility = View.INVISIBLE
@@ -86,15 +102,19 @@ class UnivTotalListAdapter : RecyclerView.Adapter<UnivTotalListAdapter.UnivTotal
                 binding.blindedText.text = postResult.title
 
                 binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(postResult, position, false, true, postResult.title)
+                    mItemClickListener.onItemClick(
+                        post = postResult,
+                        position = absoluteAdapterPosition,
+                        isBlind = false,
+                        isReported = true,
+                        reportText = postResult.title
+                    )
                 }
-            }
-
-            else {
+            } else {
                 val fileattached = postResult.fileAttached
                 if (fileattached) {
                     binding.photo.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding.photo.visibility = View.GONE
                 }
 
@@ -112,12 +132,21 @@ class UnivTotalListAdapter : RecyclerView.Adapter<UnivTotalListAdapter.UnivTotal
                 binding.cancelBlindTv.visibility = View.GONE
 
                 binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(postResult, position, false, false, null)
+                    mItemClickListener.onItemClick(
+                        post = postResult,
+                        position = absoluteAdapterPosition,
+                        isBlind = false,
+                        isReported = false,
+                        reportText = null
+                    )
                 }
             }
 
             binding.cancelBlindTv.setOnClickListener {
-                mItemClickListener.onCancelClick(postResult, position)
+                mItemClickListener.onCancelClick(
+                    post = postResult,
+                    position = absoluteAdapterPosition
+                )
             }
 
             binding.executePendingBindings()
@@ -126,23 +155,14 @@ class UnivTotalListAdapter : RecyclerView.Adapter<UnivTotalListAdapter.UnivTotal
     }
 
     fun clearUnivTotalList() {
-        this.univTotalList.clear()
-        notifyDataSetChanged()
+        this.submitList(emptyList())
     }
 
     fun addUnivTotalList(postList: List<PostResult>, isFirst: Boolean) {
-        if (isFirst) {
-            this.univTotalList.clear()
+        if (!isFirst) {
+            submitList(this.currentList + postList)
+        } else {
+            submitList(postList)
         }
-        this.univTotalList.addAll(postList)
-        notifyDataSetChanged()
     }
-
-    fun updateItem(postItem: PostResult, position: Int) {
-//        this.univTotalList.removeAt(position)
-//        this.univTotalList.add(position,postItem)
-        this.univTotalList[position] = postItem
-        notifyItemChanged(position)
-    }
-
 }

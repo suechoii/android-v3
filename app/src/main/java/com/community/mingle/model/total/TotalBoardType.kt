@@ -16,9 +16,9 @@ sealed class TotalBoardType(
             tabPosition: Int
         ): TotalBoardType {
             return when (tabPosition) {
-                0 -> Free
-                1 -> Questions
-                2 -> MingleNews
+                Free.tabPosition -> Free
+                Questions.tabPosition -> Questions
+                MingleNews.tabPosition -> MingleNews
                 else -> throw IllegalStateException("Unexpected position $tabPosition")
             }
         }

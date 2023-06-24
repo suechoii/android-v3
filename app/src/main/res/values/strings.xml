@@ -41,5 +41,8 @@
     <string name="guideline_post_write">밍글에서 나누고 싶은 이야기가 있나요? \n  \u2022 운영규칙을 위반하는 게시글은 삭제 될 수 있습니다. \n  \u2022 다른 유저들에게 불쾌감을 줄 수 있는 내용은 신고로 제재\n     될 수 있습니다. \n  \u2022 더 상세한 내용은 <b>밍글 가이드라인</b>을 참고하세요.</string>
     <string name="notification">알림</string>
 
+    <string name="total_board_tab_name_free">자유</string>
+    <string name="total_board_tab_name_questions">질문</string>
+    <string name="total_board_tab_name_mingle_news">밍글소식</string>
 </resources>
 

@@ -1,6 +1,5 @@
 package com.community.mingle.views.ui.board
 
-import android.R.attr.data
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
@@ -8,7 +7,11 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.ContextThemeWrapper
+import android.view.Menu
+import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
@@ -35,7 +38,6 @@ import com.community.mingle.utils.KeyboardUtils.hideKeyboard
 import com.community.mingle.utils.KeyboardUtils.requestFocusAndShowKeyboard
 import com.community.mingle.utils.RecyclerViewUtils
 import com.community.mingle.utils.ResUtils
-import com.community.mingle.utils.ScrollViewUtils.smoothScrollToView
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.viewmodel.PostViewModel
 import com.community.mingle.views.adapter.CommentListAdapter
@@ -46,20 +48,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.net.URL
 import kotlin.properties.Delegates
 
-
 @AndroidEntryPoint
 class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2) {
 
     private val viewModel: PostViewModel by viewModels()
     private lateinit var keyboardVisibilityUtils: KeyboardUtils.KeyboardVisibilityUtils
-
     private lateinit var commentListAdapter: CommentListAdapter
     private lateinit var currentCommentList: Array<Comment2>
     private lateinit var postImageListAdapter: PostImageAdapter
-
     private var postId by Delegates.notNull<Int>()
     lateinit var boardType: String
     lateinit var boardName: String
+    private var tabName: String = ""
     private var isBlind: Boolean = false
     private var isReported: Boolean = false
     private var reportText: String? = null
@@ -105,28 +105,26 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         postPosition = intent.getIntExtra("position", 0)
         boardType = intent.getStringExtra("type").toString()
         boardName = intent.getStringExtra("board").toString()
+        tabName = intent.getStringExtra("tabName").toString()
         isBlind = intent.getBooleanExtra("isBlind", false)
         isReported = intent.getBooleanExtra("isReported", false)
         reportText = intent.getStringExtra("reportText")
-
-        Log.d("postId" + postId.toString(), "type" + boardType)
 
         if (boardType == "UnivPost")
             boardType = "잔디밭"
         else if (boardType == "TotalPost") {
             boardType = "광장"
         }
-        Log.d("isBlind", isBlind.toString())
+
         if (isBlind) {
             MingleApplication.pref.isBlind = true
             binding.unhiddenLayout.visibility = View.GONE
             binding.hiddenLayout.visibility = View.VISIBLE
-
             val toolbar2: Toolbar = binding.postDetailToolbar2
             toolbar2.overflowIcon = null
             setSupportActionBar(toolbar2)
             supportActionBar?.apply {
-                binding.boardNameTv2.text = boardType
+                binding.boardNameTv2.text = tabName
                 setDisplayShowTitleEnabled(false)
                 setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
                 setHomeAsUpIndicator(R.drawable.ic_back)
@@ -134,7 +132,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
 
             binding.cancelBlindTv.setOnClickListener {
                 viewModel.unblindPost(boardType, postId)
-
             }
         } else if (isReported) {
             binding.unhiddenLayout.visibility = View.GONE
@@ -142,12 +139,11 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
             binding.cancelBlindTv.visibility = View.VISIBLE
             binding.cancelBlindTv.setLinkTextColor(ContextCompat.getColor(this, R.color.gray_04))
             binding.hiddenText.text = reportText
-
             val toolbar2: Toolbar = binding.postDetailToolbar2
             toolbar2.overflowIcon = null
             setSupportActionBar(toolbar2)
             supportActionBar?.apply {
-                binding.boardNameTv2.text = boardType
+                binding.boardNameTv2.text = tabName
                 setDisplayShowTitleEnabled(false)
                 setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
                 setHomeAsUpIndicator(R.drawable.ic_back)
@@ -160,11 +156,9 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     private fun initViewModel() {
         binding.activity = this
         binding.viewModel = viewModel
-
         // 포스트 & 댓글 요청
         viewModel.getPost(boardType, postId, false)
         viewModel.getComments(boardType, postId, false)
-
         // 로딩 화면 가시화 여부
         viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -240,7 +234,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         binding.btnLikePost.setOnClickListener {
             viewModel.likePost(boardType, postId)
         }
-
         // 게시글 좋아요 처리
         viewModel.isLikedPost.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -252,7 +245,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 }
             }
         }
-
         // 게시글 좋아요 취소 처리
         viewModel.isUnlikePost.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -268,8 +260,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         binding.btnScrap.setOnClickListener {
             viewModel.scrapPost(boardType, postId)
         }
-
-
         // 게시글 스크랩 처리
         viewModel.isScrapPost.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -310,7 +300,7 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                     toolbar2.overflowIcon = null
                     setSupportActionBar(toolbar2)
                     supportActionBar?.apply {
-                        binding.boardNameTv2.text = boardType
+                        binding.boardNameTv2.text = tabName
                         setDisplayShowTitleEnabled(false)
                         setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
                         setHomeAsUpIndicator(R.drawable.ic_back)
@@ -336,7 +326,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 }
             }
         }
-
         // 게시글 스크랩 취소 처리
         viewModel.isDelScrapPost.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -346,7 +335,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 }
             }
         }
-
         // 익명 처리
         binding.btnAnonymous.setOnClickListener {
             if (isAnon) {
@@ -359,7 +347,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 binding.btnAnonTick.setColorFilter(ResUtils.getColor(R.color.orange_02))
             }
         }
-
         // 댓글 요청 처리
         viewModel.commentList.observe(binding.lifecycleOwner!!) {
             with(commentListAdapter) { addCommentList(it) }
@@ -377,7 +364,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
             isFirst = false
             binding.swipeRefresh.isRefreshing = false
         }
-
         // 새로 작성된 댓글 처리
         viewModel.newCommentList.observe(binding.lifecycleOwner!!) {
             with(commentListAdapter) { addCommentList(it.toMutableList()) }
@@ -394,14 +380,11 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
             } else {
                 binding.emptyFrame.visibility = View.VISIBLE
             }
-
-
             // 해당 댓글로 스크롤 이동
             binding.commentRv.post {
                 binding.commentRv.smoothScrollToPosition(commentListAdapter.itemCount - 1)
             }
         }
-
         // 새로 작성된 대댓글 처리
         viewModel.replyList.observe(binding.lifecycleOwner!!) {
             with(commentListAdapter) { addCommentList(it.toMutableList()) }
@@ -412,7 +395,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
 
             isFirst = false
             binding.swipeRefresh.isRefreshing = false
-
             // 해당 댓글로 스크롤 이동
             if (commentPosition >= commentListAdapter.itemCount - 1) {
                 binding.commentRv.post {
@@ -424,20 +406,17 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 }
             }
         }
-
         // 댓글 좋아요 처리
         viewModel.comment.observe(binding.lifecycleOwner!!) {
             currentCommentList[commentPosition] = it
             //            viewModel.update(currentCommentList)
             commentListAdapter.updateItem(it, commentPosition)
         }
-
         // 대댓글 좋아요 처리
         viewModel.reply.observe(binding.lifecycleOwner!!) {
             //             commentListAdapter.notifyDataSetChanged()
             commentListAdapter.updateItem(parentComment, commentPosition)
         }
-
         // 대댓글 작성 성공 처리
         viewModel.replySuccessEvent.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -445,14 +424,12 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 selectedCommentPosition = null
             }
         }
-
         // 대댓글 옵션 다이얼로그 처리
         viewModel.showReplyOptionDialog.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
                 showReplyOptionDialog(it, isMine = false)
             }
         }
-
         // 내 대댓글 옵션 다이얼로그 처리
         viewModel.showMyReplyOptionDialog.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -461,7 +438,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         }
 
         binding.sendIv.setOnClickListener {
-
             if (!binding.writeCommentEt.text.isNullOrBlank()) {
                 if (parentReplyId == null) {
                     isFirst = false
@@ -510,7 +486,7 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
 
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
-            binding.boardNameTv.text = boardType
+            binding.boardNameTv.text = tabName
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
             setHomeAsUpIndicator(R.drawable.ic_back)
@@ -544,7 +520,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     private fun initRV() {
         commentListAdapter = CommentListAdapter(boardType, this, menuInflater, viewModel)
         postImageListAdapter = PostImageAdapter()
-
         val divider = DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
         ResUtils.getDrawable(R.drawable.divider_comment)?.let { divider.setDrawable(it) }
 
@@ -593,8 +568,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 selectedCommentPosition = position
                 binding.writeCommentEt.isFocusableInTouchMode = true
                 binding.writeCommentEt.requestFocusAndShowKeyboard(this@PostActivity)
-
-
                 //commentPosition, replyPosition 연구해보기
                 // 선택한 댓글이 키보드 위로 보이도록
                 binding.commentRv.post {
@@ -624,7 +597,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
 
     // 댓글 개수 계산
     private fun calculateCommentNum(list: List<Comment2>) {
-
         // for문을 돌아 대댓글이 있는지 확인 후 replyCount 에 더해주기
         var replyCount = 0
 
@@ -641,15 +613,14 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     private fun showDeletePostDialog(message: String) {
         showYesNoDialog(this, message, onPositiveClick = { dialog, which ->
             viewModel.deletePost(boardType, postId)
-
             // 우선은 다 홈으로 돌아가는걸로 설정, 나중에 잔디밭이나 광장에서 클릭한 경우라면 어떻게 해야할지도 생각
             val intent = Intent(applicationContext, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(intent)
             finish()
         },
-            onNegativeClick = { dialog, which ->
-                null
+            onNegativeClick = { _, _ ->
+                //do Nothing
             })
     }
 
@@ -657,15 +628,14 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     private fun showBlindPostDialog(message: String) {
         showYesNoDialog(this, message, onPositiveClick = { dialog, which ->
             viewModel.blindPost(boardType, postId)
-
             // 우선은 다 홈으로 돌아가는걸로 설정, 나중에 잔디밭이나 광장에서 클릭한 경우라면 어떻게 해야할지도 생각
             //            val intent = Intent(applicationContext, MainActivity::class.java)
             //            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             //            startActivity(intent)
             //            finish()
         },
-            onNegativeClick = { dialog, which ->
-                null
+            onNegativeClick = { _, _ ->
+                //                do nothing
             })
     }
 
@@ -684,7 +654,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 R.id.report_one -> {
                     showYesNoDialog(this, "게시글을 신고하시겠습니까?", onPositiveClick = { dialog, which ->
                         viewModel.reportPost(boardType, postId, 1)
-
                     },
                         onNegativeClick = { dialog, which ->
                             null
@@ -749,7 +718,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     override fun dispatchTouchEvent(motionEvent: MotionEvent?): Boolean {
         val focusView = binding.commentBox
         if (focusView != null) {
-
             val rect = Rect()
             focusView.getGlobalVisibleRect(rect)
             val x = motionEvent!!.x.toInt()
@@ -830,7 +798,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     private fun showCommentOptionDialog(comment: Comment2, isMine: Boolean) {
         val cw = ContextThemeWrapper(this, R.style.AlertDialogTheme)
         val builder = AlertDialog.Builder(cw)
-
         val array = if (isMine) arrayMine else arrayNotMine
 
         builder.setItems(array) { _, which ->
@@ -858,7 +825,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 }
 
             } catch (e: IllegalArgumentException) {
-
             }
         }
         val alertDialog = builder.create()
@@ -867,10 +833,8 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
 
     // 대댓글 옵션 다이얼로그
     private fun showReplyOptionDialog(reply: Reply, isMine: Boolean) {
-
         val cw = ContextThemeWrapper(this, R.style.AlertDialogTheme)
         val builder = AlertDialog.Builder(cw)
-
         val array = if (isMine) arrayMine else arrayNotMine
 
         builder.setItems(array) { _, which ->
@@ -900,7 +864,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 }
 
             } catch (e: IllegalArgumentException) {
-
             }
         }
 
@@ -908,10 +871,10 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     }
 
     companion object {
+
         val arrayMine = arrayOf(
             DELETE_COMMENT
         )
-
         val arrayNotMine = arrayOf(
             REPORT_COMMENT
         )

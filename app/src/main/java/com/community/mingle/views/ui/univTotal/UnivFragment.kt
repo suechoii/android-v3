@@ -10,8 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentUnivBinding
-import com.community.mingle.service.models.PostResult
-import com.community.mingle.utils.Constants.toast
+import com.community.mingle.model.univ.UnivBoardType
 import com.community.mingle.utils.base.BaseFragment
 import com.community.mingle.views.adapter.UnivVPAdapter
 import com.community.mingle.views.ui.board.PostWriteActivity
@@ -23,15 +22,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 @AndroidEntryPoint
-class UnivFragment() : BaseFragment<FragmentUnivBinding>(R.layout.fragment_univ) {
+class UnivFragment : BaseFragment<FragmentUnivBinding>(R.layout.fragment_univ) {
 
-    private val information = arrayListOf("자유", "질문", "진로", "학생회", "인기")
     private lateinit var tabLayout: TabLayout
 
     private lateinit var callback: OnBackPressedCallback
-    private var backPressedTime: Long = 0
 
     private lateinit var univVPAdapter: UnivVPAdapter
 
@@ -95,7 +91,7 @@ class UnivFragment() : BaseFragment<FragmentUnivBinding>(R.layout.fragment_univ)
         tabLayout = binding.tabBoardname
 
         TabLayoutMediator(binding.tabBoardname, binding.boardContentVp) { tab, position ->
-            tab.text = information[position]
+            tab.text = resources.getString(UnivBoardType.parseFromTabPosition(position).tabNameStringRes)
         }.attach()
 
         if (index != null) {

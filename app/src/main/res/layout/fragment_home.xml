@@ -426,6 +426,76 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/now_total" />
+
+                        <LinearLayout
+                            android:id="@+id/hot_posts_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="32dp"
+                            android:padding="5dp"
+                            app:layout_constraintStart_toStartOf="@id/now_univ"
+                            app:layout_constraintTop_toBottomOf="@id/now_univ">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="top"
+                                android:text="@string/hot_posts"
+                                android:textAppearance="@style/home_title" />
+
+                            <ImageView
+                                android:id="@+id/hot_posts_navigate_iv"
+                                android:layout_width="6dp"
+                                android:layout_height="10dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="9dp"
+                                android:background="@drawable/ic_vector_3" />
+                        </LinearLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/hot_posts_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="16dp"
+                            android:layout_marginTop="12dp"
+                            android:background="@drawable/home_textbox"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/hot_posts_title">
+
+                            <View
+                                android:id="@+id/top_spacing"
+                                android:layout_width="match_parent"
+                                android:layout_height="20dp"
+                                android:maxHeight="20dp"
+                                android:minHeight="16dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/hot_posts_rv"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_marginEnd="12dp"
+                                android:orientation="vertical"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/top_spacing"
+                                tools:listitem="@layout/item_home" />
+
+                            <View
+                                android:id="@+id/hot_posts_bottom_spacing"
+                                android:layout_width="match_parent"
+                                android:layout_height="20dp"
+                                android:maxHeight="20dp"
+                                android:minHeight="16dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/hot_posts_rv" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.core.widget.NestedScrollView>
 

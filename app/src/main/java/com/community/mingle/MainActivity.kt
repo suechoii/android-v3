@@ -37,46 +37,12 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("type",boardType)
             startActivity(intent)
         }
-//            // possible launched from notification
-//            // check if desired notification data present in extras then its
-//            // confirmed that launched from notification
-//
-//        }
-        // not launched from notification
 
 
-        var view2 = BottomDialogTermsBinding.inflate(layoutInflater)
+        val view2 = BottomDialogTermsBinding.inflate(layoutInflater)
         val bool = intent.getBooleanExtra("isLogin",false)
 
         mBinding = ActivityMainBinding.inflate(layoutInflater)
-
-
-//        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                boardType = intent.getStringExtra("boardType")
-//                postId = intent.getIntExtra("postId",-1)
-//                Log.d("boardType"+boardType.toString(), "postId "+postId.toString())
-//
-//                Log.d("token",task.result)
-//                if (boardType == "UnivPost") {
-//                    val intent = Intent(this@MainActivity, PostDetailActivity::class.java)
-//                    intent.putExtra("type","잔디밭")
-//                    intent.putExtra("board","알림")
-//                    intent.putExtra("postId", postId)
-//                    startActivity(intent)
-//
-//                }
-//                else if (boardType == "TotalPost") {
-//                    val intent = Intent(this@MainActivity, PostDetailActivity::class.java)
-//                    intent.putExtra("type","광장")
-//                    intent.putExtra("board","알림")
-//                    intent.putExtra("postId", postId)
-//                    startActivity(intent)
-//                    boardType = null
-//                    postId = -1
-//                }
-//            }
-//        }
 
         setContentView(mBinding.root)
 

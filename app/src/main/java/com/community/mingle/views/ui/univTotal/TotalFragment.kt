@@ -7,10 +7,9 @@ import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
-import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentTotalBinding
-import com.community.mingle.utils.Constants.toast
+import com.community.mingle.model.total.TotalBoardType
 import com.community.mingle.utils.base.BaseFragment
 import com.community.mingle.views.adapter.TotalVPAdapter
 import com.community.mingle.views.ui.board.PostWriteActivity
@@ -23,25 +22,18 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TotalFragment() : BaseFragment<FragmentTotalBinding>(R.layout.fragment_total) {
+class TotalFragment : BaseFragment<FragmentTotalBinding>(R.layout.fragment_total) {
 
-    private val information = arrayListOf("자유", "질문", "진로", "밍글소식", "인기")
     private lateinit var tabLayout: TabLayout
-
     private lateinit var callback: OnBackPressedCallback
-    private var backPressedTime: Long = 0
-
     private lateinit var totalVPAdapter: TotalVPAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-
                 val bottom = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
-
                 bottom.selectedItemId = R.id.homeFragment
-
             }
         }
 
@@ -69,25 +61,20 @@ class TotalFragment() : BaseFragment<FragmentTotalBinding>(R.layout.fragment_tot
     }
 
     private fun initVP() {
-
         totalVPAdapter = TotalVPAdapter(this)
 
         binding.boardContentVp.adapter = totalVPAdapter
         TabLayoutMediator(binding.tabBoardname, binding.boardContentVp) { tab, position ->
-            tab.text = information[position]
+            val type = TotalBoardType.parseFromTabPosition(position)
+            tab.text = resources.getString(type.tabNameStringRes)
         }.attach()
 
         tabLayout = binding.tabBoardname
+        val index = arguments?.getInt("index") ?: return
 
-        val index= arguments?.getInt("index")
-
-        Log.d("index",index.toString())
-
-        if (index != null) {
-            lifecycleScope.launch {
-                delay(100)
-                binding.boardContentVp.currentItem = index
-            }
+        lifecycleScope.launch {
+            delay(100)
+            binding.boardContentVp.currentItem = index
         }
     }
 }

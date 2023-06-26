@@ -42,5 +42,12 @@
     <string name="notification">알림</string>
     <string name="hot_posts">불타오르는 게시글</string>
 
+    <string name="total_board_tab_name_free">자유</string>
+    <string name="total_board_tab_name_questions">질문</string>
+    <string name="total_board_tab_name_mingle_news">밍글소식</string>
+
+    <string name="univ_board_tab_name_free">자유</string>
+    <string name="univ_board_tab_name_questions">질문</string>
+    <string name="univ_board_tab_name_council">학생회</string>
 </resources>
 

@@ -140,6 +140,7 @@ class UnivCouncilFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.
                 intent.putExtra("postId", post.postId)
                 intent.putExtra("type","잔디밭")
                 intent.putExtra("board","학생회")
+                intent.putExtra("tabName", "학생회게시판")
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("reportText",reportText)
 

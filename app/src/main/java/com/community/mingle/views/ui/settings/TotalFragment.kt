@@ -48,7 +48,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
             when (option) {
                 MY_POST -> {
                     isFirst = true
-                    viewModel.getMyTotalPostList(10000000, true)
+                    viewModel.getMyTotalPostList(10000000)
                 }
                 MY_COMMENT_POST -> {
                     isFirst = true
@@ -56,7 +56,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
                 }
                 MY_SCRAP_POST -> {
                     isFirst = true
-                    viewModel.getMyTotalPostList(10000000,true)
+                    viewModel.getMyTotalPostList(10000000)
                 }
                 MY_LIKE_POST -> {
                     isFirst = true
@@ -71,7 +71,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
 
         when (option) {
             MY_POST -> {
-                viewModel.getMyTotalPostList(10000000, false)
+                viewModel.getMyTotalPostList(10000000)
             }
             MY_COMMENT_POST -> {
                 viewModel.getMyTotalCommentPostList(10000000,false)
@@ -134,7 +134,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
                     when (option) {
                         MY_POST -> {
                             isFirst = true
-                            viewModel.getMyTotalPostList(10000000, true)
+                            viewModel.getMyTotalPostList(10000000)
                         }
                         MY_COMMENT_POST -> {
                             isFirst = true
@@ -187,7 +187,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
             isFirst = true
             when (option) {
                 MY_POST -> {
-                    viewModel.getMyTotalPostList(10000000, true)
+                    viewModel.getMyTotalPostList(10000000)
                 }
                 MY_COMMENT_POST -> {
                     viewModel.getMyTotalCommentPostList(10000000,true)

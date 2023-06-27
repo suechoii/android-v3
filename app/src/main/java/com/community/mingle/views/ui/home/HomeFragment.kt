@@ -40,39 +40,31 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
-    private var isRunning = true
 
+    private var isRunning = true
     private val homeViewModel: HomeViewModel by viewModels()
     private val postViewModel: PostViewModel by viewModels()
     private lateinit var callback: OnBackPressedCallback
     private var backPressedTime: Long = 0
-
     private lateinit var homeUnivRecentListAdapter: HomeListAdapter
     private lateinit var homeTotalRecentListAdapter: HomeListAdapter
-
     private lateinit var currentHomeUnivRecentList: List<HomeResult>
     private lateinit var currentHomeTotalRecentList: List<HomeResult>
-
     private lateinit var viewPagerAdapter: BannerVPAdapter
-
     private var unBlindPosition: Int = 0
     private var clickedPosition: Int = 0
-
     private var bannerList = arrayListOf<Banner>()
-
     private lateinit var tempAdapter: HomeListAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-
                 // 백 버튼 2초 내 다시 클릭 시 앱 종료
                 if (System.currentTimeMillis() - backPressedTime < 2000) {
                     activity!!.finish()
                     return
                 }
-
                 // 백 버튼 최초 클릭 시
                 requireContext().toast("뒤로가기 버튼을 한 번 더 누르면 앱이 종료됩니다.")
                 backPressedTime = System.currentTimeMillis()
@@ -163,7 +155,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             bannerList.addAll(it)
             viewPagerAdapter.submitlist(bannerList)
         }
-
         /* 홈 화면 배너 */
         binding.sliderVp.apply {
             Log.d("bannerList", bannerList.toString())
@@ -182,18 +173,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
             viewPagerAdapter.setMyItemClickListener(object :
                 BannerVPAdapter.MyItemClickListener {
-
                 override fun onItemClick(banner: Banner) {
-
                     if (banner.link != null) {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(banner.link))
                         startActivity(intent)
                     }
                 }
             })
-
         }
-
         //자동 스크롤은 4초 당 한 번 ’넘어가도록
         lifecycleScope.launch {
             whenResumed {
@@ -216,7 +203,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun initRV() {
         homeUnivRecentListAdapter = HomeListAdapter()
         homeTotalRecentListAdapter = HomeListAdapter()
-
         /* 지금 잔디밭 화젯거리 */
         binding.nowUnivRv.apply {
             layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
@@ -224,19 +210,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             adapter = homeUnivRecentListAdapter
             hasFixedSize()
         }
-
+        // TODO: Home에서 포스팅으로 넘어갈때 확인할방법
         homeUnivRecentListAdapter.setMyItemClickListener(object :
             HomeListAdapter.MyItemClickListener {
-
             override fun onItemClick(post: HomeResult, pos: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
                 clickedPosition = pos
                 tempAdapter = homeUnivRecentListAdapter
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
-                if (post.nickname == "HKUKSA")
+                if (post.nickname == "HKUKSA") {
                     intent.putExtra("board", "학생회")
-                if (post.nickname == "팀 밍글")
+                }
+                else if (post.nickname == "팀 밍글") {
                     intent.putExtra("board", "밍글소식")
+                }
+
                 intent.putExtra("type", "잔디밭")
                 intent.putExtra("isBlind", isBlind)
                 intent.putExtra("isReported", isReported)
@@ -249,7 +237,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 postViewModel.unblindPost("잔디밭", post.postId)
             }
         })
-
         /* 지금 광장에서는 */
         binding.nowTotalRv.apply {
             layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
@@ -260,7 +247,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         homeTotalRecentListAdapter.setMyItemClickListener(object :
             HomeListAdapter.MyItemClickListener {
-
             override fun onItemClick(post: HomeResult, pos: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
                 clickedPosition = pos
                 tempAdapter = homeTotalRecentListAdapter
@@ -282,20 +268,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 postViewModel.unblindPost("잔디밭", post.postId)
             }
         })
-
         val view = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
-
-
         /* 지금 잔디밭에서는 바로가기 연결 */
         binding.nowUnivTitle.setOnClickListener {
             view.findViewById<BottomNavigationItemView>(R.id.univFragment).performClick()
         }
-
         /* 지금 광장에서는 바로가기 연결 */
         binding.nowTotalTitle.setOnClickListener {
             view.findViewById<BottomNavigationItemView>(R.id.totalFragment).performClick()
         }
-
         /* 학생회 바로가기 */
         binding.quickclickStudentUnion.setOnClickListener {
             view.findViewById<BottomNavigationItemView>(R.id.univFragment).performClick()
@@ -306,7 +287,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     }
                 }).commitAllowingStateLoss()
         }
-
         /* 밍글소식 바로가기 */
         binding.quickclickMingleNews.setOnClickListener {
             view.findViewById<BottomNavigationItemView>(R.id.totalFragment).performClick()

@@ -166,7 +166,7 @@ constructor(
         }
     }
 
-    fun getMyTotalPostList(postId: Int, isRefreshing: Boolean) {
+    fun getMyTotalPostList(postId: Int) {
 
         _loading.postValue(Event(true))
 

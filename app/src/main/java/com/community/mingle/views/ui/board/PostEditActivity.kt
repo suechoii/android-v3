@@ -28,6 +28,7 @@ class PostEditActivity: BaseActivity<ActivityPostRewriteBinding>(R.layout.activi
     private var postId by Delegates.notNull<Int>()
     private lateinit var title: String
     private lateinit var content: String
+    private lateinit var tabName :String
 
     private var postTitleFilled: Boolean = true
     private var postContentFilled: Boolean = true
@@ -46,6 +47,7 @@ class PostEditActivity: BaseActivity<ActivityPostRewriteBinding>(R.layout.activi
         boardType = intent.getStringExtra("type").toString()
         title = intent.getStringExtra("title").toString()
         content = intent.getStringExtra("content").toString()
+        tabName = intent.getStringExtra("tabName").toString()
 
         Log.d("title",title)
         Log.d("content",content)
@@ -64,7 +66,7 @@ class PostEditActivity: BaseActivity<ActivityPostRewriteBinding>(R.layout.activi
             override fun onTextChanged(s: CharSequence, start: Int,
                                        count: Int, after: Int) {
                 // 게시글 제목이 한글자 이상일때
-                if(s.toString().trim().length > 0 ){
+                if(s.toString().trim().isNotEmpty()){
                     postTitleFilled = true
                     // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530
                     if (postContentFilled) {
@@ -132,6 +134,7 @@ class PostEditActivity: BaseActivity<ActivityPostRewriteBinding>(R.layout.activi
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 intent.putExtra("postId", it)
                 intent.putExtra("type", boardType)
+                intent.putExtra("tabName", tabName)
                 startActivity(intent)
                 loadingDialog.dismiss()
 

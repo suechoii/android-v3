@@ -141,6 +141,7 @@ class UnivQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layou
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)
+                intent.putExtra("tabName", "질문게시판")
 
                 startActivity(intent)
             }

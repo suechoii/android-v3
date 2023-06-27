@@ -139,6 +139,7 @@ class TotalQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layo
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
                 intent.putExtra("type","광장")
+                intent.putExtra("tabName", "질문게시판")
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)

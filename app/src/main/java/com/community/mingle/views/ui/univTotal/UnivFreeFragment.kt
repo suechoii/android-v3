@@ -146,6 +146,7 @@ class UnivFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
                 intent.putExtra("type","잔디밭")
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
+                intent.putExtra("tabName", "자유게시판")
                 intent.putExtra("reportText",reportText)
 
                 startActivity(intent)

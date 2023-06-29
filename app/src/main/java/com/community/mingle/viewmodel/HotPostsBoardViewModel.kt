@@ -2,8 +2,9 @@ package com.community.mingle.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.community.mingle.model.HotPost
+import com.community.mingle.model.post.HomeHotPost
 import com.community.mingle.model.post.PostType
+import com.community.mingle.model.post.TotalBoardType
 import com.community.mingle.service.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BurningPostViewModel @Inject constructor(
+class HotPostsBoardViewModel @Inject constructor(
     private val postRepository: PostRepository,
 ) : ViewModel() {
 
@@ -24,7 +25,7 @@ class BurningPostViewModel @Inject constructor(
     val loading = _loading.asStateFlow()
 
     //best post list
-    private val _bestPostList = MutableStateFlow<List<HotPost>>(emptyList())
+    private val _bestPostList = MutableStateFlow<List<HomeHotPost>>(emptyList())
     private val lastUnivBestPostId = _bestPostList.map { list -> list.lastOrNull { it.postType is PostType.Univ }?.postId }
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
     private val lastTotalBestPostId = _bestPostList.map { list -> list.lastOrNull { it.postType is PostType.Total }?.postId }
@@ -32,14 +33,22 @@ class BurningPostViewModel @Inject constructor(
     val bestPostLIst = _bestPostList.asStateFlow()
 
     init {
-        loadAllUniteBestPost()
+        loadAllUniteBestPost(lastTotalPostId = 0, lastUnivPostId = 0)
+
     }
 
-    private fun loadAllUniteBestPost() {
+    fun refreshUniteBestPost() {
+        loadAllUniteBestPost(lastTotalPostId = 0, lastUnivPostId = 0)
+    }
+
+    private fun loadAllUniteBestPost(
+        lastTotalPostId: Int,
+        lastUnivPostId: Int,
+    ) {
         viewModelScope.launch {
             postRepository.getUniteBestPostList(
-                lastTotalPost = lastTotalBestPostId.value ?: 0,
-                lastUnivPost = lastUnivBestPostId.value ?: 0,
+                lastTotalPost = lastTotalPostId,
+                lastUnivPost = lastUnivPostId,
             ).catch {
                 _loading.value = false
                 //show error page?

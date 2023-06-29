@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.community.mingle.model.HotPost
+import com.community.mingle.model.post.HomeHotPost
 import com.community.mingle.service.models.Banner
 import com.community.mingle.service.models.HomeResult
 import com.community.mingle.service.models.NotiData
@@ -35,7 +35,7 @@ constructor(
     val homeUnivRecentList: LiveData<List<HomeResult>> get() = _homeUnivRecentList
     private val _homeTotalRecentList = MutableLiveData<List<HomeResult>>()
     val homeTotalRecentList: LiveData<List<HomeResult>> get() = _homeTotalRecentList
-    private val _homeHotPostList = MutableStateFlow<List<HotPost>>(emptyList())
+    private val _homeHotPostList = MutableStateFlow<List<HomeHotPost>>(emptyList())
     val homeHotPostList = _homeHotPostList.asStateFlow()
     private val _getNotificationSuccess = MutableLiveData<Event<Boolean>>()
     val getNotificationSuccess: LiveData<Event<Boolean>> = _getNotificationSuccess
@@ -48,6 +48,7 @@ constructor(
 
     init {
         getHomeList()
+        loadBestPostList()
     }
 
     fun getHomeList() {

@@ -1,7 +1,6 @@
 package com.community.mingle.service.models
 
-import com.community.mingle.model.HotPost
-import com.community.mingle.model.post.PostType
+import com.community.mingle.model.post.HomeHotPost
 import com.google.gson.annotations.SerializedName
 
 data class HomeListResponse (
@@ -23,7 +22,7 @@ data class HomeResult(
     @SerializedName("fileAttached") val fileAttached: Boolean,
     @SerializedName("reported") val reported: Boolean
 ) {
-    fun toHotPost(): HotPost = HotPost(
+    fun toHotPost(): HomeHotPost = HomeHotPost(
         postId = postId,
         title = title,
         contents = contents,

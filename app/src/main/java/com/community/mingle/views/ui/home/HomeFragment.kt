@@ -17,7 +17,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentHomeBinding
-import com.community.mingle.model.HotPost
+import com.community.mingle.model.post.HomeHotPost
 import com.community.mingle.service.models.Banner
 import com.community.mingle.service.models.HomeResult
 import com.community.mingle.utils.Constants.toast
@@ -347,13 +347,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         startActivity(intent)
     }
 
-    private fun onHomeHotPostClick(post: HotPost, position: Int) {
+    private fun onHomeHotPostClick(post: HomeHotPost, position: Int) {
         clickedPosition = position
         tempAdapter = homeUnivRecentListAdapter
         startPostActivity(
             postId = post.postId,
             authorNickName = post.nickname,
-            boardTypeName = "잔디밭",
+            boardTypeName = "잔디밭", // TODO: 잔디밭, 광장 구분
             isBlind = post.blinded,
             isReported = post.reported,
             reportText = post.title,

@@ -1,7 +1,7 @@
 package com.community.mingle.service.repository
 
 import com.community.mingle.api.HomeService
-import com.community.mingle.model.HotPost
+import com.community.mingle.model.post.HomeHotPost
 import com.community.mingle.service.models.Notifications
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +27,7 @@ constructor(private val homeService: HomeService) {
     suspend fun readNotification(notifications: Notifications) =
         homeService.readNotification(notifications)
 
-    suspend fun getUniteBestList(): Flow<List<HotPost>> = flow {
+    suspend fun getUniteBestList(): Flow<List<HomeHotPost>> = flow {
         val response = homeService.getUniteBestList()
         if(response.code == 1000) {
             emit(response.result.map { it.toHotPost() })

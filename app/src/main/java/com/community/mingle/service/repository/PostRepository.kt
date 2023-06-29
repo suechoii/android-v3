@@ -1,7 +1,7 @@
 package com.community.mingle.service.repository
 
 import com.community.mingle.api.PostService
-import com.community.mingle.model.HotPost
+import com.community.mingle.model.post.HomeHotPost
 import com.community.mingle.service.models.CommentSend
 import com.community.mingle.service.models.Edit
 import com.community.mingle.service.models.ReplySend
@@ -137,7 +137,7 @@ constructor(private val postService: PostService) {
     suspend fun getUniteBestPostList(
         lastTotalPost: Int,
         lastUnivPost: Int,
-    ): Flow<List<HotPost>> = flow {
+    ): Flow<List<HomeHotPost>> = flow {
         val response = postService.getUniteBest(
             totalPost = lastTotalPost,
             univPost = lastUnivPost,

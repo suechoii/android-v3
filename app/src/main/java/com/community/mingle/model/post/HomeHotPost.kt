@@ -1,8 +1,8 @@
-package com.community.mingle.model
+package com.community.mingle.model.post
 
 import com.community.mingle.model.post.PostType
 
-data class HotPost(
+data class HomeHotPost(
     val postId: Int,
     val postType: PostType = PostType.Total, // TODO: change by type
     val title: String,

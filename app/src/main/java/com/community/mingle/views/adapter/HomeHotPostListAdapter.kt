@@ -7,18 +7,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.community.mingle.databinding.ItemHomeHotPostBinding
-import com.community.mingle.model.HotPost
+import com.community.mingle.model.post.HomeHotPost
 
 class HomeHotPostListAdapter(
-    private val onItemClick: (HotPost, Int) -> Unit,
-    private val onCancelBlindClick: (HotPost, Int) -> Unit,
-) : ListAdapter<HotPost, HomeHotPostListAdapter.HomeHotPostViewHolder>(
-    object : DiffUtil.ItemCallback<HotPost>() {
-        override fun areItemsTheSame(oldItem: HotPost, newItem: HotPost): Boolean {
+    private val onItemClick: (HomeHotPost, Int) -> Unit,
+    private val onCancelBlindClick: (HomeHotPost, Int) -> Unit,
+) : ListAdapter<HomeHotPost, HomeHotPostListAdapter.HomeHotPostViewHolder>(
+    object : DiffUtil.ItemCallback<HomeHotPost>() {
+        override fun areItemsTheSame(oldItem: HomeHotPost, newItem: HomeHotPost): Boolean {
             return oldItem.postId == newItem.postId
         }
 
-        override fun areContentsTheSame(oldItem: HotPost, newItem: HotPost): Boolean {
+        override fun areContentsTheSame(oldItem: HomeHotPost, newItem: HomeHotPost): Boolean {
             return oldItem == newItem
         }
     }
@@ -39,11 +39,11 @@ class HomeHotPostListAdapter(
 
     class HomeHotPostViewHolder(
         private val binding: ItemHomeHotPostBinding,
-        private val onItemClick: (HotPost, Int) -> Unit,
-        private val onCancelBlindClick: (HotPost, Int) -> Unit,
+        private val onItemClick: (HomeHotPost, Int) -> Unit,
+        private val onCancelBlindClick: (HomeHotPost, Int) -> Unit,
     ) : ViewHolder(binding.root) {
 
-        fun bind(item: HotPost) {
+        fun bind(item: HomeHotPost) {
             binding.item = item
 
             if (item.blinded) {
@@ -57,7 +57,7 @@ class HomeHotPostListAdapter(
             binding.executePendingBindings()
         }
 
-        private fun blindedPost(item: HotPost) {
+        private fun blindedPost(item: HomeHotPost) {
             binding.likeimg.visibility = View.INVISIBLE
             binding.commentimg.visibility = View.INVISIBLE
             binding.photo.visibility = View.INVISIBLE
@@ -81,7 +81,7 @@ class HomeHotPostListAdapter(
             }
         }
 
-        private fun reportedPost(item: HotPost) {
+        private fun reportedPost(item: HomeHotPost) {
             binding.likeimg.visibility = View.INVISIBLE
             binding.commentimg.visibility = View.INVISIBLE
             binding.photo.visibility = View.INVISIBLE
@@ -101,7 +101,7 @@ class HomeHotPostListAdapter(
             }
         }
 
-        private fun normalPost(item: HotPost) {
+        private fun normalPost(item: HomeHotPost) {
             val fileAttached = item.fileAttached
             if (fileAttached) {
                 binding.photo.visibility = View.VISIBLE

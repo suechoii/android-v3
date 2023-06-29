@@ -1,4 +1,4 @@
-package com.community.mingle.model.univ
+package com.community.mingle.model.post
 
 import androidx.annotation.StringRes
 

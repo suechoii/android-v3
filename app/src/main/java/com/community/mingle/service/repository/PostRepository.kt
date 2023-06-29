@@ -1,12 +1,17 @@
 package com.community.mingle.service.repository
 
 import com.community.mingle.api.PostService
-import com.community.mingle.service.models.*
+import com.community.mingle.model.HotPost
+import com.community.mingle.service.models.CommentSend
+import com.community.mingle.service.models.Edit
+import com.community.mingle.service.models.ReplySend
+import com.community.mingle.service.models.ReportPost
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Response
-import retrofit2.http.*
 import javax.inject.Inject
 
 /* 게시물 상세 Repository */
@@ -108,13 +113,40 @@ constructor(private val postService: PostService) {
     suspend fun commentUnlikeTotal(commentIdx: Int) =
         postService.commentUnlikeTotal(commentIdx)
 
-    suspend fun writeUnivPost(categoryId: Int, title: RequestBody, content: RequestBody, anonymous: Boolean, multipartFile: ArrayList<MultipartBody.Part>?) =
+    suspend fun writeUnivPost(
+        categoryId: Int,
+        title: RequestBody,
+        content: RequestBody,
+        anonymous: Boolean,
+        multipartFile: ArrayList<MultipartBody.Part>?,
+    ) =
         postService.writeUnivPost(categoryId, title, content, anonymous, multipartFile)
 
-    suspend fun writeTotalPost(categoryId: Int, title: RequestBody, content: RequestBody, anonymous: Boolean, multipartFile: ArrayList<MultipartBody.Part>?) =
+    suspend fun writeTotalPost(
+        categoryId: Int,
+        title: RequestBody,
+        content: RequestBody,
+        anonymous: Boolean,
+        multipartFile: ArrayList<MultipartBody.Part>?,
+    ) =
         postService.writeTotalPost(categoryId, title, content, anonymous, multipartFile)
 
     suspend fun getPostCategory() =
         postService.getPostCategory()
+
+    suspend fun getUniteBestPostList(
+        lastTotalPost: Int,
+        lastUnivPost: Int,
+    ): Flow<List<HotPost>> = flow {
+        val response = postService.getUniteBest(
+            totalPost = lastTotalPost,
+            univPost = lastUnivPost,
+        )
+        if (response.code == 1000) {
+            emit(response.result.map { it.toHotPost() })
+        } else {
+            throw IllegalStateException(response.message)
+        }
+    }.flowOn(Dispatchers.IO)
 
 }

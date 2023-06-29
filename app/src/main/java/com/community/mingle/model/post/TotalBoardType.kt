@@ -1,4 +1,4 @@
-package com.community.mingle.model.total
+package com.community.mingle.model.post
 
 import androidx.annotation.StringRes
 import com.community.mingle.R

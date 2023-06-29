@@ -2,7 +2,7 @@ package com.community.mingle.views.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.community.mingle.model.total.TotalBoardType
+import com.community.mingle.model.post.TotalBoardType
 import com.community.mingle.views.ui.univTotal.*
 
 class TotalVPAdapter(fragment: TotalFragment) : FragmentStateAdapter(fragment) {

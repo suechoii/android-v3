@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.community.mingle.model.HotPost
 import com.community.mingle.service.models.Banner
 import com.community.mingle.service.models.HomeResult
 import com.community.mingle.service.models.NotiData
@@ -13,6 +14,9 @@ import com.community.mingle.service.repository.HomeRepository
 import com.community.mingle.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -25,25 +29,20 @@ constructor(
 
     private val _loading = MutableLiveData<Event<Boolean>>()
     val loading: LiveData<Event<Boolean>> = _loading
-
     private val _banner = MutableLiveData<List<Banner>>()
     val banner: LiveData<List<Banner>> get() = _banner
-
     private val _homeUnivRecentList = MutableLiveData<List<HomeResult>>()
     val homeUnivRecentList: LiveData<List<HomeResult>> get() = _homeUnivRecentList
-
     private val _homeTotalRecentList = MutableLiveData<List<HomeResult>>()
     val homeTotalRecentList: LiveData<List<HomeResult>> get() = _homeTotalRecentList
-
+    private val _homeHotPostList = MutableStateFlow<List<HotPost>>(emptyList())
+    val homeHotPostList = _homeHotPostList.asStateFlow()
     private val _getNotificationSuccess = MutableLiveData<Event<Boolean>>()
     val getNotificationSuccess: LiveData<Event<Boolean>> = _getNotificationSuccess
-
     private val _readNotificationSuccess = MutableLiveData<Event<Boolean>>()
     val readNotificationSuccess: LiveData<Event<Boolean>> = _readNotificationSuccess
-
     private val _notiList = MutableLiveData<List<NotiData>>()
     val notiList: LiveData<List<NotiData>> get() = _notiList
-
     private val _refreshExpire = MutableLiveData<Boolean>()
     val refreshExpire: LiveData<Boolean> = _refreshExpire
 
@@ -52,7 +51,6 @@ constructor(
     }
 
     fun getHomeList() {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -62,17 +60,11 @@ constructor(
                     _banner.postValue(response.body()!!.result)
                     getUnivRecent()
                 }
-                //                else if (response.code() == 403) {
-                //                    MingleApplication.pref.accessToken = null
-                //                    refresh()
-                //                    getUnivRecent()
-                //                }
             }
         }
     }
 
-
-    fun getUnivRecent() {
+    private fun getUnivRecent() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getUnivRecentPost().let { response ->
                 if (response.isSuccessful) {
@@ -84,9 +76,6 @@ constructor(
                         }
                     }
                 } else {
-                    //                    if (response.code() == 403) {
-                    //                        refresh()
-                    //                    }
                     Log.d("tag_", "getUnivRecentList Error: ${response.code()}")
                 }
                 _loading.postValue(Event(false))
@@ -112,7 +101,6 @@ constructor(
         }
     }
 
-
     fun getNotification() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getNotification().let { response ->
@@ -127,6 +115,19 @@ constructor(
                     Log.d("tag_fail", "getNoti Error: ${response.code()}")
                 }
             }
+        }
+    }
+
+
+    private fun loadBestPostList() {
+        viewModelScope.launch {
+            repository.getUniteBestList()
+                .catch {
+                    _homeHotPostList.value = emptyList()
+                }
+                .collect { list ->
+                    _homeHotPostList.value = list
+                }
         }
     }
 
@@ -145,25 +146,4 @@ constructor(
             }
         }
     }
-
-    //    fun refresh () {
-    //        runBlocking {
-    //            try {
-    //                val refreshToken = MingleApplication.pref.refreshToken.toString()
-    //                val email = MingleApplication.pref.email.toString()
-    //                val response = authRepository.refresh(Email(email),refreshToken)
-    //                if (response.isSuccessful && response.body()!!.code == 1000) {
-    //                    MingleApplication.pref.refreshToken = response.body()!!.result.refreshToken
-    //                    MingleApplication.pref.accessToken = response.body()!!.result.accessToken
-    //                } else {
-    //                    _refreshExpire.postValue(true)
-    //                }
-    //            } catch (e: Exception) {
-    //                Log.d(TAG, "e: ${e.message}")
-    //                _refreshExpire.postValue(true)
-    //            }
-    //        }
-    //    }
-
-
 }

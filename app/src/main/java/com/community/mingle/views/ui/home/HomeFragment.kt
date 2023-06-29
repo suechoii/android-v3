@@ -8,7 +8,9 @@ import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.whenResumed
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -38,6 +40,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -220,7 +223,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             adapter = homeUnivRecentListAdapter
             hasFixedSize()
         }
-        // TODO: Home에서 포스팅으로 넘어갈때 확인할방법
         homeUnivRecentListAdapter.setMyItemClickListener(object :
             HomeListAdapter.MyItemClickListener {
             override fun onItemClick(post: HomeResult, pos: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
@@ -311,6 +313,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             adapter = homeHotPostListAdapter
             addItemDecoration(RecyclerViewUtils.DividerItemDecorator(ResUtils.getDrawable(R.drawable.divider_comment)!!))
             hasFixedSize()
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                homeViewModel.homeHotPostList.collectLatest {
+                    homeHotPostListAdapter.submitList(it)
+                }
+            }
         }
     }
 

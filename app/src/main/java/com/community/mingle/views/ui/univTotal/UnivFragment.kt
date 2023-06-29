@@ -10,7 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentUnivBinding
-import com.community.mingle.model.univ.UnivBoardType
+import com.community.mingle.model.post.UnivBoardType
 import com.community.mingle.utils.base.BaseFragment
 import com.community.mingle.views.adapter.UnivVPAdapter
 import com.community.mingle.views.ui.board.PostWriteActivity

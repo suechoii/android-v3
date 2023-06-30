@@ -154,10 +154,10 @@ constructor(
 
                     Log.d("tag_success", "getMyUnivPostList: ${response.body()}")
 
-                    if (response.body()!!.code == 1000 && !response.body()!!.result.postListDTO.isNullOrEmpty()) {
+                    if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
-                        _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
+                        _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId.toInt())
                     }
                 } else {
                     Log.d("tag_fail", "getMyUnivPostList Error: ${response.code()}")

@@ -29,6 +29,7 @@ import com.community.mingle.viewmodel.PostViewModel
 import com.community.mingle.views.adapter.BannerVPAdapter
 import com.community.mingle.views.adapter.HomeHotPostListAdapter
 import com.community.mingle.views.adapter.HomeListAdapter
+import com.community.mingle.views.ui.board.HotPostsBoardActivity
 import com.community.mingle.views.ui.board.PostActivity
 import com.community.mingle.views.ui.member.StartActivity
 import com.community.mingle.views.ui.notification.NotiActivity
@@ -121,6 +122,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         binding.search.setOnClickListener {
             val intent = Intent(activity, SearchActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.hotPostsTitle.setOnClickListener {
+            val intent = Intent(context, HotPostsBoardActivity::class.java)
             startActivity(intent)
         }
     }
@@ -353,7 +359,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         startPostActivity(
             postId = post.postId,
             authorNickName = post.nickname,
-            boardTypeName = "잔디밭", // TODO: 잔디밭, 광장 구분
+            boardTypeName = "불타오르는 게시글",
             isBlind = post.blinded,
             isReported = post.reported,
             reportText = post.title,

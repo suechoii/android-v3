@@ -219,10 +219,4 @@ interface PostService {
     suspend fun getPostCategory(
     ) : Response<CategoryResponse>
 
-    @GET("/post/unite/best")
-    suspend fun getUniteBest(
-        @Query("totalPost") totalPost: Int,
-        @Query("univPost") univPost: Int,
-    ): HomeListResponse
-
 }

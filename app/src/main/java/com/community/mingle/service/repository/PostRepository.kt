@@ -134,19 +134,6 @@ constructor(private val postService: PostService) {
     suspend fun getPostCategory() =
         postService.getPostCategory()
 
-    suspend fun getUniteBestPostList(
-        lastTotalPost: Int,
-        lastUnivPost: Int,
-    ): Flow<List<HomeHotPost>> = flow {
-        val response = postService.getUniteBest(
-            totalPost = lastTotalPost,
-            univPost = lastUnivPost,
-        )
-        if (response.code == 1000) {
-            emit(response.result.map { it.toHotPost() })
-        } else {
-            throw IllegalStateException(response.message)
-        }
-    }.flowOn(Dispatchers.IO)
+
 
 }

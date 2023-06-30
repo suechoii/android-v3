@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -21,7 +20,7 @@ import com.community.mingle.R
 import com.community.mingle.utils.DateUtils.formatTo
 import com.community.mingle.utils.DateUtils.toDate
 
-class CommentListAdapter(private val type: String,private val context: Context, private val menuInflater: MenuInflater, private val viewModel: PostViewModel) :
+class CommentListAdapter(private val context: Context, private val viewModel: PostViewModel) :
     RecyclerView.Adapter<CommentListAdapter.CommentViewHolder>() {
 
     interface OnCommentClickListener {

@@ -22,6 +22,8 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.firebase.quickstart.fcm.kotlin.MyWorker
 
+// TODO: check for tabName
+
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
@@ -40,13 +42,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             Log.d(TAG, "Message data payload: ${remoteMessage.data}")
-            if (true) {
-                // For long-running tasks (10 seconds or more) use WorkManager.
-                scheduleJob()
-            } else {
-                // Handle message within 10 seconds
-                handleNow()
-            }
+            scheduleJob()
         }
 
         val body = remoteMessage.notification?.body
@@ -127,7 +123,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        Log.d("boardType",boardType.toString())
+        Log.d("boardType", boardType)
 
         val channelId = getString(R.string.default_notification_channel_id)
         val channelName = getString(R.string.default_notification_channel_name)
@@ -140,8 +136,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             )
             notificationManager.createNotificationChannel(channel)
         }
-        //알림 생성
-
         NotificationManagerCompat.from(this)
             .notify((System.currentTimeMillis()/100).toInt(), createNotification(body, title, boardType, postId))  //알림이 여러개 표시되도록 requestCode 를 추가
     }

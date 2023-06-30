@@ -19,36 +19,28 @@ import javax.inject.Inject
 class PostViewModel
 @Inject
 constructor(
-    private val repository: PostRepository
+    private val repository: PostRepository,
 ) : ViewModel() {
 
     val content = MutableLiveData("")
-
     private val _loading = MutableLiveData<Event<Boolean>>()
     val loading: LiveData<Event<Boolean>> = _loading
-
     private val _post = MutableLiveData<PostDetail>()
     val post: LiveData<PostDetail> get() = _post
-
     private val _newPost = MutableLiveData<PostDetail>()
     val newPost: LiveData<PostDetail> get() = _newPost
 
     /*이 녀석들은 댓글 / 대댓글 작성 후 getComments해서 새로운 리스트를 불러올 필요 있음*/
     private val _commentList = MutableLiveData<List<Comment2>>()
     val commentList: LiveData<List<Comment2>> get() = _commentList
-
     private val _newCommentList = MutableLiveData<List<Comment2>>()
     val newCommentList: LiveData<List<Comment2>> get() = _newCommentList
-
     private val _replyList = MutableLiveData<List<Comment2>>()
     val replyList: LiveData<List<Comment2>> get() = _replyList
-
     private val _comment = MutableLiveData<Comment2>()
     val comment: LiveData<Comment2> get() = _comment
-
     private val _reply = MutableLiveData<Reply>()
     val reply: LiveData<Reply> get() = _reply
-
     private val _imageList = MutableLiveData<List<URL>>()
     val imageList: LiveData<List<URL>> get() = _imageList
 
@@ -95,17 +87,14 @@ constructor(
     // 댓글 좋아요 완료 여부
     private val _isLikedComment = MutableLiveData<Event<Boolean>>()
     val isLikedComment: LiveData<Event<Boolean>> = _isLikedComment
-
     private val _showReplyOptionDialog = MutableLiveData<Event<Reply>>()
     val showReplyOptionDialog: LiveData<Event<Reply>> = _showReplyOptionDialog
-
     private val _showMyReplyOptionDialog = MutableLiveData<Event<Reply>>()
     val showMyReplyOptionDialog: LiveData<Event<Reply>> = _showMyReplyOptionDialog
 
     fun getPost(boardType: String, postId: Int, isRefreshing: Boolean) {
         if (!isRefreshing)
             _loading.postValue(Event(false))
-
         // need to check whether it's univ or total post
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
@@ -137,7 +126,6 @@ constructor(
     }
 
     fun deletePost(boardType: String, postId: Int) {
-
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.deleteUnivPost(postId)
@@ -158,16 +146,13 @@ constructor(
                         }
                     }
             }
-
         }
     }
 
     fun likePost(boardType: String, postIdx: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-
             if (boardType == "잔디밭") {
                 repository.likeUnivPost(postIdx)
                     .let { response ->
@@ -199,12 +184,10 @@ constructor(
                         }
                     }
             }
-
         }
     }
 
     fun unlikePost(boardType: String, postIdx: Int) {
-
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.unlikeUnivPost(postIdx)
@@ -233,7 +216,6 @@ constructor(
     }
 
     fun scrapPost(boardType: String, postId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -247,10 +229,12 @@ constructor(
                                     _isScrapPost.postValue(Event(true))
                                     Log.d("tag_success", "bookmarkPost: ${response.body()}")
                                 }
+
                                 DUP_SCRAP -> {
                                     _isScrapPost.postValue(Event(false))
-                                    delScrap(boardType,postId)
+                                    delScrap(boardType, postId)
                                 }
+
                                 else -> {
                                     Log.d("tag_fail", "bookmarkPost Error: ${response.code()}")
                                 }
@@ -269,10 +253,12 @@ constructor(
                                     _isScrapPost.postValue(Event(true))
                                     Log.d("tag_success", "bookmarkPost: ${response.body()}")
                                 }
+
                                 DUP_SCRAP -> {
                                     _isScrapPost.postValue(Event(false))
                                     delScrap(boardType, postId)
                                 }
+
                                 else -> {
                                     Log.d("tag_fail", "bookmarkPost Error: ${response.code()}")
                                 }
@@ -286,7 +272,6 @@ constructor(
     }
 
     fun delScrap(boardType: String, postId: Int) {
-
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.delscrapUniv(postId)
@@ -298,6 +283,7 @@ constructor(
                                     _isDelScrapPost.postValue(Event(true))
                                     Log.d("tag_success", "bookmarkPost: ${response.body()}")
                                 }
+
                                 else -> {
                                     Log.d("tag_fail", "bookmarkPost Error: ${response.code()}")
                                 }
@@ -316,6 +302,7 @@ constructor(
                                     _isDelScrapPost.postValue(Event(true))
                                     Log.d("tag_success", "bookmarkPost: ${response.body()}")
                                 }
+
                                 else -> {
                                     Log.d("tag_fail", "bookmarkPost Error: ${response.code()}")
                                 }
@@ -328,8 +315,8 @@ constructor(
         }
     }
 
-    fun reportPost(boardType: String, postId: Int,reportTypeId: Int) {
-        lateinit var tableType : String
+    fun reportPost(boardType: String, postId: Int, reportTypeId: Int) {
+        lateinit var tableType: String
         if (boardType == "잔디밭")
             tableType = "UnivPost"
         else if (boardType == "광장")
@@ -339,7 +326,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.createReport(ReportPost(tableType,postId, reportTypeId))
+            repository.createReport(ReportPost(tableType, postId, reportTypeId))
                 .let { response ->
                     if (response.isSuccessful) {
                         _loading.postValue(Event(false))
@@ -350,8 +337,9 @@ constructor(
                                     _isReportedPost.postValue(Event(true))
                                 else
                                     _isReportedComment.postValue(Event(true))
-                                    Log.d("tag_success", "reportPost: ${response.body()}")
+                                Log.d("tag_success", "reportPost: ${response.body()}")
                             }
+
                             DUP_REPORT -> {
                                 if (tableType == "UnivPost" || tableType == "TotalPost")
                                     _isReportedPost.postValue(Event(false))
@@ -367,32 +355,30 @@ constructor(
     }
 
     fun blindPost(boardType: String, postId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-
             var req = repository.blindUnivPost(postId)
             if (boardType == "광장")
                 req = repository.blindTotalPost(postId)
 
             req.let { response ->
-                    if (response.isSuccessful) {
-                        _loading.postValue(Event(false))
+                if (response.isSuccessful) {
+                    _loading.postValue(Event(false))
 
-                        when (response.body()!!.code) {
-                            OK -> {
-                                _isBlindedPost.postValue(Event(true))
-                                Log.d("tag_success", "blindPost: ${response.body()}")
-                            }
+                    when (response.body()!!.code) {
+                        OK -> {
+                            _isBlindedPost.postValue(Event(true))
+                            Log.d("tag_success", "blindPost: ${response.body()}")
                         }
-                    } else {
-                        if (response.code() == 500) {
-                            _isBlindedPost.postValue(Event(false))
-                        }
-                        Log.d("tag_fail", "blindPost Error: ${response.code()}")
                     }
+                } else {
+                    if (response.code() == 500) {
+                        _isBlindedPost.postValue(Event(false))
+                    }
+                    Log.d("tag_fail", "blindPost Error: ${response.code()}")
                 }
+            }
         }
     }
 
@@ -400,7 +386,6 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-
             var req = repository.unblindUnivPost(postId)
             if (boardType == "광장")
                 req = repository.unblindTotalPost(postId)
@@ -412,7 +397,7 @@ constructor(
                     when (response.body()!!.code) {
                         OK -> {
                             _isUnblindPost.postValue(Event(true))
-                            Log.d("tag_success","unblindPost: ${response.body()}")
+                            Log.d("tag_success", "unblindPost: ${response.body()}")
                         }
                     }
                 } else {
@@ -421,8 +406,6 @@ constructor(
             }
         }
     }
-
-
 
     fun getComments(boardType: String, postId: Int, isRefreshing: Boolean) {
         _loading.postValue(Event(true))
@@ -437,18 +420,16 @@ constructor(
 
                             Log.d("tag_success", "getComments: ${response.body()}")
 
-                            if (response.body()!!.code == 1000 ) {
+                            if (response.body()!!.code == 1000) {
                                 _loading.postValue(Event(false))
                                 _commentList.postValue(response.body()!!.result)
                             } else {
-
                             }
                         } else {
                             Log.d("tag_fail", "getComments Error: ${response.code()}")
                         }
                     }
-            }
-            else {
+            } else {
                 repository.getTotalComment(postId)
                     .let { response ->
                         if (response.isSuccessful) {
@@ -457,23 +438,20 @@ constructor(
 
                             Log.d("tag_success", "getComments: ${response.body()}")
 
-                            if (response.body()!!.code == 1000 ) {
+                            if (response.body()!!.code == 1000) {
                                 _commentList.postValue(response.body()!!.result)
                             } else {
-
                             }
                         } else {
                             Log.d("tag_fail", "getComments Error: ${response.code()}")
                         }
                     }
             }
-
         }
     }
 
-    fun writeComment(boardType: String,postId: Int, isAnonymous: Boolean, ) {
+    fun writeComment(boardType: String, postId: Int, isAnonymous: Boolean) {
         //if (!check()) return
-
         val comment = CommentSend(
             isAnonymous = isAnonymous,
             content = content.value!!,
@@ -486,7 +464,7 @@ constructor(
             if (boardType == "잔디밭") {
                 repository.postUnivComment(comment).let { response ->
                     if (response.isSuccessful && response.body()!!.code == 1000) {
-                        var result : List<Comment2>
+                        var result: List<Comment2>
                         runBlocking {
                             result = repository.getUnivComment(postId).body()!!.result
                         }
@@ -496,11 +474,10 @@ constructor(
                         Log.d("tag_fail", "writeComment Error: $response")
                     }
                 }
-            }
-            else {
+            } else {
                 repository.postTotalComment(comment).let { response ->
                     if (response.isSuccessful && response.body()!!.code == 1000) {
-                        var result : List<Comment2>
+                        var result: List<Comment2>
                         runBlocking {
                             result = repository.getTotalComment(postId).body()!!.result
                         }
@@ -515,11 +492,9 @@ constructor(
     }
 
     fun likeComment(boardType: String, commentId: Int, comment: Comment2) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.Main) {
-
             if (boardType == "잔디밭") {
                 repository.commentLikeUniv(commentId)
                     .let { response ->
@@ -533,17 +508,14 @@ constructor(
                                 _comment.postValue(comment)
                                 _isLikedComment.postValue(Event(true))
                             } else if (response.body()?.code == DUP_LIKE) {
-                                unlikeComment(boardType,commentId, comment)
+                                unlikeComment(boardType, commentId, comment)
                             } else {
-
                             }
                         } else {
                             Log.d("tag_fail", "likeComment Error: ${response.code()}")
                         }
                     }
-            }
-
-            else {
+            } else {
                 repository.commentLikeTotal(commentId)
                     .let { response ->
                         if (response.isSuccessful) {
@@ -556,17 +528,14 @@ constructor(
                                 _comment.postValue(comment)
                                 _isLikedComment.postValue(Event(true))
                             } else if (response.body()?.code == DUP_LIKE) {
-                                unlikeComment(boardType,commentId, comment)
+                                unlikeComment(boardType, commentId, comment)
                             } else {
-
                             }
                         } else {
                             Log.d("tag_fail", "likeComment Error: ${response.code()}")
                         }
                     }
             }
-
-
         }
     }
 
@@ -605,7 +574,6 @@ constructor(
     }
 
     fun deleteComment(boardType: String, comment: Comment2, postId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -615,30 +583,29 @@ constructor(
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             if (response.body()!!.code == 1000) {
-//                                if (comment.coCommentsList != null) {
-//                                    comment.content = "삭제된 댓글입니다"
-//                                    comment.nickname = "(비공개됨)"
-//                                    comment.commentDeleted = true
-//                                    _comment.postValue(comment)
-//                                }
-//                                else {
-//                                    getComments(boardType,postId,false)
-//                                }
-                                getComments(boardType,postId,false)
+                                //                                if (comment.coCommentsList != null) {
+                                //                                    comment.content = "삭제된 댓글입니다"
+                                //                                    comment.nickname = "(비공개됨)"
+                                //                                    comment.commentDeleted = true
+                                //                                    _comment.postValue(comment)
+                                //                                }
+                                //                                else {
+                                //                                    getComments(boardType,postId,false)
+                                //                                }
+                                getComments(boardType, postId, false)
                             }
                             Log.d("tag_success", "deleteComment: ${response.body()}")
                         } else {
                             Log.d("tag_fail", "deleteComment Error: ${response.code()}")
                         }
                     }
-            }
-            else {
+            } else {
                 repository.deleteTotalComment(comment.commentId)
                     .let { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             if (response.body()!!.code == 1000) {
-                                getComments(boardType,postId,false)
+                                getComments(boardType, postId, false)
                             }
                             Log.d("tag_success", "deleteComment: ${response.body()}")
                         } else {
@@ -646,12 +613,10 @@ constructor(
                         }
                     }
             }
-
         }
     }
 
     fun writeReply(boardType: String, postId: Int, mentionId: Int, parentReplyId: Int, isAnonymous: Boolean) {
-
         val reply = ReplySend(
             isAnonymous = isAnonymous,
             content = content.value!!,
@@ -703,8 +668,7 @@ constructor(
         }
     }
 
-    fun likeReply( boardType: String, replyId: Int, reply: Reply) {
-
+    fun likeReply(boardType: String, replyId: Int, reply: Reply) {
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.Main) {
@@ -722,8 +686,7 @@ constructor(
                             } else if (response.body()?.code == DUP_LIKE)
                                 unlikeReply(boardType, replyId, reply)
                             else {
-
-                                }
+                            }
                         } else {
                             Log.d("tag_fail", "likeReply Error: ${response.code()}")
                         }
@@ -749,7 +712,6 @@ constructor(
             }
         }
     }
-
 
     fun unlikeReply(boardType: String, replyId: Int, reply: Reply) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -785,21 +747,17 @@ constructor(
         }
     }
 
-
-
-    fun deleteReply(boardType: String,replyId: Int, postId: Int) {
-
+    fun deleteReply(boardType: String, replyId: Int, postId: Int) {
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-
             if (boardType == "잔디밭") {
                 repository.deleteUnivComment(replyId)
                     .let { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             if (response.body()!!.code == 1000) {
-                                getComments(boardType,postId,true)
+                                getComments(boardType, postId, true)
                             }
                             // if it doesn't work, then result = repository.getUnivComment(postId).body()!!.result[position].cocomments
                             Log.d("tag_success", "deleteReply: ${response.body()}")
@@ -812,12 +770,12 @@ constructor(
                     .let { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
-                            getComments(boardType,postId,true)
-//                            var result: List<Comment2>
-//                            runBlocking {
-//                                result = repository.getTotalComment(postId).body()!!.result
-//                            }
-//                            _commentList.postValue(result)
+                            getComments(boardType, postId, true)
+                            //                            var result: List<Comment2>
+                            //                            runBlocking {
+                            //                                result = repository.getTotalComment(postId).body()!!.result
+                            //                            }
+                            //                            _commentList.postValue(result)
                             // if it doesn't work, then result = repository.getUnivComment(postId).body()!!.result[position].cocomments
                             Log.d("tag_success", "deleteReply: ${response.body()}")
                         } else {
@@ -825,7 +783,6 @@ constructor(
                         }
                     }
             }
-
         }
     }
 
@@ -838,15 +795,11 @@ constructor(
     }
 
     companion object {
+
         const val OK = 1000
         const val DUP_SCRAP = 3061
         const val DUP_LIKE = 3060
         const val DUP_REPORT = 2021
-    }
-
-    fun update(commentList: Array<Comment2>) {
-        _commentList.postValue(commentList.toList())
-        //_commentList.value!!.get(index = position).likes = comment.likes
     }
 
 

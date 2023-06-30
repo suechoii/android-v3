@@ -105,16 +105,16 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         postPosition = intent.getIntExtra("position", 0)
         boardType = intent.getStringExtra("type").toString()
         boardName = intent.getStringExtra("board").toString()
-        tabName = intent.getStringExtra("tabName").toString()
-        isBlind = intent.getBooleanExtra("isBlind", false)
-        isReported = intent.getBooleanExtra("isReported", false)
-        reportText = intent.getStringExtra("reportText")
-
         if (boardType == "UnivPost")
             boardType = "잔디밭"
         else if (boardType == "TotalPost") {
             boardType = "광장"
         }
+        tabName = intent.getStringExtra("tabName") ?: boardType
+        isBlind = intent.getBooleanExtra("isBlind", false)
+        isReported = intent.getBooleanExtra("isReported", false)
+        reportText = intent.getStringExtra("reportText")
+
 
         if (isBlind) {
             MingleApplication.pref.isBlind = true
@@ -518,7 +518,7 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     }
 
     private fun initRV() {
-        commentListAdapter = CommentListAdapter(boardType, this, menuInflater, viewModel)
+        commentListAdapter = CommentListAdapter(this, viewModel)
         postImageListAdapter = PostImageAdapter()
         val divider = DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
         ResUtils.getDrawable(R.drawable.divider_comment)?.let { divider.setDrawable(it) }
@@ -941,20 +941,18 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                     showYesNoDialog(this, "댓글을 신고하시겠습니까?", onPositiveClick = { dialog, which ->
                         viewModel.reportPost(reportType, commentId, 5)
                     },
-                        onNegativeClick = { dialog, which ->
-                            null
+                        onNegativeClick = { _, _ ->
                         })
-                    dialog?.dismiss()
+                    dialog.dismiss()
                 }
 
                 R.id.report_six -> {
                     showYesNoDialog(this, "댓글을 신고하시겠습니까?", onPositiveClick = { dialog, which ->
                         viewModel.reportPost(reportType, commentId, 6)
                     },
-                        onNegativeClick = { dialog, which ->
-                            null
+                        onNegativeClick = { _, _ ->
                         })
-                    dialog?.dismiss()
+                    dialog.dismiss()
                 }
             }
             false

@@ -1,7 +1,7 @@
 package com.community.mingle.api
 
 import com.community.mingle.service.models.*
-import retrofit2.Call
+import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -46,6 +46,9 @@ interface HomeService {
     ): Response<ResultResponse>
 
 
+    @GET("/home/unite/best")
+    suspend fun getUniteBestList(
+    ): HomeListResponse
 
 
 }

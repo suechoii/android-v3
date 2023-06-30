@@ -123,25 +123,26 @@ class MarketMyPageListAdapter : RecyclerView.Adapter<MarketMyPageListAdapter.Mar
                 popupMenu.menuInflater.inflate(R.menu.market_mypage_menu, popupMenu.menu)
 
                 popupMenu.setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.itemId) {
+                    val b = when (menuItem.itemId) {
                         R.id.market_mypage_edit -> {
                             // Handle the "Edit" menu item click
                             // 수정 버튼 누를 시
                             val intent = Intent(itemView.context, MarketPostEditActivity::class.java).apply {
                                 putExtra("itemId", marketPostResult.id)
-                                putExtra("title",marketPostResult.title)
-                                putExtra("content",marketPostResult.content)
-                                putExtra("price",marketPostResult.price)
-                                putExtra("chatUrl",marketPostResult.chatUrl)
-                                putExtra("place",marketPostResult.location)
+                                putExtra("title", marketPostResult.title)
+                                putExtra("content", marketPostResult.content)
+                                putExtra("price", marketPostResult.price)
+                                putExtra("chatUrl", marketPostResult.chatUrl)
+                                putExtra("place", marketPostResult.location)
                                 val urlStrings = marketPostResult.itemImgList.map { it.toString() }
-                                putStringArrayListExtra("imageList",urlStrings as ArrayList<String>)
-                                Log.d("checkUrlString",urlStrings.toString())
+                                putStringArrayListExtra("imageList", urlStrings as ArrayList<String>)
+                                Log.d("checkUrlString", urlStrings.toString())
                             }
 
                             itemView.context.startActivity(intent)
                             true
                         }
+
                         R.id.market_mypage_delete -> {
                             // Handle the "Delete" menu item click
                             val viewModelProvider = ViewModelProvider(itemView.context as AppCompatActivity)
@@ -153,13 +154,14 @@ class MarketMyPageListAdapter : RecyclerView.Adapter<MarketMyPageListAdapter.Mar
                                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                                 itemView.context.startActivity(intent)
                             },
-                                onNegativeClick = { dialog, which ->
-                                    null
+                                onNegativeClick = { dialog, _ ->
                                 })
                             true
                         }
+
                         else -> false
                     }
+                    b
                 }
 
                 popupMenu.show()

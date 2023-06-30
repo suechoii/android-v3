@@ -1,5 +1,6 @@
 package com.community.mingle.service.models
 
+import com.community.mingle.model.post.PostType
 import com.google.gson.annotations.SerializedName
 
 class PostListResponse (
@@ -25,4 +26,6 @@ data class PostResult(
     @SerializedName("blinded") var blinded: Boolean,
     @SerializedName("fileAttached") val fileAttached: Boolean,
     @SerializedName("reported") val reported: Boolean
-)
+) {
+    var boardType: PostType = PostType.Univ
+}

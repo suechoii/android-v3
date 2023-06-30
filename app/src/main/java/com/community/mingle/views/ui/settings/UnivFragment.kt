@@ -169,6 +169,7 @@ class UnivFragment(private val option: String) : BaseFragment<FragmentUnivtotalM
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", item.postId)
                 intent.putExtra("type","잔디밭")
+//                intent.putExtra("tabName", )
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)

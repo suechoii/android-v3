@@ -48,7 +48,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
             when (option) {
                 MY_POST -> {
                     isFirst = true
-                    viewModel.getMyTotalPostList(10000000, true)
+                    viewModel.getMyTotalPostList(10000000)
                 }
                 MY_COMMENT_POST -> {
                     isFirst = true
@@ -56,7 +56,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
                 }
                 MY_SCRAP_POST -> {
                     isFirst = true
-                    viewModel.getMyTotalPostList(10000000,true)
+                    viewModel.getMyTotalPostList(10000000)
                 }
                 MY_LIKE_POST -> {
                     isFirst = true
@@ -71,7 +71,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
 
         when (option) {
             MY_POST -> {
-                viewModel.getMyTotalPostList(10000000, false)
+                viewModel.getMyTotalPostList(10000000)
             }
             MY_COMMENT_POST -> {
                 viewModel.getMyTotalCommentPostList(10000000,false)
@@ -134,7 +134,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
                     when (option) {
                         MY_POST -> {
                             isFirst = true
-                            viewModel.getMyTotalPostList(10000000, true)
+                            viewModel.getMyTotalPostList(10000000)
                         }
                         MY_COMMENT_POST -> {
                             isFirst = true
@@ -166,10 +166,10 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
 
         postListAdapter.setMyItemClickListener(object :
             UnivTotalListAdapter.MyItemClickListener {
-            override fun onItemClick(item: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
+            override fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
                 clickedPosition = position
                 val intent = Intent(activity, PostActivity::class.java)
-                intent.putExtra("postId", item.postId)
+                intent.putExtra("postId", post.postId)
                 intent.putExtra("type","광장")
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
@@ -179,7 +179,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
 
             override fun onCancelClick(post: PostResult, position: Int) {
                 clickedPosition = position
-                viewModel2.unblindPost("광장",post.postId)
+                viewModel2.unblindPost("광장",post.postId.toInt())
             }
         })
 
@@ -187,7 +187,7 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
             isFirst = true
             when (option) {
                 MY_POST -> {
-                    viewModel.getMyTotalPostList(10000000, true)
+                    viewModel.getMyTotalPostList(10000000)
                 }
                 MY_COMMENT_POST -> {
                     viewModel.getMyTotalCommentPostList(10000000,true)

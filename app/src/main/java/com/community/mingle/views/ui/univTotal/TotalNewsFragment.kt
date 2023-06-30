@@ -140,6 +140,7 @@ class TotalNewsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
                 intent.putExtra("type","광장")
                 intent.putExtra("board","밍글소식")
                 intent.putExtra("isBlind",isBlind)
+                intent.putExtra("tabName", "밍글소식")
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)
 

@@ -58,6 +58,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
     private lateinit var loadingDialog: LoadingDialog
     private lateinit var boardType: String
     private lateinit var boardName: String
+    private lateinit var tabName : String
 
     private var uriPaths: ArrayList<Uri> = ArrayList()
     var imageList : MutableList<MultipartBody.Part>? = null
@@ -194,6 +195,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
         // 이 부분은 이제 어떤 탭에서 넘어오는지에 따라 정해짐
         boardName = intent.getStringExtra("boardName").toString()
         boardType = intent.getStringExtra("type").toString()
+        tabName = intent.getStringExtra("tabName").toString()
     }
 
     private fun initView() {
@@ -324,6 +326,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
                     intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                     intent.putExtra("postId", it)
                     intent.putExtra("type", boardType)
+                    intent.putExtra("tabName",tabName)
                     startActivity(intent)
                     loadingDialog.dismiss()
 

@@ -138,6 +138,7 @@ class TotalFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
                 intent.putExtra("type","광장")
+                intent.putExtra("tabName", "자유게시판")
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)

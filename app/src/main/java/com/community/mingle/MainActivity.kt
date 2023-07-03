@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(mBinding.root)
 
-        mBinding.bottomNavigationView.itemIconTintList = null;
+        mBinding.bottomNavigationView.itemIconTintList = null
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.home_frm, HomeFragment())

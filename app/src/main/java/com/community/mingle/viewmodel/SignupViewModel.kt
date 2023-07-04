@@ -104,7 +104,7 @@ constructor(
 
     // 회원가입 단계별 함수
     fun getUnivList() = viewModelScope.launch(Dispatchers.IO) {
-        repository.getUnivList().let { response ->
+        repository.getUnivList().onSuccess { response ->
             if (response.isSuccessful) {
                 for (i in response.body()!!.result) {
                     univs[i.name]=i.univIdx
@@ -118,7 +118,7 @@ constructor(
     }
 
     fun getDomain(univId : Int) = viewModelScope.launch(Dispatchers.IO) {
-        repository.getDomain(univId).let { response ->
+        repository.getDomain(univId).onSuccess { response ->
             if (response.isSuccessful && response.body()!!.code == 1000) {
                 domain = response.body()!!.result[0].domain
                 _getDomainSuccess.postValue(true)
@@ -145,16 +145,18 @@ constructor(
     }
 
     private fun checkEmail(email: String) = viewModelScope.launch(Dispatchers.IO) {
-        repository.checkEmail(Email("$email@$domain")).let { response ->
+        repository.checkEmail(Email("$email@$domain")).onSuccess { response ->
             if (response.isSuccessful) {
-                if (response.body()!!.code == 2012) {
-                    _isEmailVerified.postValue(EMAIL_DUP)
-                }
-                else if (response.body()!!.code == 1000) {
-                    _isEmailVerified.postValue("")
-                }
-                else {
-                    _isEmailVerified.postValue(" ")
+                when (response.body()!!.code) {
+                    2012 -> {
+                        _isEmailVerified.postValue(EMAIL_DUP)
+                    }
+                    1000 -> {
+                        _isEmailVerified.postValue("")
+                    }
+                    else -> {
+                        _isEmailVerified.postValue(" ")
+                    }
                 }
                 userEmail = "$email@$domain"
                 Log.d("tag_success", response.body().toString())
@@ -167,7 +169,7 @@ constructor(
     fun sendCode() = viewModelScope.launch(Dispatchers.IO) {
         _loading.postValue(Event(true))
 
-        repository.sendCode(Email(userEmail)).let  { response ->
+        repository.sendCode(Email(userEmail)).onSuccess  { response ->
             if (response.isSuccessful) {
                 _loading.postValue(Event(false))
                 if (response.body()!!.code == 1000) {
@@ -188,7 +190,7 @@ constructor(
     }
 
     private fun checkCode(code: String) = viewModelScope.launch(Dispatchers.IO) {
-        repository.checkCode(Code(userEmail,code)).let { response ->
+        repository.checkCode(Code(userEmail,code)).onSuccess { response ->
             if (response.isSuccessful) {
                 if (response.body()!!.code == 2013) {
                     _isCodeVerified.postValue(CODE_ERROR)
@@ -232,7 +234,7 @@ constructor(
 
     fun getTerms(isService: Boolean) = viewModelScope.launch(Dispatchers.IO) {
         if (isService) {
-            repository.getServiceTerms().let { response ->
+            repository.getServiceTerms().onSuccess { response ->
                 if (response.isSuccessful) {
                     if (response.body()!!.code == 1000) {
                         terms = response.body()!!.result
@@ -248,7 +250,7 @@ constructor(
             }
         }
         else {
-            repository.getPrivacyTerms().let { response ->
+            repository.getPrivacyTerms().onSuccess { response ->
                 if (response.isSuccessful) {
                     if (response.body()!!.code == 1000) {
                         terms = response.body()!!.result
@@ -276,7 +278,7 @@ constructor(
         Log.d("tag_user", user.toString())
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.signup(user).let { response ->
+            repository.signup(user).onSuccess { response ->
                 if (response.isSuccessful && response.body()!!.code == 1000) {
                     Log.d("tag_success", "signup: ${response.body()}")
                     _signupSuccess.postValue(Event(true))

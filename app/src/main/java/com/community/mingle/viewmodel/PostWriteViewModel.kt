@@ -61,7 +61,7 @@ constructor(
 
     fun getCategoryCount() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getPostCategory().let { response ->
+            repository.getPostCategory().onSuccess { response ->
                 if (response.isSuccessful && response.body()!!.code == 1000) {
                     _getCategorySuccess.postValue(Event(true))
                     returnInt = response.body()!!.result.size
@@ -86,7 +86,7 @@ constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
-                repository.writeUnivPost(categoryInt.value!!,postTitle,postBody,isAnon.value!!,imageList).let { response ->
+                repository.writeUnivPost(categoryInt.value!!,postTitle,postBody,isAnon.value!!,imageList).onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == 1000) {
                         _successEvent.postValue(Event(response.body()!!.result.postId))
                         Log.d("tag_success", "writePost: ${response.body()}")
@@ -95,7 +95,7 @@ constructor(
                     }
                 }
             } else {
-                repository.writeTotalPost(categoryInt.value!!,postTitle,postBody,isAnon.value!!,imageList).let { response ->
+                repository.writeTotalPost(categoryInt.value!!,postTitle,postBody,isAnon.value!!,imageList).onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == 1000) {
                         _successEvent.postValue(Event(response.body()!!.result.postId))
                         Log.d("tag_success", "writePost: ${response.body()}")
@@ -113,7 +113,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO){
 
             if (boardType == "잔디밭") {
-                repository.editUnivPost(postId, Edit(title, content)).let { response ->
+                repository.editUnivPost(postId, Edit(title, content)).onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == 1000) {
                         _successEvent.postValue(Event(postId))
                         Log.d("tag_success", "editUnivPost: ${response.body()}")
@@ -122,7 +122,7 @@ constructor(
                     }
                 }
             } else {
-                repository.editTotalPost(postId, Edit(title, content)).let { response ->
+                repository.editTotalPost(postId, Edit(title, content)).onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == 1000) {
                         _successEvent.postValue(Event(postId))
                         Log.d("tag_success", "editTotalPost: ${response.body()}")

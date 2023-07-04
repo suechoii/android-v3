@@ -2,9 +2,11 @@ package com.community.mingle.service.repository
 
 import com.community.mingle.api.UnivTotalService
 import com.community.mingle.model.post.PostType
+import com.community.mingle.service.models.PostListResponse
 import com.community.mingle.service.models.PostResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 import javax.inject.Inject
 
 class UnivTotalRepository
@@ -13,23 +15,29 @@ constructor(
     private val univTotalService: UnivTotalService,
 ) {
 
-    suspend fun getUnivPost(category: Int, postId: Int) =
+    suspend fun getUnivPost(category: Int, postId: Int): Result<Response<PostListResponse>> = runCatching {
         univTotalService.getUnivPosts(category, postId)
+    }
 
-    suspend fun getTotalPost(category: Int, postId: Int) =
+    suspend fun getTotalPost(category: Int, postId: Int): Result<Response<PostListResponse>> = runCatching {
         univTotalService.getTotalPosts(category, postId)
+    }
 
-    suspend fun getUnivBestPost(postId: Int) =
+    suspend fun getUnivBestPost(postId: Int): Result<Response<PostListResponse>> = runCatching {
         univTotalService.getUnivBestPosts(postId)
+    }
 
-    suspend fun getTotalBestPost(postId: Int) =
+    suspend fun getTotalBestPost(postId: Int): Result<Response<PostListResponse>> = runCatching {
         univTotalService.getTotalBestPosts(postId)
+    }
 
-    suspend fun searchUnivPost(keyword: String) =
+    suspend fun searchUnivPost(keyword: String): Result<Response<PostListResponse>> = runCatching {
         univTotalService.searchUnivPost(keyword)
+    }
 
-    suspend fun searchTotalPost(keyword: String) =
+    suspend fun searchTotalPost(keyword: String): Result<Response<PostListResponse>> = runCatching {
         univTotalService.searchTotalPost(keyword)
+    }
 
     suspend fun getHotPostList(
         lastUnivBestPostId: Int,

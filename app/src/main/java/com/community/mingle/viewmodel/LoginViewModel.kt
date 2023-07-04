@@ -10,8 +10,6 @@ import com.community.mingle.service.models.FcmToken
 import com.community.mingle.service.models.OldUser
 import com.community.mingle.service.repository.MemberRepository
 import com.community.mingle.utils.Event
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,7 +72,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.login(loginInfo).let { response ->
+            repository.login(loginInfo).onSuccess { response ->
                 if (response.isSuccessful) {
                     when (response.body()!!.code) {
                         1000 -> {
@@ -107,7 +105,7 @@ constructor(
     fun fcmRefresh() {
         viewModelScope.launch(Dispatchers.IO) {
             MingleApplication.pref.fcmToken?.let { FcmToken(it) }?.let {
-                repository.fcmRefresh(it).let { response ->
+                repository.fcmRefresh(it).onSuccess { response ->
                     if (response.isSuccessful) {
                         when (response.body()!!.code) {
                             1000 -> {

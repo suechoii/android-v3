@@ -99,7 +99,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.getUnivPostDetail(postId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             _post.postValue(response.body()!!.result)
                             _imageList.postValue(response.body()!!.result.postImgUrl)
@@ -111,7 +111,7 @@ constructor(
                     }
             } else {
                 repository.getTotalPostDetail(postId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             _post.postValue(response.body()!!.result)
                             _imageList.postValue(response.body()!!.result.postImgUrl)
@@ -129,7 +129,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.deleteUnivPost(postId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             Log.d("tag_success", response.body().toString())
                         } else {
@@ -138,7 +138,7 @@ constructor(
                     }
             } else {
                 repository.deleteTotalPost(postId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             Log.d("tag_success", response.body().toString())
                         } else {
@@ -155,7 +155,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.likeUnivPost(postIdx)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful && response.body()!!.code == OK) {
                             _loading.postValue(Event(false))
                             _isLikedPost.postValue(Event(true))
@@ -170,7 +170,7 @@ constructor(
                     }
             } else {
                 repository.likeTotalPost(postIdx)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful && response.body()!!.code == OK) {
                             _loading.postValue(Event(false))
                             _isLikedPost.postValue(Event(true))
@@ -191,7 +191,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.unlikeUnivPost(postIdx)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful && response.body()!!.code == OK) {
                             _loading.postValue(Event(false))
                             _isUnlikePost.postValue(Event(true))
@@ -202,7 +202,7 @@ constructor(
                     }
             } else {
                 repository.unlikeTotalPost(postIdx)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful && response.body()!!.code == OK) {
                             _loading.postValue(Event(false))
                             _isUnlikePost.postValue(Event(true))
@@ -221,7 +221,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.scrapUniv(postId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             when (response.body()!!.code) {
                                 OK -> {
@@ -245,7 +245,7 @@ constructor(
                     }
             } else {
                 repository.scrapTotal(postId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             when (response.body()!!.code) {
                                 OK -> {
@@ -275,7 +275,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.delscrapUniv(postId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             when (response.body()!!.code) {
                                 OK -> {
@@ -294,7 +294,7 @@ constructor(
                     }
             } else {
                 repository.delscrapTotal(postId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             when (response.body()!!.code) {
                                 OK -> {
@@ -327,7 +327,7 @@ constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.createReport(ReportPost(tableType, postId, reportTypeId))
-                .let { response ->
+                .onSuccess { response ->
                     if (response.isSuccessful) {
                         _loading.postValue(Event(false))
 
@@ -362,7 +362,7 @@ constructor(
             if (boardType == "광장")
                 req = repository.blindTotalPost(postId)
 
-            req.let { response ->
+            req.onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
 
@@ -390,7 +390,7 @@ constructor(
             if (boardType == "광장")
                 req = repository.unblindTotalPost(postId)
 
-            req.let { response ->
+            req.onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
 
@@ -412,7 +412,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.getUnivComment(postId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             if (!isRefreshing) {
                                 _loading.postValue(Event(false))
@@ -431,7 +431,7 @@ constructor(
                     }
             } else {
                 repository.getTotalComment(postId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             if (!isRefreshing)
                                 _loading.postValue(Event(false))
@@ -462,12 +462,9 @@ constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
-                repository.postUnivComment(comment).let { response ->
+                repository.postUnivComment(comment).onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == 1000) {
-                        var result: List<Comment2>
-                        runBlocking {
-                            result = repository.getUnivComment(postId).body()!!.result
-                        }
+                        val result: List<Comment2> = repository.getUnivComment(postId).getOrNull()?.body()?.result ?: emptyList()
                         _newCommentList.postValue(result)
                         Log.d("tag_success", "writeComment: ${response.body()}")
                     } else {
@@ -475,12 +472,9 @@ constructor(
                     }
                 }
             } else {
-                repository.postTotalComment(comment).let { response ->
+                repository.postTotalComment(comment).onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == 1000) {
-                        var result: List<Comment2>
-                        runBlocking {
-                            result = repository.getTotalComment(postId).body()!!.result
-                        }
+                        val result: List<Comment2> = repository.getTotalComment(postId).getOrNull()?.body()?.result ?: emptyList()
                         _newCommentList.postValue(result)
                         Log.d("tag_success", "writeComment: ${response.body()}")
                     } else {
@@ -497,7 +491,7 @@ constructor(
         viewModelScope.launch(Dispatchers.Main) {
             if (boardType == "잔디밭") {
                 repository.commentLikeUniv(commentId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             Log.d("tag_success", "likeComment: ${response.body()}")
@@ -517,7 +511,7 @@ constructor(
                     }
             } else {
                 repository.commentLikeTotal(commentId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             Log.d("tag_success", "likeComment: ${response.body()}")
@@ -543,7 +537,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.commentUnlikeUniv(commentId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful && response.body()!!.code == OK) {
                             _loading.postValue(Event(false))
                             comment.likeCount = ((comment.likeCount.toInt()) - 1).toString()
@@ -557,7 +551,7 @@ constructor(
                     }
             } else {
                 repository.commentUnlikeTotal(commentId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful && response.body()!!.code == OK) {
                             _loading.postValue(Event(false))
                             comment.likeCount = ((comment.likeCount.toInt()) - 1).toString()
@@ -579,7 +573,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.deleteUnivComment(comment.commentId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             if (response.body()!!.code == 1000) {
@@ -601,7 +595,7 @@ constructor(
                     }
             } else {
                 repository.deleteTotalComment(comment.commentId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             if (response.body()!!.code == 1000) {
@@ -629,13 +623,10 @@ constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
-                repository.postUnivReply(reply).let { response ->
+                repository.postUnivReply(reply).onSuccess { response ->
                     if (response.isSuccessful) {
                         if (response.body()!!.code == 1000) {
-                            var result: List<Comment2>
-                            runBlocking {
-                                result = repository.getUnivComment(postId).body()!!.result
-                            }
+                            val result = repository.getUnivComment(postId).getOrNull()?.body()?.result ?: emptyList()
                             // if this doesn't work, it must be
                             //result = repository.getUnivComment(postId).body()!!.result[position].coCommentsList
                             _replyList.postValue(result)
@@ -647,13 +638,10 @@ constructor(
                     }
                 }
             } else {
-                repository.postTotalReply(reply).let { response ->
+                repository.postTotalReply(reply).onSuccess { response ->
                     if (response.isSuccessful) {
                         if (response.body()!!.code == 1000) {
-                            var result: List<Comment2>
-                            runBlocking {
-                                result = repository.getTotalComment(postId).body()!!.result
-                            }
+                            val result: List<Comment2> = repository.getTotalComment(postId).getOrNull()?.body()?.result ?: emptyList()
                             // if this doesn't work, it must be
                             //result = repository.getUnivComment(postId).body()!!.result[position].coCommentsList
                             _replyList.postValue(result)
@@ -674,7 +662,7 @@ constructor(
         viewModelScope.launch(Dispatchers.Main) {
             if (boardType == "잔디밭") {
                 repository.commentLikeUniv(replyId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             Log.d("tag_success", "likeReply: ${response.body()}")
@@ -694,7 +682,7 @@ constructor(
 
             } else {
                 repository.commentLikeTotal(replyId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             Log.d("tag_success", "likeReply: ${response.body()}")
@@ -717,7 +705,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.commentUnlikeUniv(replyId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful && response.body()!!.code == OK) {
                             _loading.postValue(Event(false))
                             reply.likeCount = ((reply.likeCount.toInt()) - 1).toString()
@@ -731,7 +719,7 @@ constructor(
                     }
             } else {
                 repository.commentUnlikeTotal(replyId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful && response.body()!!.code == OK) {
                             _loading.postValue(Event(false))
                             reply.likeCount = ((reply.likeCount.toInt()) - 1).toString()
@@ -753,7 +741,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (boardType == "잔디밭") {
                 repository.deleteUnivComment(replyId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             if (response.body()!!.code == 1000) {
@@ -767,7 +755,7 @@ constructor(
                     }
             } else {
                 repository.deleteTotalComment(replyId)
-                    .let { response ->
+                    .onSuccess { response ->
                         if (response.isSuccessful) {
                             _loading.postValue(Event(false))
                             getComments(boardType, postId, true)

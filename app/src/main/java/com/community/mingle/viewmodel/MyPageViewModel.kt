@@ -123,7 +123,7 @@ constructor(
 
     private fun modifyNickname(nickname: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.modifyNickname(Nickname(nickname)).let { response ->
+            repository.modifyNickname(Nickname(nickname)).onSuccess { response ->
                 if (response.isSuccessful  ) {
                     when (response.body()!!.code) {
                         1000 ->  {
@@ -147,7 +147,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyUnivPost(postId).let { response ->
+            repository.getMyUnivPost(postId).onSuccess { response ->
                 if (response.isSuccessful) {
 
                     _loading.postValue(Event(false))
@@ -171,7 +171,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyTotalPost(postId).let { response ->
+            repository.getMyTotalPost(postId).onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
 
@@ -194,7 +194,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyUnivPost(lastPostId).let { response ->
+            repository.getMyUnivPost(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyUnivNextPosts: ${response.body()}")
@@ -220,7 +220,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyTotalPost(lastPostId).let { response ->
+            repository.getMyTotalPost(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyTotalNextPosts: ${response.body()}")
@@ -247,7 +247,7 @@ constructor(
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyUnivComment(postId).let { response ->
+            repository.getMyUnivComment(postId).onSuccess { response ->
                 if (response.isSuccessful) {
 
                     if (!isRefreshing)
@@ -274,7 +274,7 @@ constructor(
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyTotalComment(postId).let { response ->
+            repository.getMyTotalComment(postId).onSuccess { response ->
                 if (response.isSuccessful) {
 
                     if (!isRefreshing)
@@ -299,7 +299,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyUnivComment(lastPostId).let { response ->
+            repository.getMyUnivComment(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyUnivNextCommentedPosts: ${response.body()}")
@@ -324,7 +324,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyTotalComment(lastPostId).let { response ->
+            repository.getMyTotalComment(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyTotalNextCommentedPosts: ${response.body()}")
@@ -350,7 +350,7 @@ constructor(
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyUnivScrap(postId).let { response ->
+            repository.getMyUnivScrap(postId).onSuccess { response ->
                 if (response.isSuccessful) {
 
                     if (!isRefreshing)
@@ -376,7 +376,7 @@ constructor(
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyTotalScrap(postId).let { response ->
+            repository.getMyTotalScrap(postId).onSuccess { response ->
                 if (response.isSuccessful) {
 
                     if (!isRefreshing)
@@ -401,7 +401,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyUnivScrap(lastPostId).let { response ->
+            repository.getMyUnivScrap(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyUnivNextScrapedPosts: ${response.body()}")
@@ -426,7 +426,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyTotalScrap(lastPostId).let { response ->
+            repository.getMyTotalScrap(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyTotalNextScrapedPosts: ${response.body()}")
@@ -452,7 +452,7 @@ constructor(
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyLikedUniv(postId).let { response ->
+            repository.getMyLikedUniv(postId).onSuccess { response ->
                 if (response.isSuccessful) {
 
                     if (!isRefreshing)
@@ -460,7 +460,7 @@ constructor(
 
                     Log.d("tag_success", "getMyLikedUnivPostList: ${response.body()}")
 
-                    if (!response.body()!!.result.postListDTO.isNullOrEmpty()) {
+                    if (response.body()!!.result.postListDTO.isNotEmpty()) {
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
@@ -478,7 +478,7 @@ constructor(
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyLikedTotal(postId).let { response ->
+            repository.getMyLikedTotal(postId).onSuccess { response ->
                 if (response.isSuccessful) {
 
                     if (!isRefreshing)
@@ -486,7 +486,7 @@ constructor(
 
                     Log.d("tag_success", "getMyLikedTotalPostList: ${response.body()}")
 
-                    if (response.body()!!.code == 1000 && !response.body()!!.result.postListDTO.isNullOrEmpty()) {
+                    if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
@@ -503,7 +503,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyLikedUniv(lastPostId).let { response ->
+            repository.getMyLikedUniv(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyUnivNextLikedPosts: ${response.body()}")
@@ -528,7 +528,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMyLikedTotal(lastPostId).let { response ->
+            repository.getMyLikedTotal(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyTotalNextLikedPosts: ${response.body()}")
@@ -549,7 +549,7 @@ constructor(
     }
 
     fun getUnivList() = viewModelScope.launch(Dispatchers.IO) {
-        repository.getUnivList().let { response ->
+        repository.getUnivList().onSuccess { response ->
             if (response.isSuccessful) {
                 for (i in response.body()!!.result) {
                     univs[i.name]=i.univIdx
@@ -573,7 +573,7 @@ constructor(
     }
 
     fun getDomain(univId : Int) = viewModelScope.launch(Dispatchers.IO) {
-        repository.getDomain(univId).let { response ->
+        repository.getDomain(univId).onSuccess { response ->
             if (response.isSuccessful) {
                 domain = response.body()!!.result[0].domain
                 _getDomainSuccess.postValue(Event(true))
@@ -589,17 +589,19 @@ constructor(
     }
 
     private fun checkEmail(email: String) = viewModelScope.launch(Dispatchers.IO) {
-        repository.checkEmail(Email("$email@$domain")).let { response ->
+        repository.checkEmail(Email("$email@$domain")).onSuccess { response ->
             if (response.isSuccessful) {
-                if (response.body()!!.code == 2012) {
-                    _isEmailVerified.postValue("")
-                    userEmail = email+"@"+domain
-                }
-                else if (response.body()!!.code == 1000) {
-                    _isEmailVerified.postValue(EMAIL_ERROR)
-                }
-                else {
-                    _isEmailVerified.postValue("쑤쑤")
+                when (response.body()!!.code) {
+                    2012 -> {
+                        _isEmailVerified.postValue("")
+                        userEmail = "$email@$domain"
+                    }
+                    1000 -> {
+                        _isEmailVerified.postValue(EMAIL_ERROR)
+                    }
+                    else -> {
+                        _isEmailVerified.postValue("쑤쑤")
+                    }
                 }
                 Log.d("tag_success", response.body().toString()+"ah:"+isEmailVerified.value.toString()+"hi")
             } else {
@@ -610,10 +612,10 @@ constructor(
 
     fun sendCode() {
         _loading.postValue(Event(true))
-        Log.d("email",userEmail.toString())
+        Log.d("email", userEmail)
         viewModelScope.launch(Dispatchers.IO) {
             Email(userEmail).let {
-                repository.sendCode(it).let  { response ->
+                repository.sendCode(it).onSuccess  { response ->
                     if (response.isSuccessful) {
                         if (response.body()!!.code == 1000) {
                             _sendCodeSuccess.postValue(Event(true))
@@ -636,7 +638,7 @@ constructor(
 
     private fun checkCode(code: String) = viewModelScope.launch(Dispatchers.IO) {
         Code(userEmail,code).let {
-            repository.checkCode(it).let { response ->
+            repository.checkCode(it).onSuccess { response ->
                 if (response.isSuccessful) {
                     if (response.body()!!.code == 2013) {
                         _isCodeVerified.postValue(SignupChangepwUtils.CODE_ERROR)
@@ -686,7 +688,7 @@ constructor(
         Log.d("tag_user", user.toString())
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.resetPw(user).let { response ->
+            repository.resetPw(user).onSuccess { response ->
                 if (response.isSuccessful) {
                     Log.d("tag_success", "reset: ${response.body()}")
                     if (response.body()!!.code == 1000) {
@@ -707,7 +709,7 @@ constructor(
     private fun deleteAccount(email:String, pw:String) = viewModelScope.launch(Dispatchers.IO) {
         _loading.postValue(Event(true))
         OldUser(email,pw,"").let {
-            repository.deleteAccount(it).let { response ->
+            repository.deleteAccount(it).onSuccess { response ->
                 if (response.isSuccessful && response.body()!!.code == 1000) {
                     _isDeleteAccount.postValue("")
                 }
@@ -727,7 +729,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getService().let { response ->
+            repository.getService().onSuccess { response ->
                 if (response.isSuccessful && response.body()!!.code == 1000) {
                     _isTermSuccess.postValue(Event(true))
                     terms = response.body()!!.result
@@ -740,7 +742,7 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getPrivacy().let { response ->
+            repository.getPrivacy().onSuccess { response ->
                 if (response.isSuccessful && response.body()!!.code == 1000) {
                     _isTermSuccess.postValue(Event(true))
                     terms = response.body()!!.result

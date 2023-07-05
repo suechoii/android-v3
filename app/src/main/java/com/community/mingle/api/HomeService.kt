@@ -14,11 +14,6 @@ interface HomeService {
     suspend fun getUnivRecentPost(
     ): Response<HomeListResponse>
 
-    /* 홈 화면 잔디밭 베스트 게시물 */
-    @GET("/home/univ/best")
-    suspend fun getUnivBestPost(
-    ): Response<HomeListResponse>
-
     /* 홈 화면 광장 최신 게시글 */
     @GET("/home/total/recent")
     suspend fun getTotalRecentPost(

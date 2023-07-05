@@ -50,7 +50,7 @@ constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.searchUnivPost(keyword)
-                .let { response ->
+                .onSuccess { response ->
                     if (response.isSuccessful) {
                         if (!isRefreshing)
                             _loading.postValue(Event(false))
@@ -73,7 +73,7 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
 
             repository.searchTotalPost(keyword)
-                .let { response ->
+                .onSuccess { response ->
                     if (response.isSuccessful) {
                         if (!isRefreshing)
                             _loading.postValue(Event(false))
@@ -81,8 +81,6 @@ constructor(
                             _searchTotalList.postValue(response.body()!!.result.postListDTO)
                         } else if (response.body()!!.code == 3035) {
                             _searchTotalList.postValue(emptyList())
-                        } else {
-
                         }
                     } else {
                         Log.d("tag_fail", "getUnivList Error: ${response.code()}")

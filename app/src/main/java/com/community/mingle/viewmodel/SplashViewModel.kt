@@ -72,7 +72,7 @@ constructor(
             val refreshToken = MingleApplication.pref.refreshToken // refresh 토큰
 
             if (!refreshToken.isNullOrEmpty()) { // 저장된 토큰이 있는 경우
-                homeRepository.getBanner().let { response ->
+                homeRepository.getBanner().onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == 1000) { // 토큰이 유효한 경우
                         _tokenVerified.postValue(true)
                     } else { // 토큰이 유효하지 않은 경우

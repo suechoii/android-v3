@@ -55,19 +55,21 @@ constructor(
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getBanner().let { response ->
+            repository.getBanner().onSuccess { response ->
                 if (response.isSuccessful && response.body()?.code == 1000) {
                     Log.d("tag_success", "getBannerList: ${response.body()}")
                     _banner.postValue(response.body()!!.result)
                     getUnivRecent()
                 }
+            }.onFailure {
+                // TODO: 배너 불러오기 실패 오류
             }
         }
     }
 
     private fun getUnivRecent() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getUnivRecentPost().let { response ->
+            repository.getUnivRecentPost().onSuccess { response ->
                 if (response.isSuccessful) {
                     if (response.body()?.code == 1000) {
                         if (response.body()!!.result.isNotEmpty()) {
@@ -80,13 +82,15 @@ constructor(
                     Log.d("tag_", "getUnivRecentList Error: ${response.code()}")
                 }
                 _loading.postValue(Event(false))
+            }.onFailure {
+                // TODO: 오류 메시지 띄우기
             }
         }
     }
 
     private fun getTotalRecent() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getTotalRecentPost().let { response ->
+            repository.getTotalRecentPost().onSuccess { response ->
                 if (response.isSuccessful) {
                     if (response.body()?.code == 1000) {
                         Log.d("tag_success", "getTotalRecentList: ${response.body()}")
@@ -98,13 +102,15 @@ constructor(
                     //                    }
                     Log.d("tag_", "getTotalRecentList Error: ${response.code()}")
                 }
+            }.onFailure {
+                // TODO: 오류 메시지 띄우기
             }
         }
     }
 
     fun getNotification() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getNotification().let { response ->
+            repository.getNotification().onSuccess { response ->
                 if (response.isSuccessful && response.body()!!.code == 1000) {
                     _getNotificationSuccess.postValue(Event(true))
                     _notiList.postValue(response.body()!!.result)
@@ -115,6 +121,8 @@ constructor(
                     //                    }
                     Log.d("tag_fail", "getNoti Error: ${response.code()}")
                 }
+            }.onFailure {
+                // error on load notification show nothing
             }
         }
     }
@@ -134,7 +142,7 @@ constructor(
 
     fun readNotification(type: String, id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.readNotification(Notifications(type, id)).let { response ->
+            repository.readNotification(Notifications(type, id)).onSuccess { response ->
                 if (response.isSuccessful) {
                     _readNotificationSuccess.postValue(Event(true))
                     Log.d("tag_success", "Read Notification: ${response.body()}")
@@ -144,6 +152,8 @@ constructor(
                     //                    }
                     Log.d("tag_fail", "readNoti Error: ${response.code()}")
                 }
+            }.onFailure {
+                // error on load notification show nothing
             }
         }
     }

@@ -51,7 +51,7 @@ constructor(
             val refreshToken = MingleApplication.pref.refreshToken
             runBlocking {
                     authRepository.refresh(Email(email.toString()), refreshToken.toString())
-                        .let { response ->
+                        .onSuccess { response ->
                             if (response.isSuccessful && response.body()!!.code == 1000) {
                                 MingleApplication.pref.accessToken =
                                     response.body()!!.result.accessToken
@@ -67,6 +67,9 @@ constructor(
                                 MingleApplication.pref.refreshToken = null
                                 MingleApplication.pref.accessToken = null
                             }
+                        }.onFailure {
+                            MingleApplication.pref.refreshToken = null
+                            MingleApplication.pref.accessToken = null
                         }
                 }
             }

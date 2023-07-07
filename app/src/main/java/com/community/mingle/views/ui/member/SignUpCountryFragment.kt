@@ -24,7 +24,7 @@ class SignUpCountryFragment : BaseSignupFragment<FragmentSignupCountrySelectionB
         super.onAttach(context)
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                parentFragmentManager.popBackStack()
+                requireActivity().finish()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -43,6 +43,7 @@ class SignUpCountryFragment : BaseSignupFragment<FragmentSignupCountrySelectionB
             signupViewModel.toggleCountryDropDownShown()
         }
         binding.imageButtonRefreshCountryList.setOnClickListener { signupViewModel.refreshCountryList() }
+        binding.imageButtonClose.setOnClickListener { requireActivity().finish() }
     }
 
     private fun setOnUiStateChangedListener() {
@@ -62,7 +63,7 @@ class SignUpCountryFragment : BaseSignupFragment<FragmentSignupCountrySelectionB
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 signupViewModel.countryDropDownListShow.collect { dropDownShow ->
                     binding.dropDownLayout.setEndIconDrawable(if (dropDownShow) R.drawable.ic_up else R.drawable.ic_down)
-                    binding.dropDownLayout.setBoxBackgroundColorResource(if (dropDownShow) R.color.gray_03 else R.color.white)
+                    binding.dropDownLayout.setBoxBackgroundColorResource(if (dropDownShow) R.color.gray_02 else R.color.white)
                     if (dropDownShow) binding.dropDownLayout.endIconMode = TextInputLayout.END_ICON_DROPDOWN_MENU
                 }
             }

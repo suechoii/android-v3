@@ -51,5 +51,10 @@
     <string name="univ_board_tab_name_council">학생회</string>
     <string name="hotPostsBoard_title">불타오르는 게시판</string>
     <string name="goBack">뒤로가기</string>
+    <string name="close">닫기</string>
+    <string name="country_inquire_message">재학 중인 학교가\n어디에 위치해 있나요?</string>
+    <string name="school_info_require_message">원활한 앱 이용을 위해 재학 정보가 필요해요.</string>
+    <string name="select_country">국가 선택</string>
+    <string name="toNextPage">다음으로</string>
 </resources>
 

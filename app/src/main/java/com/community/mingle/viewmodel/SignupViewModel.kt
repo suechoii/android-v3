@@ -1,7 +1,11 @@
 package com.community.mingle.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.community.mingle.model.user.Country
 import com.community.mingle.service.models.Code
 import com.community.mingle.service.models.Email
 import com.community.mingle.service.models.NewUser
@@ -18,16 +22,40 @@ import com.community.mingle.utils.SignupChangepwUtils.PW_REGEX
 import com.community.mingle.utils.SignupChangepwUtils.validate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.List
+import kotlin.collections.emptyList
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 
 @HiltViewModel
 class SignupViewModel
 @Inject
 constructor(
-    private val repository: MemberRepository
+    private val repository: MemberRepository,
 ) : ViewModel() {
 
+    private val _toastEventFlow = MutableSharedFlow<String>()
+    val toastEventFlow = _toastEventFlow.asSharedFlow()
+    private val _selectableCountryList = MutableStateFlow<List<Country>>(emptyList())
+    val selectableCountryList = _selectableCountryList.asStateFlow()
+    private val _countryDropDownListShow = MutableStateFlow(false)
+    val countryDropDownListShow = _countryDropDownListShow.asStateFlow()
+    private val _refreshCountryListVisible = MutableStateFlow(false)
+    val refreshCountryListVisible = _refreshCountryListVisible.asStateFlow()
+    private val _selectedCountry = MutableStateFlow<Country?>(null)
+    val selectedCountry = _selectedCountry.asStateFlow()
+    val nextButtonInCountrySelectionEnabled = _selectedCountry.map { it != null }
+        .stateIn(viewModelScope, SharingStarted.Lazily, false)
     val univs = mutableMapOf<String, Int>()
 
     // email
@@ -62,39 +90,29 @@ constructor(
     // 각 항목별 verified 여부
     private val _isEmailVerified = MutableLiveData<String>()
     val isEmailVerified: LiveData<String> get() = _isEmailVerified
-
     private val _isCodeVerified = MutableLiveData<String>()
     val isCodeVerified: LiveData<String> get() = _isCodeVerified
-
     private val _isPwVerified = MutableLiveData<String>()
     val isPwVerified: LiveData<String> get() = _isPwVerified
-
     private val _isPwConfirmVerified = MutableLiveData<String>()
     val isPwConfirmVerified: LiveData<String> get() = _isPwConfirmVerified
-
     private val _isNicknameVerified = MutableLiveData<String>()
     val isNicknameVerified: LiveData<String> get() = _isNicknameVerified
-
     private val _isNicknameError = MutableLiveData<String>()
     val isNicknameError: LiveData<String> get() = _isNicknameError
 
     // api call success 여부
     private val _getUnivListSuccess = MutableLiveData<Event<Boolean>>()
     val getUnivListSuccess: LiveData<Event<Boolean>> = _getUnivListSuccess
-
     private val _getDomainSuccess = MutableLiveData<Boolean>()
     val getDomainSuccess: LiveData<Boolean> = _getDomainSuccess
-
     private val _sendCodeSuccess = MutableLiveData<Event<Boolean>>()
     val sendCodeSuccess: LiveData<Event<Boolean>> = _sendCodeSuccess
-
     private val _getTermsSuccess = MutableLiveData<Event<Boolean>>()
     val getTermsSuccess: LiveData<Event<Boolean>> = _getTermsSuccess
-
     private val _signupSuccess = MutableLiveData<Event<Boolean>>()
     val signupSuccess: LiveData<Event<Boolean>> = _signupSuccess
-
-    private var univId : Int = 0
+    private var univId: Int = 0
     private var userEmail = ""
     var domain = ""
     private var userPw = ""
@@ -102,28 +120,56 @@ constructor(
     var termsTitle = ""
     private var userName = ""
 
+    init {
+        getCountryList()
+    }
+
     // 회원가입 단계별 함수
+
+    fun refreshCountryList() {
+        _refreshCountryListVisible.value = false
+        getCountryList()
+    }
+    private fun getCountryList() {
+        viewModelScope.launch {
+            repository.getCountryList()
+                .onSuccess { list ->
+                    _selectableCountryList.value = list
+                    _refreshCountryListVisible.value = false
+                }.onFailure {
+                    _toastEventFlow.emit("국가 목록을 불러오는데 실패했습니다. 새로고침 후 다시 시도해주세요.")
+                    _refreshCountryListVisible.value = true
+                }
+        }
+    }
+
+    fun toggleCountryDropDownShown() {
+        _countryDropDownListShow.update { !it }
+    }
+
+    fun selectCountryByName(countryName: String) {
+        _selectedCountry.value = selectableCountryList.value.find { it.name == countryName }
+    }
+
     fun getUnivList() = viewModelScope.launch(Dispatchers.IO) {
         repository.getUnivList().onSuccess { response ->
             if (response.isSuccessful) {
                 for (i in response.body()!!.result) {
-                    univs[i.name]=i.univIdx
+                    univs[i.name] = i.univIdx
                 }
                 _getUnivListSuccess.postValue(Event(true))
-            }
-            else {
-                Log.d("fail","getUniv: ${response.body()}")
+            } else {
+                Log.d("fail", "getUniv: ${response.body()}")
             }
         }
     }
 
-    fun getDomain(univId : Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun getDomain(univId: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.getDomain(univId).onSuccess { response ->
             if (response.isSuccessful && response.body()!!.code == 1000) {
                 domain = response.body()!!.result[0].domain
                 _getDomainSuccess.postValue(true)
-            }
-            else {
+            } else {
                 Log.d("fail", "getDomain: ${response.body()}")
             }
         }
@@ -135,7 +181,7 @@ constructor(
         univId = _univId
     }
 
-    fun getUnivId() : Int{
+    fun getUnivId(): Int {
         return univId
     }
 
@@ -151,9 +197,11 @@ constructor(
                     2012 -> {
                         _isEmailVerified.postValue(EMAIL_DUP)
                     }
+
                     1000 -> {
                         _isEmailVerified.postValue("")
                     }
+
                     else -> {
                         _isEmailVerified.postValue(" ")
                     }
@@ -169,14 +217,13 @@ constructor(
     fun sendCode() = viewModelScope.launch(Dispatchers.IO) {
         _loading.postValue(Event(true))
 
-        repository.sendCode(Email(userEmail)).onSuccess  { response ->
+        repository.sendCode(Email(userEmail)).onSuccess { response ->
             if (response.isSuccessful) {
                 _loading.postValue(Event(false))
                 if (response.body()!!.code == 1000) {
                     _sendCodeSuccess.postValue(Event(true))
-                    Log.d("tag_success",response.body().toString())
-                }
-                else {
+                    Log.d("tag_success", response.body().toString())
+                } else {
                     Log.d("tag_fail", "sendCode Error: ${response.code()}")
                 }
             } else {
@@ -190,21 +237,18 @@ constructor(
     }
 
     private fun checkCode(code: String) = viewModelScope.launch(Dispatchers.IO) {
-        repository.checkCode(Code(userEmail,code)).onSuccess { response ->
+        repository.checkCode(Code(userEmail, code)).onSuccess { response ->
             if (response.isSuccessful) {
                 if (response.body()!!.code == 2013) {
                     _isCodeVerified.postValue(CODE_ERROR)
-                }
-                else if (response.body()!!.code == 3015) {
+                } else if (response.body()!!.code == 3015) {
                     _isCodeVerified.postValue(CODE_TIMEOUT)
-                }
-                else if (response.body()!!.code == 1000) {
+                } else if (response.body()!!.code == 1000) {
                     _isCodeVerified.postValue("")
-                }
-                else {
+                } else {
                     _isCodeVerified.postValue(" ")
                 }
-                Log.d("tag_success",response.body().toString())
+                Log.d("tag_success", response.body().toString())
             } else {
                 Log.d("tag_fail", "checkCode Error: ${response.code()}")
             }
@@ -243,13 +287,11 @@ constructor(
                     } else {
                         Log.d("tag_fail", "getTerms Error: ${response.body()}")
                     }
-                }
-                else {
+                } else {
                     Log.d("tag_fail", "getTerms Error: ${response.code()}")
                 }
             }
-        }
-        else {
+        } else {
             repository.getPrivacyTerms().onSuccess { response ->
                 if (response.isSuccessful) {
                     if (response.body()!!.code == 1000) {
@@ -270,7 +312,6 @@ constructor(
         _loading.postValue(Event(true))
 
         userName = nickname.value!!
-
         val user = NewUser(
             univId = univId, email = userEmail, pwd = userPw, nickname = userName
         )

@@ -23,7 +23,7 @@ class SignUpSchoolFragment :
         super.onAttach(context)
         callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                requireActivity().finish()
+                parentFragmentManager.popBackStack()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -51,7 +51,7 @@ class SignUpSchoolFragment :
         }
     }
 
-    fun NavController.safeNavigate(id : Int) {
+    private fun NavController.safeNavigate(id : Int) {
         currentDestination?.getAction(id)?.run {
             navigate(id)
         }

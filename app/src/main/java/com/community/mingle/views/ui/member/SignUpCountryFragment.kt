@@ -11,10 +11,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSignupCountrySelectionBinding
+import com.community.mingle.extension.clicks
+import com.community.mingle.extension.throttleFirst
 import com.community.mingle.utils.Constants.toast
 import com.community.mingle.utils.base.BaseSignupFragment
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -42,15 +46,29 @@ class SignUpCountryFragment : BaseSignupFragment<FragmentSignupCountrySelectionB
         binding.typesFilter.setOnClickListener {
             signupViewModel.toggleCountryDropDownShown()
         }
-        binding.imageButtonRefreshCountryList.setOnClickListener { signupViewModel.refreshCountryList() }
+        binding.imageButtonRefreshCountryList
+            .clicks()
+            .throttleFirst(windowDuration = 2000L)
+            .onEach { signupViewModel.refreshCountryList() }
+            .launchIn(lifecycleScope)
+
         binding.imageButtonClose.setOnClickListener { requireActivity().finish() }
     }
 
+
+    private fun parseCountryName(countryCode: Int): String? {
+        return when(countryCode) {
+            1 -> getString(R.string.country_hongkong)
+            2 -> getString(R.string.country_singapore)
+            3 -> getString(R.string.country_UK)
+            else -> null
+        }
+    }
     private fun setOnUiStateChangedListener() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 signupViewModel.selectableCountryList.collect { countries ->
-                    val arrayAdapter = ArrayAdapter(requireContext(), R.layout.item_school, countries.map { it.name })
+                    val arrayAdapter = ArrayAdapter(requireContext(), R.layout.item_school, countries.map { parseCountryName(it.id) ?: it.name })
                     binding.typesFilter.setAdapter(arrayAdapter)
                     binding.typesFilter.setOnItemClickListener { _, _, position, _ ->
                         signupViewModel.selectCountryByName(arrayAdapter.getItem(position).toString())

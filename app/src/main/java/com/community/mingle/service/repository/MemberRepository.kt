@@ -1,5 +1,6 @@
 package com.community.mingle.service.repository
 
+import com.community.mingle.R
 import com.community.mingle.api.MemberService
 import com.community.mingle.model.user.Country
 import com.community.mingle.service.models.Code

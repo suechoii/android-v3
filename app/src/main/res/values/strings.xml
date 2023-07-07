@@ -56,5 +56,8 @@
     <string name="school_info_require_message">원활한 앱 이용을 위해 재학 정보가 필요해요.</string>
     <string name="select_country">국가 선택</string>
     <string name="toNextPage">다음으로</string>
+    <string name="country_hongkong">홍콩</string>
+    <string name="country_singapore">싱가포르</string>
+    <string name="country_UK">영국</string>
 </resources>
 

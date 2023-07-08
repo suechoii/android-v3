@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".views.ui.member.SignUpSchoolFragment">
+
+    <data>
+
+
+        <variable
+            name="viewModel"
+            type="com.community.mingle.viewmodel.SignupViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="30dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25"
+            android:layout_height="wrap_content"
+            />
+
+        <View
+            android:id="@+id/progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:background="@color/gray_02"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="4dp"/>
+
+        <ImageButton
+            android:id="@+id/imageButton_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/transparent"
+            android:contentDescription="@string/close"
+            android:src="@drawable/ic_close"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_country_inquire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:letterSpacing="-0.01"
+            android:text="@string/country_inquire_message"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="@id/imageButton_close"
+            app:layout_constraintTop_toBottomOf="@id/imageButton_close" />
+
+        <TextView
+            android:id="@+id/textView_schoolInfo_require"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="@string/school_info_require_message"
+            android:textColor="@color/gray_03"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/textView_country_inquire"
+            app:layout_constraintTop_toBottomOf="@id/textView_country_inquire" />
+
+        <ImageView
+            android:id="@+id/imageView_countryInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="207dp"
+            android:src="@drawable/ic_country"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/drop_down_layout"
+            style="@style/DropDownTextInputLayoutStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:endIconDrawable="@drawable/ic_down"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageView_countryInfo">
+
+            <AutoCompleteTextView
+                android:id="@+id/typesFilter"
+                android:layout_width="170dp"
+                android:layout_height="44dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/pretendard_regular"
+                android:inputType="none"
+                android:maxLines="1"
+                android:paddingStart="12dp"
+                android:paddingTop="14dp"
+                android:paddingEnd="0dp"
+                android:paddingBottom="13dp"
+                android:singleLine="true"
+                android:text="@string/select_country"
+                android:textColor="@color/gray_03"
+                android:textSize="14sp"
+                tools:ignore="LabelFor" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/imageButton_refreshCountryList"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:padding="5dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toEndOf="@id/drop_down_layout"
+            app:layout_constraintTop_toTopOf="@id/drop_down_layout"
+            app:layout_constraintBottom_toBottomOf="@id/drop_down_layout"
+            android:background="@color/transparent"
+            android:src="@drawable/ic_refresh"
+            app:tint="@color/gray_03"
+            android:layout_marginStart="10dp"/>
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="fill_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_background_selector"
+            android:enabled="@{viewModel.nextButtonInCountrySelectionEnabled}"
+            android:fontFamily="@font/pretendard_regular"
+            android:gravity="center"
+            android:text="@string/toNextPage"
+            android:textColor="@color/gray_04"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:enabled="false" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

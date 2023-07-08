@@ -1,6 +1,8 @@
 package com.community.mingle.service.repository
 
+import com.community.mingle.R
 import com.community.mingle.api.MemberService
+import com.community.mingle.model.user.Country
 import com.community.mingle.service.models.Code
 import com.community.mingle.service.models.Email
 import com.community.mingle.service.models.FcmToken
@@ -58,5 +60,20 @@ constructor(private val memberService: MemberService) {
 
     suspend fun fcmRefresh(fcmToken: FcmToken): Result<Response<ResultResponse>> = runCatching {
         memberService.fcmRefresh(fcmToken)
+    }
+
+    suspend fun getCountryList(): Result<List<Country>> = runCatching {
+        memberService.getCountryList()
+            .let { response ->
+                if(response.isSuccess) {
+                    response.result.map { Country(
+                        id = it.countryId,
+                        name = it.countryName,
+                    ) }
+                }
+                else {
+                    throw IllegalStateException(response.message)
+                }
+            }
     }
 }

@@ -68,4 +68,8 @@ interface MemberService {
     suspend fun fcmRefresh(
         @Body fcmToken: FcmToken
     ) : Response<ResultResponse>
+
+    @GET("/auth/country-list")
+    suspend fun getCountryList(
+    ): CountryListResponse
 }

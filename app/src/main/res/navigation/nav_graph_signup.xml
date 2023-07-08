@@ -4,8 +4,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph_signup"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/signupSchoolFragment">
+    app:startDestination="@id/signupCountryFragment">
+    <fragment
+        android:id="@+id/signupCountryFragment"
+        android:name="com.community.mingle.views.ui.member.SignUpCountryFragment"
+        android:label="fragment_signup_school"
+        tools:layout="@layout/fragment_signup_schoolinfo" >
+        <action
+            android:id="@+id/action_signupCountryFragment_to_signupSchoolFragment"
+            app:destination="@id/signupSchoolFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"/>
 
+    </fragment>
     <fragment
         android:id="@+id/signupSchoolFragment"
         android:name="com.community.mingle.views.ui.member.SignUpSchoolFragment"

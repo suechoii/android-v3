@@ -51,7 +51,7 @@ class HotPostsBoardActivity : BaseActivity<ActivityHotPostsBoardBinding>(R.layou
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 hotPostViewModel.swipeLoading.collect {
-                    if(!it) binding.swipeRefresh.isRefreshing = false
+                    if (!it) binding.swipeRefresh.isRefreshing = false
                 }
             }
         }
@@ -72,12 +72,7 @@ class HotPostsBoardActivity : BaseActivity<ActivityHotPostsBoardBinding>(R.layou
                         override fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
                             val intent = Intent(context, PostActivity::class.java)
                             intent.putExtra("postId", post.postId)
-                            intent.putExtra(
-                                "type", when (post.boardType) {
-                                    PostType.Total -> "광장"
-                                    PostType.Univ -> "잔디밭"
-                                }
-                            )
+                            intent.putExtra("type", post.boardType)
                             intent.putExtra("isBlind", isBlind)
                             intent.putExtra("isReported", isReported)
                             intent.putExtra("reportText", reportText)
@@ -85,15 +80,9 @@ class HotPostsBoardActivity : BaseActivity<ActivityHotPostsBoardBinding>(R.layou
                         }
 
                         override fun onCancelClick(post: PostResult, position: Int) {
-                            postViewModel.unblindPost(
-                                when (post.boardType) {
-                                    PostType.Total -> "광장"
-                                    PostType.Univ -> "잔디밭"
-                                }, post.postId
-                            )
+                            postViewModel.unblindPost(post.boardType ?: "", post.postId)
 
                         }
-
                     })
                 }
             addOnScrollListener(object : RecyclerView.OnScrollListener() {

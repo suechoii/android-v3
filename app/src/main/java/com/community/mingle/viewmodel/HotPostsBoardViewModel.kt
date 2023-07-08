@@ -67,8 +67,8 @@ class HotPostsBoardViewModel @Inject constructor(
 
     private fun updateLastPostIds() {
         _bestPostList.value.let { list ->
-            lastUnivBestPostId = list.lastOrNull { it.boardType == PostType.Univ }?.postId ?: Int.MAX_VALUE
-            lastTotalBestPostId = list.lastOrNull { it.boardType == PostType.Total }?.postId ?: Int.MAX_VALUE
+            lastUnivBestPostId = list.lastOrNull { it.boardType == "잔디밭" }?.postId ?: Int.MAX_VALUE
+            lastTotalBestPostId = list.lastOrNull { it.boardType == "광장" }?.postId ?: Int.MAX_VALUE
         }
     }
 }

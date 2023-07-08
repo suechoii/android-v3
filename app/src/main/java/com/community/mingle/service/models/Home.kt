@@ -1,6 +1,7 @@
 package com.community.mingle.service.models
 
 import com.community.mingle.model.post.HomeHotPost
+import com.community.mingle.model.post.PostType
 import com.google.gson.annotations.SerializedName
 
 data class HomeListResponse (
@@ -14,6 +15,7 @@ data class HomeResult(
     @SerializedName("postId") val postId: Int,
     @SerializedName("title") val title: String,
     @SerializedName("contents") val contents: String,
+    @SerializedName("boardType") val boardType: String? = null,
     @SerializedName("nickname") val nickname: String,
     @SerializedName("likeCount") val likeCount: String,
     @SerializedName("commentCount") val commentCount: String,
@@ -26,6 +28,11 @@ data class HomeResult(
         postId = postId,
         title = title,
         contents = contents,
+        postType = when(boardType) {
+            "잔디밭" -> PostType.Univ
+            "광장" -> PostType.Total
+            else -> null
+        },
         nickname = nickname,
         likeCount = likeCount,
         commentCount = commentCount,

@@ -21,11 +21,10 @@ data class PostResult(
     @SerializedName("contents") val contents: String,
     @SerializedName("nickname") val nickname: String,
     @SerializedName("likeCount") val likeCount: String,
+    @SerializedName("boardType") val boardType: String? = null,
     @SerializedName("commentCount") val commentCount: String,
     @SerializedName("createdAt") val createdAt: String,
     @SerializedName("blinded") var blinded: Boolean,
     @SerializedName("fileAttached") val fileAttached: Boolean,
     @SerializedName("reported") val reported: Boolean
-) {
-    var boardType: PostType = PostType.Univ
-}
+)

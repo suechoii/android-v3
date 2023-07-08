@@ -1,10 +1,8 @@
 package com.community.mingle.model.post
 
-import com.community.mingle.model.post.PostType
-
 data class HomeHotPost(
     val postId: Int,
-    val postType: PostType = PostType.Total, // TODO: change by type
+    val postType: PostType?,
     val title: String,
     val contents: String,
     val nickname: String,

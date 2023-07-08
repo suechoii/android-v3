@@ -50,7 +50,6 @@ constructor(
             )
             if (response.code != 1000) throw IllegalStateException(response.message)
             response.result.postListDTO
-                .onEach { it.boardType = if (response.result.boardName == null) PostType.Total else PostType.Univ } // TODO: need new model class
         }
     }
 }

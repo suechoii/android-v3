@@ -17,7 +17,11 @@ captures/
 .externalNativeBuild/
 .cxx/
 *.apk
+*.aab
+output-metadata.json
 output.json
+.DS_Store
+
 
 # IntelliJ
 *.iml
@@ -35,6 +39,8 @@ render.experimental.xml
 
 ### Android Patch ###
 gen-external-apklibs
+
+# build files
 
 # Replacement of .externalNativeBuild directories introduced
 # with Android Studio 3.5.

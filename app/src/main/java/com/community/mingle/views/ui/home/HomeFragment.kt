@@ -18,6 +18,7 @@ import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentHomeBinding
 import com.community.mingle.model.post.HomeHotPost
+import com.community.mingle.model.post.PostType
 import com.community.mingle.service.models.Banner
 import com.community.mingle.service.models.HomeResult
 import com.community.mingle.utils.Constants.toast
@@ -359,7 +360,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         startPostActivity(
             postId = post.postId,
             authorNickName = post.nickname,
-            boardTypeName = "불타오르는 게시글",
+            boardTypeName = when(post.postType){
+                PostType.Total -> "광장"
+                PostType.Univ -> "잔디밭"
+                null -> ""
+            },
             isBlind = post.blinded,
             isReported = post.reported,
             reportText = post.title,

@@ -152,7 +152,8 @@ constructor(
     }
 
     fun getUnivList() = viewModelScope.launch(Dispatchers.IO) {
-        repository.getUnivList().onSuccess { response ->
+        val countryId = selectedCountry.value?.id ?: return@launch
+        repository.getUnivListByCountryId(countryId).onSuccess { response ->
             if (response.isSuccessful) {
                 for (i in response.body()!!.result) {
                     univs[i.name] = i.univIdx

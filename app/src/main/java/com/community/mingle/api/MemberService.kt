@@ -43,8 +43,9 @@ interface MemberService {
     ): Response<ResultResponse>
 
     /* 대학교 리스트 가져오기 */
-    @GET("/auth/univlist")
+    @GET("/auth/univlist/{countryId}")
     suspend fun getUnivList(
+        @Path("countryId") countryId: Int,
     ): Response<UnivListResponse>
 
     /* 서비스이용약관 가져오기 */

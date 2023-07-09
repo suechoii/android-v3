@@ -1,6 +1,5 @@
 package com.community.mingle.service.repository
 
-import com.community.mingle.R
 import com.community.mingle.api.MemberService
 import com.community.mingle.model.user.Country
 import com.community.mingle.service.models.Code
@@ -30,8 +29,8 @@ constructor(private val memberService: MemberService) {
         memberService.signUp(newUser)
     }
 
-    suspend fun getUnivList(): Result<Response<UnivListResponse>> = runCatching {
-        memberService.getUnivList()
+    suspend fun getUnivListByCountryId(countryId: Int): Result<Response<UnivListResponse>> = runCatching {
+        memberService.getUnivList(countryId)
     }
 
     suspend fun getDomain(univId: Int): Result<Response<UnivDomainResponse>> = runCatching {
@@ -65,13 +64,14 @@ constructor(private val memberService: MemberService) {
     suspend fun getCountryList(): Result<List<Country>> = runCatching {
         memberService.getCountryList()
             .let { response ->
-                if(response.isSuccess) {
-                    response.result.map { Country(
-                        id = it.countryId,
-                        name = it.countryName,
-                    ) }
-                }
-                else {
+                if (response.isSuccess) {
+                    response.result.map {
+                        Country(
+                            id = it.countryId,
+                            name = it.countryName,
+                        )
+                    }
+                } else {
                     throw IllegalStateException(response.message)
                 }
             }

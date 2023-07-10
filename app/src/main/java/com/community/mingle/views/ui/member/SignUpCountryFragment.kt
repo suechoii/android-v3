@@ -9,6 +9,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSignupCountrySelectionBinding
 import com.community.mingle.extension.clicks
@@ -53,22 +55,24 @@ class SignUpCountryFragment : BaseSignupFragment<FragmentSignupCountrySelectionB
             .launchIn(lifecycleScope)
 
         binding.imageButtonClose.setOnClickListener { requireActivity().finish() }
-    }
 
+        binding.buttonNext.setOnClickListener {
+            findNavController().safeNavigate(R.id.action_signupCountryFragment_to_signupSchoolFragment)
 
-    private fun parseCountryName(countryCode: Int): String? {
-        return when(countryCode) {
-            1 -> getString(R.string.country_hongkong)
-            2 -> getString(R.string.country_singapore)
-            3 -> getString(R.string.country_UK)
-            else -> null
         }
     }
+
+    private fun NavController.safeNavigate(id : Int) {
+        currentDestination?.getAction(id)?.run {
+            navigate(id)
+        }
+    }
+
     private fun setOnUiStateChangedListener() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 signupViewModel.selectableCountryList.collect { countries ->
-                    val arrayAdapter = ArrayAdapter(requireContext(), R.layout.item_school, countries.map { parseCountryName(it.id) ?: it.name })
+                    val arrayAdapter = ArrayAdapter(requireContext(), R.layout.item_school, countries.map { it.name })
                     binding.typesFilter.setAdapter(arrayAdapter)
                     binding.typesFilter.setOnItemClickListener { _, _, position, _ ->
                         signupViewModel.selectCountryByName(arrayAdapter.getItem(position).toString())

@@ -14,6 +14,7 @@ class TotalVPAdapter(fragment: TotalFragment) : FragmentStateAdapter(fragment) {
             TotalBoardType.Free -> TotalFreeFragment()
             TotalBoardType.Questions -> TotalQuestionsFragment()
             TotalBoardType.MingleNews -> TotalNewsFragment()
+            else -> TODO()
         }
     }
 }

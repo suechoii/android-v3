@@ -52,4 +52,12 @@ constructor(
             response.result.postListDTO
         }
     }
+
+    suspend fun getAllUnivPostList(lastPostId: Int) : Result<List<PostResult>> = withContext(Dispatchers.IO) {
+        runCatching {
+            val response = univTotalService.getAllUnivPosts(lastPostId)
+            if (response.code != 1000) throw IllegalStateException(response.message)
+            response.result.postListDTO
+        }
+    }
 }

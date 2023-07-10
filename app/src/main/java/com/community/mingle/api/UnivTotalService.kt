@@ -43,4 +43,9 @@ interface UnivTotalService {
         @Query("totalPost") totalPost: Int,
         @Query("univPost") univPost: Int,
     ): PostListResponse
+
+    @GET("/post/univ/posts")
+    suspend fun getAllUnivPosts(
+        @Query("postId") postId: Int,
+    ): PostListResponse
 }

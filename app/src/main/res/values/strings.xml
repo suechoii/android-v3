@@ -59,5 +59,7 @@
     <string name="country_hongkong">홍콩</string>
     <string name="country_singapore">싱가포르</string>
     <string name="country_UK">영국</string>
+    <string name="total_board_tab_name_all">전체글</string>
+    <string name="univ_board_tab_name_all">전체글</string>
 </resources>
 

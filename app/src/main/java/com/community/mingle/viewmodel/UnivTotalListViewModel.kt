@@ -11,6 +11,9 @@ import com.community.mingle.service.repository.UnivTotalRepository
 import com.community.mingle.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -58,6 +61,9 @@ constructor(
     private val _clearUnivTotalList = MutableLiveData<Event<Boolean>>()
     val clearUnivTotalList: LiveData<Event<Boolean>> = _clearUnivTotalList
 
+    private val _univAllList = MutableStateFlow<List<PostResult>>(emptyList())
+    val univAllList = _univAllList.asStateFlow()
+
     //    fun updateList(postList: Array<PostResult>) {
     //        _newUnivTotalList.postValue(postList.toList())
     //    }
@@ -66,7 +72,7 @@ constructor(
         if (isRefreshing)
             _loading.postValue(Event(true))
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             repository.getUnivPost(category, 100000000)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
@@ -112,6 +118,27 @@ constructor(
                         Log.d("tag_fail", "getUnivList Error: ${response.code()}")
                     }
                 }
+        }
+    }
+
+    fun loadNewAllUnivPosts() {
+        viewModelScope.launch {
+            _loading.postValue(Event(true))
+            repository.getAllUnivPostList(Int.MAX_VALUE)
+                .onSuccess { list  -> _univAllList.value = list }
+                .onFailure { _univAllList.value = emptyList() }
+            _loading.postValue(Event(false))
+        }
+    }
+
+    fun loadNextAllUnivPosts() {
+        viewModelScope.launch {
+            _loading.postValue(Event(true))
+            val lastPostId = _univAllList.value.lastOrNull()?.postId ?: Int.MAX_VALUE
+
+            repository.getAllUnivPostList(lastPostId)
+                .onSuccess { list  -> _univAllList.update { it.plus(list) } }
+            _loading.postValue(Event(false))
         }
     }
 

@@ -11,6 +11,9 @@ import com.community.mingle.service.repository.UnivTotalRepository
 import com.community.mingle.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,33 +33,30 @@ constructor(
     private val _univTotalList2 = MutableLiveData<List<PostResult>>()
     val univTotalList2: LiveData<List<PostResult>> get() = _univTotalList2
     private val _univTotalList3 = MutableLiveData<List<PostResult>>()
-    val univTotalList3: LiveData<List<PostResult>> get() = _univTotalList3
     private val _univTotalList4 = MutableLiveData<List<PostResult>>()
     val univTotalList4: LiveData<List<PostResult>> get() = _univTotalList4
     private val _univTotalList5 = MutableLiveData<List<PostResult>>()
-    val univTotalList5: LiveData<List<PostResult>> get() = _univTotalList5
     private val _lastPostId1 = MutableLiveData<Int>()
     val lastPostId1: LiveData<Int> get() = _lastPostId1
     private val _lastPostId2 = MutableLiveData<Int>()
     val lastPostId2: LiveData<Int> get() = _lastPostId2
     private val _lastPostId3 = MutableLiveData<Int>()
-    val lastPostId3: LiveData<Int> get() = _lastPostId3
     private val _lastPostId4 = MutableLiveData<Int>()
     val lastPostId4: LiveData<Int> get() = _lastPostId4
     private val _lastPostId5 = MutableLiveData<Int>()
-    val lastPostId5: LiveData<Int> get() = _lastPostId5
     private val _newUnivTotalList1 = MutableLiveData<List<PostResult>>()
     val newUnivTotalList1: LiveData<List<PostResult>> get() = _newUnivTotalList1
     private val _newUnivTotalList2 = MutableLiveData<List<PostResult>>()
     val newUnivTotalList2: LiveData<List<PostResult>> get() = _newUnivTotalList2
-    private val _newUnivTotalList3 = MutableLiveData<List<PostResult>>()
-    val newUnivTotalList3: LiveData<List<PostResult>> get() = _newUnivTotalList3
     private val _newUnivTotalList4 = MutableLiveData<List<PostResult>>()
     val newUnivTotalList4: LiveData<List<PostResult>> get() = _newUnivTotalList4
-    private val _newUnivTotalList5 = MutableLiveData<List<PostResult>>()
-    val newUnivTotalList5: LiveData<List<PostResult>> get() = _newUnivTotalList5
-    private val _clearUnivTotalList = MutableLiveData<Event<Boolean>>()
-    val clearUnivTotalList: LiveData<Event<Boolean>> = _clearUnivTotalList
+
+    private val _univAllList = MutableStateFlow<List<PostResult>>(emptyList())
+    val univAllList = _univAllList.asStateFlow()
+
+
+    private val _totalAllList = MutableStateFlow<List<PostResult>>(emptyList())
+    val totalAllList = _totalAllList.asStateFlow()
 
     //    fun updateList(postList: Array<PostResult>) {
     //        _newUnivTotalList.postValue(postList.toList())
@@ -66,7 +66,7 @@ constructor(
         if (isRefreshing)
             _loading.postValue(Event(true))
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             repository.getUnivPost(category, 100000000)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
@@ -112,6 +112,48 @@ constructor(
                         Log.d("tag_fail", "getUnivList Error: ${response.code()}")
                     }
                 }
+        }
+    }
+
+    fun loadNewAllUnivPosts() {
+        viewModelScope.launch {
+            _loading.postValue(Event(true))
+            repository.getAllUnivPostList(Int.MAX_VALUE)
+                .onSuccess { list  -> _univAllList.value = list }
+                .onFailure { _univAllList.value = emptyList() }
+            _loading.postValue(Event(false))
+        }
+    }
+
+    fun loadNextAllUnivPosts() {
+        viewModelScope.launch {
+            _loading.postValue(Event(true))
+            val lastPostId = _univAllList.value.lastOrNull()?.postId ?: Int.MAX_VALUE
+
+            repository.getAllUnivPostList(lastPostId)
+                .onSuccess { list  -> _univAllList.update { it.plus(list) } }
+            _loading.postValue(Event(false))
+        }
+    }
+
+    fun loadNewAllTotalPosts() {
+        viewModelScope.launch {
+            _loading.postValue(Event(true))
+            repository.getAllTotalPostList(Int.MAX_VALUE)
+                .onSuccess { list  -> _totalAllList.value = list }
+                .onFailure { _totalAllList.value = emptyList() }
+            _loading.postValue(Event(false))
+        }
+    }
+
+    fun loadNextAllTotalPosts() {
+        viewModelScope.launch {
+            _loading.postValue(Event(true))
+            val lastPostId = totalAllList.value.lastOrNull()?.postId ?: Int.MAX_VALUE
+
+            repository.getAllTotalPostList(lastPostId)
+                .onSuccess { list  -> _totalAllList.update { it.plus(list) } }
+            _loading.postValue(Event(false))
         }
     }
 

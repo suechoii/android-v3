@@ -129,7 +129,7 @@
             app:tint="@color/gray_03"
             android:layout_marginStart="10dp"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_next"
             android:layout_width="fill_parent"
             android:layout_height="48dp"

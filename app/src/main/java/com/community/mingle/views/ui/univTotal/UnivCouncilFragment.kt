@@ -90,10 +90,6 @@ class UnivCouncilFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.
             currentPostList = it.toTypedArray()
         }
 
-        viewModel.clearUnivTotalList.observe(binding.lifecycleOwner!!) {
-            univListAdapter.clearUnivTotalList()
-        }
-
         viewModel.lastPostId4.observe(binding.lifecycleOwner!!) {
             lastPostId = it
             if (lastPostId != -1)

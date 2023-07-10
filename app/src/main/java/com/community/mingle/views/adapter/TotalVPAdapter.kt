@@ -7,13 +7,14 @@ import com.community.mingle.views.ui.univTotal.*
 
 class TotalVPAdapter(fragment: TotalFragment) : FragmentStateAdapter(fragment) {
 
-    override fun getItemCount(): Int = 3
+    override fun getItemCount(): Int = 4
 
     override fun createFragment(position: Int): Fragment {
         return when (TotalBoardType.parseFromTabPosition(position)) {
             TotalBoardType.Free -> TotalFreeFragment()
             TotalBoardType.Questions -> TotalQuestionsFragment()
             TotalBoardType.MingleNews -> TotalNewsFragment()
+            TotalBoardType.All -> TotalAllFragment()
         }
     }
 }

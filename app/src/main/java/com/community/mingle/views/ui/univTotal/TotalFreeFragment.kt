@@ -89,10 +89,6 @@ class TotalFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
             currentPostList = it.toTypedArray()
         }
 
-        viewModel.clearUnivTotalList.observe(binding.lifecycleOwner!!) {
-            totalListAdapter.clearUnivTotalList()
-        }
-
         viewModel.lastPostId1.observe(binding.lifecycleOwner!!) {
             lastPostId = it
             if (lastPostId != -1)

@@ -89,10 +89,6 @@ class TotalNewsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
             currentPostList = it.toTypedArray()
         }
 
-        viewModel.clearUnivTotalList.observe(binding.lifecycleOwner!!) {
-            totalListAdapter.clearUnivTotalList()
-        }
-
         viewModel.lastPostId4.observe(binding.lifecycleOwner!!) {
             lastPostId = it
             if (lastPostId != -1)

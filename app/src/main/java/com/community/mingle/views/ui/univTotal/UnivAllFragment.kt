@@ -74,6 +74,7 @@ class UnivAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.frag
                 if (it) {
                     binding.layoutProgress.root.visibility = View.VISIBLE
                 } else {
+                    binding.swipeRefresh.isRefreshing = false
                     binding.layoutProgress.root.visibility = View.GONE
                 }
             }
@@ -83,18 +84,9 @@ class UnivAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.frag
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.univAllList.collect {
                     univListAdapter.submitList(it)
+                    binding.swipeRefresh.isRefreshing = false
                 }
             }
-        }
-
-        viewModel.clearUnivTotalList.observe(binding.lifecycleOwner!!) {
-            univListAdapter.clearUnivTotalList()
-        }
-
-        viewModel.newUnivTotalList4.observe(binding.lifecycleOwner!!) {
-            univListAdapter.addUnivTotalList(it, isFirst)
-            binding.swipeRefresh.isRefreshing = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
@@ -146,7 +138,7 @@ class UnivAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.frag
 
         binding.swipeRefresh.setOnRefreshListener {
             isFirst = true
-            viewModel.getUnivList(5, true)
+            viewModel.loadNewAllUnivPosts()
         }
 
         binding.univtotalRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {

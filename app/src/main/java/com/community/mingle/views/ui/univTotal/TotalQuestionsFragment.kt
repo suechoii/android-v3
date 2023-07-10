@@ -90,10 +90,6 @@ class TotalQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layo
             currentPostList = it.toTypedArray()
         }
 
-        viewModel.clearUnivTotalList.observe(binding.lifecycleOwner!!) {
-            totalListAdapter.clearUnivTotalList()
-        }
-
         viewModel.lastPostId2.observe(binding.lifecycleOwner!!) {
             lastPostId = it
             if (lastPostId != -1)

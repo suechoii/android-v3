@@ -54,6 +54,10 @@ constructor(
     private val _univAllList = MutableStateFlow<List<PostResult>>(emptyList())
     val univAllList = _univAllList.asStateFlow()
 
+
+    private val _totalAllList = MutableStateFlow<List<PostResult>>(emptyList())
+    val totalAllList = _totalAllList.asStateFlow()
+
     //    fun updateList(postList: Array<PostResult>) {
     //        _newUnivTotalList.postValue(postList.toList())
     //    }
@@ -128,6 +132,27 @@ constructor(
 
             repository.getAllUnivPostList(lastPostId)
                 .onSuccess { list  -> _univAllList.update { it.plus(list) } }
+            _loading.postValue(Event(false))
+        }
+    }
+
+    fun loadNewAllTotalPosts() {
+        viewModelScope.launch {
+            _loading.postValue(Event(true))
+            repository.getAllTotalPostList(Int.MAX_VALUE)
+                .onSuccess { list  -> _totalAllList.value = list }
+                .onFailure { _totalAllList.value = emptyList() }
+            _loading.postValue(Event(false))
+        }
+    }
+
+    fun loadNextAllTotalPosts() {
+        viewModelScope.launch {
+            _loading.postValue(Event(true))
+            val lastPostId = totalAllList.value.lastOrNull()?.postId ?: Int.MAX_VALUE
+
+            repository.getAllTotalPostList(lastPostId)
+                .onSuccess { list  -> _totalAllList.update { it.plus(list) } }
             _loading.postValue(Event(false))
         }
     }

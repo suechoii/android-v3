@@ -348,8 +348,11 @@ constructor(
                             }
                         }
                     } else {
+                        _loading.postValue(Event(false))
                         Log.d("tag_fail", "reportPost Error: ${response.code()}")
                     }
+                }.onFailure {
+                    _loading.postValue(Event(false))
                 }
         }
     }

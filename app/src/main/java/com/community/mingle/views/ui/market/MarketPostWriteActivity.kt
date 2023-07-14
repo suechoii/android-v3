@@ -367,8 +367,11 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
                 }
             }
 
-            viewModel.loading.observe(binding.lifecycleOwner!!) {
-                loadingDialog.show()
+            viewModel.loading.observe(binding.lifecycleOwner!!) {event ->
+                event.getContentIfNotHandled()?.let {
+                    if(it) loadingDialog.show()
+                    else loadingDialog.dismiss()
+                }
             }
 
             viewModel.successEvent.observe(this) { event ->
@@ -408,7 +411,7 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
             )
         }
 
-        viewModel.writeMarketPost(multipartList ?: null)
+        viewModel.writeMarketPost(multipartList)
     }
 
     private fun selectGalleryIntent() {

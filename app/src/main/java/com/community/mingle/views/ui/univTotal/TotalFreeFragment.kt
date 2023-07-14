@@ -161,11 +161,13 @@ class TotalFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
                 val totalCount = recyclerView.adapter!!.itemCount - 1
                 firstPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition()
 
-
-                // 스크롤이 끝에 도달하면
-                if (!binding.univtotalRv.canScrollVertically(1) && lastPosition == totalCount && lastPostId != -1) {
-                    viewModel.getTotalNextPosts(1, lastPostId)
-                }
+                viewModel.loadNextTotalIfNeeded(
+                    canScrollVertical = binding.univtotalRv.canScrollVertically(1),
+                    lastVisiblePostPos = lastPosition,
+                    lastPostId = lastPostId,
+                    totalCount = totalCount,
+                    category = 1
+                )
             }
         })
     }

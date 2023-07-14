@@ -53,7 +53,7 @@ constructor(
     val newUnivTotalList4: LiveData<List<PostListItem>> get() = _newUnivTotalList4
     private val _univAllList = MutableStateFlow<List<PostListItem>>(emptyList())
     val univAllList = _univAllList.asStateFlow()
-    private val _totalAllList = MutableStateFlow<List<PostResult>>(emptyList())
+    private val _totalAllList = MutableStateFlow<List<PostListItem>>(emptyList())
     val totalAllList = _totalAllList.asStateFlow()
     private var univAllLastCalledPostId: Int = Int.MAX_VALUE
     private var univFreeLastCalledPostId: Int = Int.MAX_VALUE
@@ -231,13 +231,26 @@ constructor(
     fun loadNextAllTotalPosts() {
         viewModelScope.launch {
             _loading.postValue(Event(true))
-            val lastPostId = totalAllList.value.lastOrNull()?.postId ?: Int.MAX_VALUE
+            val lastPostId = (totalAllList.value.lastOrNull { it is PostResult } as PostResult?)?.postId ?: Int.MAX_VALUE
             if (totalAllLastCalledPostId > lastPostId) {
                 val t = totalAllLastCalledPostId
                 totalAllLastCalledPostId = lastPostId
                 repository.getAllTotalPostList(lastPostId)
-                    .onSuccess { list -> _totalAllList.update { current -> current.plus(list.sortedByDescending { it.postId }) } }
-                    .onFailure { totalAllLastCalledPostId = t }
+                    .onSuccess { list ->
+                        if (list.isEmpty()) {
+                            totalAllLastCalledPostId = -1
+                            _totalAllList.update { originalList -> originalList.plus(PostListItem.NoMorePost) }
+                        }
+                        _totalAllList.update { current ->
+                            current
+                                .plus(list.sortedByDescending { it.postId })
+                                .filter { it !is PostListItem.Loading }
+                        }
+                    }
+                    .onFailure {
+                        _totalAllList.update { list -> list.filter { it !is PostListItem.Loading } }
+                        totalAllLastCalledPostId = t
+                    }
             }
             _loading.postValue(Event(false))
         }
@@ -248,16 +261,31 @@ constructor(
         lastVisibleItemPosition: Int,
     ) {
         viewModelScope.launch {
-            if ((!canScrollVertical && lastVisibleItemPosition == totalAllList.value.lastIndex && totalAllList.value.isNotEmpty())
+            if ((!canScrollVertical
+                        && lastVisibleItemPosition == totalAllList.value.filter { it !is PostListItem.Loading }.lastIndex
+                        && totalAllList.value.isNotEmpty())
                 || (lastVisibleItemPosition == totalAllList.value.lastIndex - 10)
             ) {
-                val lastPostId = totalAllList.value.lastOrNull()?.postId ?: Int.MAX_VALUE
-                if (univAllLastCalledPostId > lastPostId) {
-                    val t = univAllLastCalledPostId
-                    univAllLastCalledPostId = lastPostId
+                val lastPostId = (totalAllList.value.lastOrNull { it is PostResult } as PostResult?)?.postId ?: Int.MAX_VALUE
+                if (totalAllLastCalledPostId > lastPostId) {
+                    val t = totalAllLastCalledPostId
+                    totalAllLastCalledPostId = lastPostId
                     repository.getAllTotalPostList(lastPostId)
-                        .onSuccess { list -> _totalAllList.update { newList -> newList.plus(list).sortedByDescending { it.postId } } }
-                        .onFailure { univAllLastCalledPostId = t }
+                        .onSuccess { list ->
+                            if (list.isEmpty()) {
+                                totalAllLastCalledPostId = -1
+                                _totalAllList.update { originalList -> originalList.plus(PostListItem.NoMorePost) }
+                            }
+                            _totalAllList.update { current ->
+                                current
+                                    .plus(list.sortedByDescending { it.postId })
+                                    .filter { it !is PostListItem.Loading }
+                            }
+                        }
+                        .onFailure {
+                            _totalAllList.update { list -> list.filter { it !is PostListItem.Loading } }
+                            totalAllLastCalledPostId = t
+                        }
                 }
             }
         }
@@ -356,10 +384,12 @@ constructor(
                 1 -> {
                     _univTotalList1.postValue(listOf(PostListItem.Loading))
                 }
-                2-> {
+
+                2 -> {
                     _univTotalList2.postValue(listOf(PostListItem.Loading))
                 }
-                5-> {
+
+                5 -> {
                     _univTotalList4.postValue(listOf(PostListItem.Loading))
                 }
             }
@@ -420,10 +450,12 @@ constructor(
                         1 -> {
                             _univTotalList1.postValue(emptyList())
                         }
-                        2-> {
+
+                        2 -> {
                             _univTotalList2.postValue(emptyList())
                         }
-                        5-> {
+
+                        5 -> {
                             _univTotalList4.postValue(emptyList())
                         }
                     }
@@ -441,10 +473,12 @@ constructor(
                     1 -> {
                         _univTotalList1.postValue(emptyList())
                     }
-                    2-> {
+
+                    2 -> {
                         _univTotalList2.postValue(emptyList())
                     }
-                    5-> {
+
+                    5 -> {
                         _univTotalList4.postValue(emptyList())
                     }
                 }
@@ -475,6 +509,19 @@ constructor(
                         return@launch
                     }
                 }
+            when (category) {
+                1 -> {
+                    _univTotalList1.postValue(listOf(PostListItem.Loading))
+                }
+
+                2 -> {
+                    _univTotalList2.postValue(listOf(PostListItem.Loading))
+                }
+
+                4 -> {
+                    _univTotalList4.postValue(listOf(PostListItem.Loading))
+                }
+            }
             _loading.postValue(Event(true))
             repository.getTotalPost(category, lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
@@ -503,24 +550,60 @@ constructor(
                         }
                     } else if (response.body()!!.code == 3031) {
                         when (category) {
-                            1 -> _lastPostId1.postValue(-1)
-                            2 -> _lastPostId2.postValue(-1)
-                            4 -> _lastPostId4.postValue(-1)
+                            1 -> {
+                                _univTotalList1.postValue(listOf(PostListItem.NoMorePost))
+                                _lastPostId1.postValue(-1)
+                                totalFreeLastCalledPostId = -1
+                            }
+
+                            2 -> {
+                                _univTotalList2.postValue(listOf(PostListItem.NoMorePost))
+                                _lastPostId2.postValue(-1)
+                                totalQuestionLastCalledPostId = -1
+                            }
+
+                            4 -> {
+                                _univTotalList4.postValue(listOf(PostListItem.NoMorePost))
+                                _lastPostId4.postValue(-1)
+                                totalMingleLastCalledPostId = -1
+                            }
                         }
                     }
                 } else {
                     when (category) {
-                        1 -> totalFreeLastCalledPostId = t
-                        2 -> totalQuestionLastCalledPostId = t
-                        4 -> totalMingleLastCalledPostId = t
+                        1 -> {
+                            _univTotalList1.postValue(emptyList())
+                            totalFreeLastCalledPostId = t
+                        }
+
+                        2 -> {
+                            _univTotalList2.postValue(emptyList())
+                            totalQuestionLastCalledPostId = t
+                        }
+
+                        4 -> {
+                            _univTotalList4.postValue(emptyList())
+                            totalMingleLastCalledPostId = t
+                        }
                     }
                     Log.d("tag_fail", "getTotalNextPosts Error: ${response.code()}")
                 }
             }.onFailure {
                 when (category) {
-                    1 -> totalFreeLastCalledPostId = t
-                    2 -> totalQuestionLastCalledPostId = t
-                    4 -> totalMingleLastCalledPostId = t
+                    1 -> {
+                        _univTotalList1.postValue(emptyList())
+                        totalFreeLastCalledPostId = t
+                    }
+
+                    2 -> {
+                        _univTotalList2.postValue(emptyList())
+                        totalQuestionLastCalledPostId = t
+                    }
+
+                    4 -> {
+                        _univTotalList4.postValue(emptyList())
+                        totalMingleLastCalledPostId = t
+                    }
                 }
             }
         }

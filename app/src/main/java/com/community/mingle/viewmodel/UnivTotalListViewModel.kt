@@ -14,7 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,14 +31,13 @@ constructor(
     val nextListLoading = _nextListLoading.asStateFlow()
 
     /* 잔디밭 / 광장 게시물 리스트 불러오기 */
-    private val _univTotalList1 = MutableLiveData<List<PostResult>>()
-    val univTotalList1: LiveData<List<PostResult>> get() = _univTotalList1
-    private val _univTotalList2 = MutableLiveData<List<PostResult>>()
-    val univTotalList2: LiveData<List<PostResult>> get() = _univTotalList2
-    private val _univTotalList3 = MutableLiveData<List<PostResult>>()
-    private val _univTotalList4 = MutableLiveData<List<PostResult>>()
-    val univTotalList4: LiveData<List<PostResult>> get() = _univTotalList4
-    private val _univTotalList5 = MutableLiveData<List<PostResult>>()
+    private val _univTotalList1 = MutableLiveData<List<PostListItem>>()
+    val univTotalList1: LiveData<List<PostListItem>> get() = _univTotalList1
+    private val _univTotalList2 = MutableLiveData<List<PostListItem>>()
+    val univTotalList2: LiveData<List<PostListItem>> get() = _univTotalList2
+    private val _univTotalList3 = MutableLiveData<List<PostListItem>>()
+    private val _univTotalList4 = MutableLiveData<List<PostListItem>>()
+    val univTotalList4: LiveData<List<PostListItem>> get() = _univTotalList4
     private val _lastPostId1 = MutableLiveData<Int>()
     val lastPostId1: LiveData<Int> get() = _lastPostId1
     private val _lastPostId2 = MutableLiveData<Int>()
@@ -47,13 +45,12 @@ constructor(
     private val _lastPostId3 = MutableLiveData<Int>()
     private val _lastPostId4 = MutableLiveData<Int>()
     val lastPostId4: LiveData<Int> get() = _lastPostId4
-    private val _lastPostId5 = MutableLiveData<Int>()
-    private val _newUnivTotalList1 = MutableLiveData<List<PostResult>>()
-    val newUnivTotalList1: LiveData<List<PostResult>> get() = _newUnivTotalList1
-    private val _newUnivTotalList2 = MutableLiveData<List<PostResult>>()
-    val newUnivTotalList2: LiveData<List<PostResult>> get() = _newUnivTotalList2
-    private val _newUnivTotalList4 = MutableLiveData<List<PostResult>>()
-    val newUnivTotalList4: LiveData<List<PostResult>> get() = _newUnivTotalList4
+    private val _newUnivTotalList1 = MutableLiveData<List<PostListItem>>()
+    val newUnivTotalList1: LiveData<List<PostListItem>> get() = _newUnivTotalList1
+    private val _newUnivTotalList2 = MutableLiveData<List<PostListItem>>()
+    val newUnivTotalList2: LiveData<List<PostListItem>> get() = _newUnivTotalList2
+    private val _newUnivTotalList4 = MutableLiveData<List<PostListItem>>()
+    val newUnivTotalList4: LiveData<List<PostListItem>> get() = _newUnivTotalList4
     private val _univAllList = MutableStateFlow<List<PostListItem>>(emptyList())
     val univAllList = _univAllList.asStateFlow()
     private val _totalAllList = MutableStateFlow<List<PostResult>>(emptyList())
@@ -332,7 +329,7 @@ constructor(
     }
 
     fun getUnivNextPosts(category: Int, lastPostId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val t =
                 when (category) {
                     1 -> {
@@ -355,6 +352,17 @@ constructor(
                     }
                 }
             _loading.postValue(Event(true))
+            when (category) {
+                1 -> {
+                    _univTotalList1.postValue(listOf(PostListItem.Loading))
+                }
+                2-> {
+                    _univTotalList2.postValue(listOf(PostListItem.Loading))
+                }
+                5-> {
+                    _univTotalList4.postValue(listOf(PostListItem.Loading))
+                }
+            }
             repository.getUnivPost(category, lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
                     _loading.postValue(Event(false))
@@ -382,9 +390,23 @@ constructor(
                         }
                     } else if (response.body()!!.code == 3031) {
                         when (category) {
-                            1 -> _lastPostId1.postValue(-1)
-                            2 -> _lastPostId2.postValue(-1)
-                            5 -> _lastPostId4.postValue(-1)
+                            1 -> {
+                                _univTotalList1.postValue(listOf(PostListItem.NoMorePost))
+                                _lastPostId1.postValue(-1)
+                                univFreeLastCalledPostId = -1
+                            }
+
+                            2 -> {
+                                _univTotalList2.postValue(listOf(PostListItem.NoMorePost))
+                                _lastPostId2.postValue(-1)
+                                univQuestionLastCalledPostId = -1
+                            }
+
+                            5 -> {
+                                _univTotalList4.postValue(listOf(PostListItem.NoMorePost))
+                                _lastPostId4.postValue(-1)
+                                univCouncilLastCalledPostId = -1
+                            }
                         }
                     }
                 } else {
@@ -393,6 +415,18 @@ constructor(
                         2 -> univQuestionLastCalledPostId = t
                         5 -> univCouncilLastCalledPostId = t
                     }
+
+                    when (category) {
+                        1 -> {
+                            _univTotalList1.postValue(emptyList())
+                        }
+                        2-> {
+                            _univTotalList2.postValue(emptyList())
+                        }
+                        5-> {
+                            _univTotalList4.postValue(emptyList())
+                        }
+                    }
                     Log.d("tag_fail", "getUnivNextPosts Error: ${response.code()}")
                 }
             }.onFailure {
@@ -400,6 +434,19 @@ constructor(
                     1 -> univFreeLastCalledPostId = t
                     2 -> univQuestionLastCalledPostId = t
                     5 -> univCouncilLastCalledPostId = t
+                }
+
+
+                when (category) {
+                    1 -> {
+                        _univTotalList1.postValue(emptyList())
+                    }
+                    2-> {
+                        _univTotalList2.postValue(emptyList())
+                    }
+                    5-> {
+                        _univTotalList4.postValue(emptyList())
+                    }
                 }
             }
         }
@@ -481,14 +528,14 @@ constructor(
 
     fun loadNextUnivIfNeeded(
         canScrollVertical: Boolean,
-        lastVisiblePostPos: Int,
+        lastVisiblePostPosition: Int,
         lastPostId: Int,
         totalCount: Int,
         category: Int,
     ) {
         viewModelScope.launch {
-            if ((!canScrollVertical && lastVisiblePostPos == totalCount && lastPostId != -1)
-                || (lastVisiblePostPos == totalCount - 10)
+            if ((!canScrollVertical && lastVisiblePostPosition == totalCount && lastPostId != -1)
+                || (lastVisiblePostPosition == totalCount - 10)
             ) {
                 getUnivNextPosts(category, lastPostId)
             }

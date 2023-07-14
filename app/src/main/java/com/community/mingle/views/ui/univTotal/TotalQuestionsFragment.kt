@@ -25,7 +25,6 @@ class TotalQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layo
     private val viewModel: UnivTotalListViewModel by viewModels()
     private val viewModel2 : PostViewModel by viewModels()
     private lateinit var totalListAdapter: UnivTotalListAdapter
-    private lateinit var currentPostList: Array<PostResult>
     private var lastPostId: Int = 0
     private var tempLastPostId: Int = 0
     private var firstPosition: Int = 0
@@ -87,7 +86,6 @@ class TotalQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layo
             totalListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
             isFirst = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel.lastPostId2.observe(binding.lifecycleOwner!!) {
@@ -99,7 +97,6 @@ class TotalQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layo
         viewModel.newUnivTotalList2.observe(binding.lifecycleOwner!!) {
             totalListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->

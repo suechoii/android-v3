@@ -89,7 +89,6 @@ class UnivFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
             univListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
             isFirst = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel.lastPostId1.observe(binding.lifecycleOwner!!) {
@@ -101,7 +100,6 @@ class UnivFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
         viewModel.newUnivTotalList1.observe(binding.lifecycleOwner!!) {
             univListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
@@ -168,9 +166,13 @@ class UnivFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
                 val totalCount = recyclerView.adapter!!.itemCount - 1
                 firstPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition()
                 // 스크롤이 끝에 도달하면
-                if (!binding.univtotalRv.canScrollVertically(1) && lastPosition == totalCount && lastPostId != -1) {
-                    viewModel.getUnivNextPosts(1, lastPostId)
-                }
+                viewModel.loadNextUnivIfNeeded(
+                    canScrollVertical = binding.univtotalRv.canScrollVertically(1),
+                    lastVisiblePostPosition = lastPosition,
+                    lastPostId = lastPostId,
+                    totalCount = totalCount,
+                    category = 1
+                )
             }
         })
     }

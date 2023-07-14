@@ -18,21 +18,17 @@ import javax.inject.Inject
 class SearchViewModel
 @Inject
 constructor(
-    private val repository: UnivTotalRepository
-): ViewModel() {
+    private val repository: UnivTotalRepository,
+) : ViewModel() {
 
     private val _loading = MutableLiveData<Event<Boolean>>()
     val loading: LiveData<Event<Boolean>> = _loading
-
     private val _searchUnivList = MutableLiveData<List<PostResult>>()
     val searchUnivList: LiveData<List<PostResult>> get() = _searchUnivList
-
     private val _searchTotalList = MutableLiveData<List<PostResult>>()
     val searchTotalList: LiveData<List<PostResult>> get() = _searchTotalList
-
     private val _newUnivList = MutableLiveData<List<PostResult>>()
     val newUnivList: LiveData<List<PostResult>> get() = _newUnivList
-
     private val _newTotalList = MutableLiveData<List<PostResult>>()
     val newTotalList: LiveData<List<PostResult>> get() = _newTotalList
 
@@ -44,7 +40,7 @@ constructor(
         _newTotalList.postValue(emptyList())
     }
 
-    fun getUnivSearchList(keyword:String,isRefreshing:Boolean) {
+    fun getUnivSearchList(keyword: String, isRefreshing: Boolean) {
         if (isRefreshing)
             _loading.postValue(Event(true))
 
@@ -66,19 +62,21 @@ constructor(
         }
     }
 
-    fun getTotalSearchList(keyword: String, isRefreshing:Boolean) {
+    fun getTotalSearchList(keyword: String, isRefreshing: Boolean) {
         if (isRefreshing)
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-
             repository.searchTotalPost(keyword)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
                         if (!isRefreshing)
                             _loading.postValue(Event(false))
                         if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
-                            _searchTotalList.postValue(response.body()!!.result.postListDTO)
+                            _searchTotalList.postValue(
+                                searchTotalList.value?.plus(response.body()!!.result.postListDTO) ?: response.body()!!
+                                    .result.postListDTO
+                            )
                         } else if (response.body()!!.code == 3035) {
                             _searchTotalList.postValue(emptyList())
                         }
@@ -86,7 +84,6 @@ constructor(
                         Log.d("tag_fail", "getUnivList Error: ${response.code()}")
                     }
                 }
-
         }
     }
 }

@@ -25,7 +25,6 @@ class TotalNewsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
     private val viewModel: UnivTotalListViewModel by viewModels()
     private val viewModel2 : PostViewModel by viewModels()
     private lateinit var totalListAdapter: UnivTotalListAdapter
-    private lateinit var currentPostList: Array<PostResult>
     private var lastPostId: Int = 0
     private var tempLastPostId: Int = 0
     private var firstPosition: Int = 0
@@ -86,7 +85,6 @@ class TotalNewsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
             totalListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
             isFirst = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel.lastPostId4.observe(binding.lifecycleOwner!!) {
@@ -98,7 +96,6 @@ class TotalNewsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
         viewModel.newUnivTotalList4.observe(binding.lifecycleOwner!!) {
             totalListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->

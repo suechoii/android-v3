@@ -198,9 +198,9 @@ class UnivTotalListAdapter : ListAdapter<PostListItem, UnivTotalListAdapter.Univ
         this.submitList(emptyList())
     }
 
-    fun addUnivTotalList(postList: List<PostResult>, isFirst: Boolean) {
+    fun addUnivTotalList(postList: List<PostListItem>, isFirst: Boolean) {
         if (!isFirst) {
-            submitList(this.currentList + postList)
+            submitList(this.currentList.filter { it !is PostListItem.Loading } + postList)
         } else {
             submitList(postList)
         }

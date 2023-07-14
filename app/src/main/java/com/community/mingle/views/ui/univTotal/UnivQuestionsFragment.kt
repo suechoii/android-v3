@@ -86,7 +86,6 @@ class UnivQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layou
             univListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
             isFirst = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel.lastPostId2.observe(binding.lifecycleOwner!!) {
@@ -98,7 +97,6 @@ class UnivQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layou
         viewModel.newUnivTotalList2.observe(binding.lifecycleOwner!!) {
             univListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->

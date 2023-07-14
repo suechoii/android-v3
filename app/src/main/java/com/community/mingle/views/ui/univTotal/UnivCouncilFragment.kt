@@ -1,11 +1,9 @@
 package com.community.mingle.views.ui.univTotal
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -87,7 +85,6 @@ class UnivCouncilFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.
             univListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
             isFirst = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel.lastPostId4.observe(binding.lifecycleOwner!!) {
@@ -99,7 +96,6 @@ class UnivCouncilFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.
         viewModel.newUnivTotalList4.observe(binding.lifecycleOwner!!) {
             univListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
@@ -166,7 +162,7 @@ class UnivCouncilFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.
                 // 스크롤이 끝에 도달하면
                 viewModel.loadNextUnivIfNeeded(
                     canScrollVertical = canScrollVertical,
-                    lastVisiblePostPos = lastPosition,
+                    lastVisiblePostPosition = lastPosition,
                     lastPostId = lastPostId,
                     totalCount = totalCount,
                     category = 5

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentUnivtotalPageBinding
+import com.community.mingle.service.models.PostListItem
 import com.community.mingle.service.models.PostResult
 import com.community.mingle.utils.base.BaseFragment
 import com.community.mingle.viewmodel.PostViewModel
@@ -25,7 +26,6 @@ class TotalFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
     private val viewModel: UnivTotalListViewModel by viewModels()
     private val viewModel2 : PostViewModel by viewModels()
     private lateinit var totalListAdapter: UnivTotalListAdapter
-    private lateinit var currentPostList: Array<PostResult>
     private var lastPostId: Int = 0
     private var tempLastPostId: Int = 0
     private var firstPosition: Int = 0
@@ -86,7 +86,6 @@ class TotalFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
             totalListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
             isFirst = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel.lastPostId1.observe(binding.lifecycleOwner!!) {
@@ -96,9 +95,9 @@ class TotalFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
         }
 
         viewModel.newUnivTotalList1.observe(binding.lifecycleOwner!!) {
+
             totalListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->

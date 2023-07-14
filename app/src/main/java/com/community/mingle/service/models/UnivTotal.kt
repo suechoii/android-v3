@@ -27,4 +27,9 @@ data class PostResult(
     @SerializedName("blinded") var blinded: Boolean,
     @SerializedName("fileAttached") val fileAttached: Boolean,
     @SerializedName("reported") val reported: Boolean
-)
+): PostListItem
+
+sealed interface PostListItem {
+    object Loading: PostListItem
+    object NoMorePost: PostListItem
+}

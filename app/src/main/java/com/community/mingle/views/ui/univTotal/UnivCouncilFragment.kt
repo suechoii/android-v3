@@ -162,11 +162,15 @@ class UnivCouncilFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.
                     (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
                 val totalCount = recyclerView.adapter!!.itemCount - 1
                 firstPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition()
-
+                val canScrollVertical = binding.univtotalRv.canScrollVertically(1)
                 // 스크롤이 끝에 도달하면
-                if (!binding.univtotalRv.canScrollVertically(1) && lastPosition == totalCount && lastPostId != -1) {
-                    viewModel.getUnivNextPosts(5, lastPostId)
-                }
+                viewModel.loadNextUnivIfNeeded(
+                    canScrollVertical = canScrollVertical,
+                    lastVisiblePostPos = lastPosition,
+                    lastPostId = lastPostId,
+                    totalCount = totalCount,
+                    category = 5
+                )
             }
         })
     }

@@ -144,13 +144,13 @@ class TotalAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
 
                 val lastPosition =
                     (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
-                val totalCount = recyclerView.adapter!!.itemCount - 1
                 firstPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition()
 
                 // 스크롤이 끝에 도달하면
-                if (!binding.univtotalRv.canScrollVertically(1) && lastPosition == totalCount && viewModel.totalAllList.value.isNotEmpty()) {
-                    viewModel.loadNextAllTotalPosts()
-                }
+                viewModel.loadNextAllTotalPostsIfNeeded(
+                    canScrollVertical = binding.univtotalRv.canScrollVertically(1),
+                    lastVisibleItemPosition = lastPosition,
+                )
             }
         })
     }

@@ -10,15 +10,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.BR
 import com.community.mingle.R
 import com.community.mingle.databinding.ItemPostBinding
+import com.community.mingle.databinding.ItemPostNextListLoadingBinding
+import com.community.mingle.databinding.ItemPostNoMoreListBinding
+import com.community.mingle.service.models.PostListItem
 import com.community.mingle.service.models.PostResult
 
-class UnivTotalListAdapter : ListAdapter<PostResult, UnivTotalListAdapter.UnivTotalViewHolder>(
-    object : DiffUtil.ItemCallback<PostResult>() {
-        override fun areItemsTheSame(oldItem: PostResult, newItem: PostResult): Boolean {
-            return oldItem.postId == newItem.postId
+class UnivTotalListAdapter : ListAdapter<PostListItem, UnivTotalListAdapter.UnivTotalViewHolder>(
+    object : DiffUtil.ItemCallback<PostListItem>() {
+        override fun areItemsTheSame(oldItem: PostListItem, newItem: PostListItem): Boolean {
+            return oldItem is PostResult
+                    && newItem is PostResult
+                    && oldItem.postId == newItem.postId
         }
 
-        override fun areContentsTheSame(oldItem: PostResult, newItem: PostResult): Boolean {
+        override fun areContentsTheSame(oldItem: PostListItem, newItem: PostListItem): Boolean {
             return oldItem == newItem
         }
     }
@@ -44,113 +49,148 @@ class UnivTotalListAdapter : ListAdapter<PostResult, UnivTotalListAdapter.UnivTo
         viewGroup: ViewGroup,
         viewType: Int,
     ): UnivTotalListAdapter.UnivTotalViewHolder {
-        val binding: ItemPostBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(viewGroup.context),
-            R.layout.item_post,
-            viewGroup,
-            false
-        )
-        return UnivTotalViewHolder(binding)
+        when (viewType) {
+            0 -> {
+                val binding: ItemPostBinding = DataBindingUtil.inflate(
+                    LayoutInflater.from(viewGroup.context),
+                    R.layout.item_post,
+                    viewGroup,
+                    false
+                )
+                return UnivTotalViewHolder.ListItem(binding, mItemClickListener)
+            }
+            1 -> {
+                val binding = ItemPostNextListLoadingBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+                return UnivTotalViewHolder.Loading(binding)
+            }
+            2 -> {
+                val binding = ItemPostNoMoreListBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
+                return UnivTotalViewHolder.NoMorePost(binding)
+            }
+            else -> {
+                throw IllegalArgumentException("Invalid view type")
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is PostResult -> 0
+            PostListItem.Loading -> 1
+            PostListItem.NoMorePost -> 2
+        }
     }
 
     override fun onBindViewHolder(holder: UnivTotalViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        when (holder) {
+            is UnivTotalViewHolder.ListItem -> holder.bind(getItem(position) as PostResult)
+            is UnivTotalViewHolder.Loading -> {}
+            is UnivTotalViewHolder.NoMorePost -> {}
+        }
     }
 
-    inner class UnivTotalViewHolder(val binding: ItemPostBinding) : RecyclerView.ViewHolder(binding.root) {
+    sealed class UnivTotalViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(postResult: PostResult) {
-            binding.setVariable(BR.item, postResult)
+        class Loading(binding: ItemPostNextListLoadingBinding) : UnivTotalViewHolder(binding.root)
+        class NoMorePost(binding: ItemPostNoMoreListBinding): UnivTotalViewHolder(binding.root)
+        class ListItem(
+            val binding: ItemPostBinding,
+            private val itemClickListener: MyItemClickListener,
+        ) : UnivTotalViewHolder(binding.root) {
 
-            if (postResult.blinded) {
-                binding.likeimg.visibility = View.INVISIBLE
-                binding.commentimg.visibility = View.INVISIBLE
-                binding.photo.visibility = View.INVISIBLE
-                binding.contenttext.visibility = View.INVISIBLE
-                binding.titletext.visibility = View.INVISIBLE
-                binding.liketext.visibility = View.INVISIBLE
-                binding.commenttext.visibility = View.INVISIBLE
-                binding.anonymous.visibility = View.INVISIBLE
-                binding.time.visibility = View.INVISIBLE
-                binding.dot.visibility = View.INVISIBLE
+            fun bind(postResult: PostResult) {
+                binding.setVariable(BR.item, postResult)
 
-                binding.blindedText.visibility = View.VISIBLE
-                binding.cancelBlindTv.visibility = View.VISIBLE
+                if (postResult.blinded) {
+                    binding.likeimg.visibility = View.INVISIBLE
+                    binding.commentimg.visibility = View.INVISIBLE
+                    binding.photo.visibility = View.INVISIBLE
+                    binding.contenttext.visibility = View.INVISIBLE
+                    binding.titletext.visibility = View.INVISIBLE
+                    binding.liketext.visibility = View.INVISIBLE
+                    binding.commenttext.visibility = View.INVISIBLE
+                    binding.anonymous.visibility = View.INVISIBLE
+                    binding.time.visibility = View.INVISIBLE
+                    binding.dot.visibility = View.INVISIBLE
 
-                binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(
-                        post = postResult,
-                        position = absoluteAdapterPosition,
-                        isBlind = true,
-                        isReported = false,
-                        reportText = null,
-                    )
-                }
-            } else if (postResult.reported) {
-                binding.likeimg.visibility = View.INVISIBLE
-                binding.commentimg.visibility = View.INVISIBLE
-                binding.photo.visibility = View.INVISIBLE
-                binding.contenttext.visibility = View.INVISIBLE
-                binding.titletext.visibility = View.INVISIBLE
-                binding.liketext.visibility = View.INVISIBLE
-                binding.commenttext.visibility = View.INVISIBLE
-                binding.anonymous.visibility = View.INVISIBLE
-                binding.time.visibility = View.INVISIBLE
-                binding.dot.visibility = View.INVISIBLE
+                    binding.blindedText.visibility = View.VISIBLE
+                    binding.cancelBlindTv.visibility = View.VISIBLE
 
-                binding.blindedText.visibility = View.VISIBLE
-                binding.blindedText.text = postResult.title
+                    binding.root.setOnClickListener {
+                        itemClickListener.onItemClick(
+                            post = postResult,
+                            position = absoluteAdapterPosition,
+                            isBlind = true,
+                            isReported = false,
+                            reportText = null,
+                        )
+                    }
+                } else if (postResult.reported) {
+                    binding.likeimg.visibility = View.INVISIBLE
+                    binding.commentimg.visibility = View.INVISIBLE
+                    binding.photo.visibility = View.INVISIBLE
+                    binding.contenttext.visibility = View.INVISIBLE
+                    binding.titletext.visibility = View.INVISIBLE
+                    binding.liketext.visibility = View.INVISIBLE
+                    binding.commenttext.visibility = View.INVISIBLE
+                    binding.anonymous.visibility = View.INVISIBLE
+                    binding.time.visibility = View.INVISIBLE
+                    binding.dot.visibility = View.INVISIBLE
 
-                binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(
-                        post = postResult,
-                        position = absoluteAdapterPosition,
-                        isBlind = false,
-                        isReported = true,
-                        reportText = postResult.title
-                    )
-                }
-            } else {
-                val fileattached = postResult.fileAttached
-                if (fileattached) {
-                    binding.photo.visibility = View.VISIBLE
+                    binding.blindedText.visibility = View.VISIBLE
+                    binding.blindedText.text = postResult.title
+
+                    binding.root.setOnClickListener {
+                        itemClickListener.onItemClick(
+                            post = postResult,
+                            position = absoluteAdapterPosition,
+                            isBlind = false,
+                            isReported = true,
+                            reportText = postResult.title
+                        )
+                    }
                 } else {
-                    binding.photo.visibility = View.GONE
+                    val fileattached = postResult.fileAttached
+                    if (fileattached) {
+                        binding.photo.visibility = View.VISIBLE
+                    } else {
+                        binding.photo.visibility = View.GONE
+                    }
+
+                    binding.likeimg.visibility = View.VISIBLE
+                    binding.commentimg.visibility = View.VISIBLE
+                    binding.contenttext.visibility = View.VISIBLE
+                    binding.titletext.visibility = View.VISIBLE
+                    binding.liketext.visibility = View.VISIBLE
+                    binding.commenttext.visibility = View.VISIBLE
+                    binding.anonymous.visibility = View.VISIBLE
+                    binding.time.visibility = View.VISIBLE
+                    binding.dot.visibility = View.VISIBLE
+
+                    binding.blindedText.visibility = View.GONE
+                    binding.cancelBlindTv.visibility = View.GONE
+
+                    binding.root.setOnClickListener {
+                        itemClickListener.onItemClick(
+                            post = postResult,
+                            position = absoluteAdapterPosition,
+                            isBlind = false,
+                            isReported = false,
+                            reportText = null
+                        )
+                    }
                 }
 
-                binding.likeimg.visibility = View.VISIBLE
-                binding.commentimg.visibility = View.VISIBLE
-                binding.contenttext.visibility = View.VISIBLE
-                binding.titletext.visibility = View.VISIBLE
-                binding.liketext.visibility = View.VISIBLE
-                binding.commenttext.visibility = View.VISIBLE
-                binding.anonymous.visibility = View.VISIBLE
-                binding.time.visibility = View.VISIBLE
-                binding.dot.visibility = View.VISIBLE
-
-                binding.blindedText.visibility = View.GONE
-                binding.cancelBlindTv.visibility = View.GONE
-
-                binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(
+                binding.cancelBlindTv.setOnClickListener {
+                    itemClickListener.onCancelClick(
                         post = postResult,
-                        position = absoluteAdapterPosition,
-                        isBlind = false,
-                        isReported = false,
-                        reportText = null
+                        position = absoluteAdapterPosition
                     )
                 }
+
+                binding.executePendingBindings()
+
             }
-
-            binding.cancelBlindTv.setOnClickListener {
-                mItemClickListener.onCancelClick(
-                    post = postResult,
-                    position = absoluteAdapterPosition
-                )
-            }
-
-            binding.executePendingBindings()
-
         }
     }
 

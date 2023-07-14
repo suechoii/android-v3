@@ -11,12 +11,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
@@ -24,10 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.trimmedLength
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.R
-import com.community.mingle.databinding.ActivityPostMarketBinding
-import com.community.mingle.databinding.ActivityPostWriteBinding
 import com.community.mingle.databinding.ActivityPostWriteMarketBinding
-import com.community.mingle.databinding.FragmentPostTypeSelectBinding
 import com.community.mingle.utils.DialogUtils
 import com.community.mingle.utils.ImageUtils.bitmapResize
 import com.community.mingle.utils.ImageUtils.convertBitmapToByte
@@ -38,21 +31,15 @@ import com.community.mingle.utils.RecyclerViewUtils
 import com.community.mingle.utils.ResUtils
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.viewmodel.MarketPostViewModel
-import com.community.mingle.viewmodel.PostWriteViewModel
 import com.community.mingle.views.adapter.MarketPostWriteImageAdapter
-import com.community.mingle.views.adapter.PostWriteImageAdapter
 import com.community.mingle.views.ui.LoadingDialog
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
 @AndroidEntryPoint

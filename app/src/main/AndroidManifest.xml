@@ -65,11 +65,11 @@
             android:name=".views.ui.market.MarketPostActivity"/>
         <activity
             android:name=".views.ui.market.MarketPostEditActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             />
         <activity
             android:name=".views.ui.market.MarketPostWriteActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             />
         <activity android:name=".views.ui.market.MarketImageSlideActivity" />
         <activity android:name=".views.ui.board.ImageSlideActivity" />

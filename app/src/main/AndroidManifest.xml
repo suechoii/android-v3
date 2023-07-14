@@ -55,7 +55,8 @@
         <activity
             android:name=".views.ui.member.StartActivity"/>
         <activity
-            android:name=".views.ui.board.PostWriteActivity"/>
+            android:name=".views.ui.board.PostWriteActivity"
+            />
         <activity
             android:name=".views.ui.board.PostEditActivity"/>
         <activity
@@ -63,9 +64,13 @@
         <activity
             android:name=".views.ui.market.MarketPostActivity"/>
         <activity
-            android:name=".views.ui.market.MarketPostEditActivity"/>
+            android:name=".views.ui.market.MarketPostEditActivity"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity
-            android:name=".views.ui.market.MarketPostWriteActivity"/>
+            android:name=".views.ui.market.MarketPostWriteActivity"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity android:name=".views.ui.market.MarketImageSlideActivity" />
         <activity android:name=".views.ui.board.ImageSlideActivity" />
         <activity android:name=".views.ui.search.SearchActivity" />

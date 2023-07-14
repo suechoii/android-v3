@@ -126,7 +126,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/scrollview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/post_detail_toolbar"
+                app:layout_constraintStart_toStartOf="parent">
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/scrollview_postdetail"
                     app:layout_constraintTop_toBottomOf="@id/post_detail_toolbar"
@@ -614,7 +619,7 @@
                     </FrameLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
+            </androidx.core.widget.NestedScrollView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

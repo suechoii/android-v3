@@ -12,6 +12,14 @@ Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('/Users/a1/Documents/GitHub/mingle/keystore/release-keystore.jks')
+            storePassword 'Mingle2023!'
+            keyAlias 'release'
+            keyPassword 'Mingle2023!'
+        }
+    }
     compileSdkVersion 33
     buildToolsVersion '33.0.0'
 
@@ -27,8 +35,10 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            minifyEnabled true
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.release
+            debuggable true
         }
         debug {
 //            applicationIdSuffix = ".test"

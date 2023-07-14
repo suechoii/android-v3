@@ -77,6 +77,7 @@ constructor(
                     when (response.body()!!.code) {
                         1000 -> {
                             _loginSuccess.postValue(Event(userEmail))
+                            _loading.postValue(Event(false))
                             MingleApplication.pref.accessToken =
                                 response.body()!!.result!!.accessToken
                             MingleApplication.pref.refreshToken =
@@ -88,17 +89,24 @@ constructor(
                         }
                         3011 -> {
                             _alertMsg.postValue(Event("일치하는 이메일이나 비밀번호를 찾지 못했습니다."))
+                            _loading.postValue(Event(false))
                             Log.d("tag_fail", "login Error: ${response.code()}")
                         }
                         3017 -> {
                             _alertMsg.postValue(Event("일치하는 이메일이나 비밀번호를 찾지 못했습니다."))
+                            _loading.postValue(Event(false))
                             Log.d("tag_fail", "login Error: ${response.code()}")
                         }
                     }
                 } else {
                     Log.d("tag_fail", "login Error: ${response.code()}")
+                    _loading.postValue(Event(false))
                 }
             }
+                .onFailure {
+                    _alertMsg.postValue(Event("네트워크 상태가 좋지 않습니다."))
+                    _loading.postValue(Event(false))
+                }
         }
     }
 

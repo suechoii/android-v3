@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.ActivityMainBinding
 import com.community.mingle.databinding.BottomDialogTermsBinding
 import com.community.mingle.databinding.HomeTermsBinding
@@ -26,14 +27,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val postId = intent.getIntExtra("postId", -1000)
-        val boardType = intent.getStringExtra("type")
-        val tabName = intent.getStringExtra("tabName")
+        val boardType = intent.getStringExtra(IntentConstants.BoardType)
+        val categoryTypeName = intent.getStringExtra(IntentConstants.CategoryType)
         if (postId != -1000 && boardType != null) {
             val intent = Intent(this, PostActivity::class.java)
                 .apply {
                     putExtra("postId", postId)
-                    putExtra("type", boardType)
-                    putExtra("tabName", tabName)
+                    putExtra(IntentConstants.BoardType,boardType)
+                    putExtra(IntentConstants.CategoryType,categoryTypeName)
                 }
             startActivity(intent)
         }

@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.MainActivity
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.ActivityPost2Binding
 import com.community.mingle.databinding.BottomDialogReportBinding
 import com.community.mingle.service.models.Comment2
@@ -57,9 +58,8 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     private lateinit var currentCommentList: Array<Comment2>
     private lateinit var postImageListAdapter: PostImageAdapter
     private var postId by Delegates.notNull<Int>()
-    lateinit var boardType: String
-    lateinit var boardName: String
-    private var tabName: String = ""
+    var boardType: String = ""
+    var categoryType: String = ""
     private var isBlind: Boolean = false
     private var isReported: Boolean = false
     private var reportText: String? = null
@@ -103,14 +103,21 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     private fun processIntent() {
         postId = intent.getIntExtra("postId", -1000)
         postPosition = intent.getIntExtra("position", 0)
-        boardType = intent.getStringExtra("type").toString()
-        boardName = intent.getStringExtra("board").toString()
-        if (boardType == "UnivPost")
-            boardType = "잔디밭"
-        else if (boardType == "TotalPost") {
-            boardType = "광장"
-        }
-        tabName = intent.getStringExtra("tabName") ?: boardType
+        boardType = intent.getStringExtra(IntentConstants.BoardType)
+            ?.let { if (it == "UnivPost") "잔디밭" else if (it == "TotalPost") "광장" else it }
+            ?: intent.getStringExtra("type")
+                    ?: intent.getStringExtra("board")
+                .let {
+                    when (it) {
+                        "UnivPost" -> "잔디밭"
+                        "TotalPost" -> {
+                            "광장"
+                        }
+
+                        else -> it.toString()
+                    }
+                }
+        categoryType = intent.getStringExtra(IntentConstants.CategoryType) ?: ""
         isBlind = intent.getBooleanExtra("isBlind", false)
         isReported = intent.getBooleanExtra("isReported", false)
         reportText = intent.getStringExtra("reportText")
@@ -124,7 +131,7 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
             toolbar2.overflowIcon = null
             setSupportActionBar(toolbar2)
             supportActionBar?.apply {
-                binding.boardNameTv2.text = tabName
+                binding.boardNameTv2.text = boardType
                 setDisplayShowTitleEnabled(false)
                 setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
                 setHomeAsUpIndicator(R.drawable.ic_back)
@@ -143,7 +150,8 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
             toolbar2.overflowIcon = null
             setSupportActionBar(toolbar2)
             supportActionBar?.apply {
-                binding.boardNameTv2.text = tabName
+                binding.boardNameTv2.text = boardType
+                binding.categoryNameTv2.text = categoryType
                 setDisplayShowTitleEnabled(false)
                 setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
                 setHomeAsUpIndicator(R.drawable.ic_back)
@@ -171,6 +179,7 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         }
 
         viewModel.post.observe(binding.lifecycleOwner!!) {
+            if (it == null) return@observe
             binding.dateTimeTv.text = it.createdAt.toDate()?.formatTo("MM/dd HH:mm").toString()
             binding.dateTime2Tv.text = it.createdAt.toDate()?.formatTo("MM/dd HH:mm").toString()
             binding.post = it
@@ -194,7 +203,7 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 binding.anonTv.text = it.nickname + " (나)"
                 binding.anonTv.setTextColor(ContextCompat.getColor(this, R.color.orange_02))
             } else {
-                if (boardName == "학생회" || boardName == "밍글소식") {
+                if (categoryType == "학생회" || categoryType == "밍글소식") {
                     binding.anonSpecialTv.text = it.nickname
                     binding.specialIcon.visibility = View.VISIBLE
                     binding.viewTv.visibility = View.VISIBLE
@@ -300,7 +309,8 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                     toolbar2.overflowIcon = null
                     setSupportActionBar(toolbar2)
                     supportActionBar?.apply {
-                        binding.boardNameTv2.text = tabName
+                        binding.boardNameTv2.text = boardType
+                        binding.categoryNameTv2.text = categoryType
                         setDisplayShowTitleEnabled(false)
                         setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
                         setHomeAsUpIndicator(R.drawable.ic_back)
@@ -486,7 +496,8 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
 
         setSupportActionBar(toolbar)
         supportActionBar?.apply {
-            binding.boardNameTv.text = tabName
+            binding.boardNameTv.text = boardType
+            binding.categoryNameTv.text = categoryType
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
             setHomeAsUpIndicator(R.drawable.ic_back)

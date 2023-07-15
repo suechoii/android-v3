@@ -11,12 +11,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
@@ -24,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.trimmedLength
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.ActivityPostWriteBinding
 import com.community.mingle.databinding.FragmentPostTypeSelectBinding
 import com.community.mingle.utils.DialogUtils
@@ -44,7 +41,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -58,33 +54,27 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
     private lateinit var loadingDialog: LoadingDialog
     private lateinit var boardType: String
     private lateinit var boardName: String
-    private lateinit var tabName : String
-
+    private lateinit var categoryType: String
     private var uriPaths: ArrayList<Uri> = ArrayList()
-    var imageList : MutableList<MultipartBody.Part>? = null
+    var imageList: MutableList<MultipartBody.Part>? = null
     private var uriList: ArrayList<Uri> = ArrayList() // 이미지에 대한 Uri 리스트
-
     private var bitmaplist: ArrayList<Bitmap> = ArrayList()
-
     private var postTitleFilled: Boolean = false
     private var postContentFilled: Boolean = false
-
-    private var fileNameList : ArrayList<String> = ArrayList<String>()  // 미디어 파일명 리스트 초기화
+    private var fileNameList: ArrayList<String> = ArrayList<String>()  // 미디어 파일명 리스트 초기화
 
     /*
        deprecated된 OnActivityResult를 대신하는 콜백 함수로, 갤러리에서 이미지를 선택하면 호출됨.
        resultCode와 data를 가지고 있음. requestCode는 쓰이지 않음.
       */
     private val galleryActivityResult =
-    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 try {
                     // 이미지 다중 선택시
                     if (it.data?.clipData != null) {
                         var clipData = it.data?.clipData
-
                         //val count = it.data!!.clipData!!.itemCount
-
                         if (clipData!!.itemCount > 5 || (imageAdapter.itemCount + clipData.itemCount) > 5) {
                             DialogUtils.showCustomOneTextDialog(
                                 this,
@@ -104,7 +94,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
                                 )
                                 uriList.add(uri)
                                 list.add(uriToBitmap(uri, this))
-                                bitmaplist.add(uriToBitmap(uri,this))
+                                bitmaplist.add(uriToBitmap(uri, this))
                             }
 
                             if (binding.writeImageRv.adapter!!.itemCount == 0) {
@@ -114,10 +104,8 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
                             imageAdapter.addItems(list)
                         }
                     }
-
                     // 이미지 단일 선택시
                     else if (it.data?.data != null) {
-
                         if (binding.writeImageRv.adapter!!.itemCount == 0) {
                             binding.writeImageRv.visibility = View.VISIBLE
                         }
@@ -128,22 +116,20 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
                             )!!
                         )
                         uriList.add(it.data?.data!!)
-                        bitmaplist.add(uriToBitmap(it.data?.data!!,this))
+                        bitmaplist.add(uriToBitmap(it.data?.data!!, this))
                         imageAdapter.addItem(uriToBitmap(it.data?.data!!, this))
                     }
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
             }
-    }
-
+        }
     private val requestActivity =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 try {
                     // 이미지 다중 선택시
                     if (it.data?.clipData != null) {
-
                         val count = it.data!!.clipData!!.itemCount
 
                         if (count > 5 || (imageAdapter.itemCount + count) > 5) {
@@ -166,10 +152,8 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
                             imageAdapter.addItems(list)
                         }
                     }
-
                     // 이미지 단일 선택시
                     else if (it.data?.data != null) {
-
                         if (binding.writeImageRv.adapter!!.itemCount == 0) {
                             binding.writeImageRv.visibility = View.VISIBLE
                         }
@@ -194,12 +178,11 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
     private fun processIntent() {
         // 이 부분은 이제 어떤 탭에서 넘어오는지에 따라 정해짐
         boardName = intent.getStringExtra("boardName").toString()
-        boardType = intent.getStringExtra("type").toString()
-        tabName = intent.getStringExtra("tabName").toString()
+        boardType = intent.getStringExtra(IntentConstants.BoardType).toString()
+        categoryType = intent.getStringExtra(IntentConstants.CategoryType).toString()
     }
 
     private fun initView() {
-
         loadingDialog = LoadingDialog(this@PostWriteActivity)
 
         binding.postPhotoIv.setOnClickListener {
@@ -222,7 +205,6 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
 
     private fun initRV() {
         imageAdapter = PostWriteImageAdapter()
-
         val spaceDecoration = RecyclerViewUtils.HorizontalSpaceItemDecoration(20) // 아이템 사이의 거리
         binding.writeImageRv.apply {
             adapter = imageAdapter
@@ -230,7 +212,6 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
             addItemDecoration(spaceDecoration)
             hasFixedSize()
         }
-
         // x 버튼 눌러 이미지 리사이클러뷰의 이미지 아이템 삭제
         imageAdapter.setOnPostWriteImageClickListener(object :
             PostWriteImageAdapter.OnPostWriteImageClickListener {
@@ -251,8 +232,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
             viewModel.isAnon.value = true
             binding.btnAnonTv.setTextColor(ResUtils.getColor(R.color.orange_02))
             binding.btnAnonTick.setColorFilter(ResUtils.getColor(R.color.orange_02))
-        }
-        else {
+        } else {
             viewModel.isAnon.value = false
             binding.btnAnonTv.setTextColor(ResUtils.getColor(R.color.gray_03))
             binding.btnAnonTick.setColorFilter(ResUtils.getColor(R.color.gray_03))
@@ -277,9 +257,8 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
                 getImageList()
             }
         }
-
         // 게시글 제목 리스너
-        viewModel.title.observe (binding.lifecycleOwner!!) {
+        viewModel.title.observe(binding.lifecycleOwner!!) {
             if (it.trimmedLength() > 0) {
                 postTitleFilled = true
                 // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530
@@ -293,9 +272,8 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
                 binding.postSendTv.isEnabled = false
             }
         }
-
         // 게시글 본문 리스너
-        viewModel.content.observe (binding.lifecycleOwner!!) {
+        viewModel.content.observe(binding.lifecycleOwner!!) {
             if (it.trimmedLength() > 0) {
                 postContentFilled = true
                 // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530
@@ -310,36 +288,33 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
             }
         }
 
-            viewModel.alertMsg.observe(this) { event ->
-                event.getContentIfNotHandled()?.let {
-                    showDialog(it)
-                }
+        viewModel.alertMsg.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                showDialog(it)
             }
+        }
 
-            viewModel.loading.observe(binding.lifecycleOwner!!) {
-                loadingDialog.show()
+        viewModel.loading.observe(binding.lifecycleOwner!!) {
+            loadingDialog.show()
+        }
+
+        viewModel.successEvent.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                val intent = Intent(this@PostWriteActivity, PostActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                intent.putExtra("postId", it)
+                intent.putExtra(IntentConstants.BoardType, boardType)
+                startActivity(intent)
+                loadingDialog.dismiss()
+
+                finish()
             }
-
-            viewModel.successEvent.observe(this) { event ->
-                event.getContentIfNotHandled()?.let {
-                    val intent = Intent(this@PostWriteActivity, PostActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    intent.putExtra("postId", it)
-                    intent.putExtra("type", boardType)
-                    intent.putExtra("tabName",tabName)
-                    startActivity(intent)
-                    loadingDialog.dismiss()
-
-                    finish()
-                }
-            }
+        }
     }
 
-
     private suspend fun getImageList() = withContext(Dispatchers.IO) {
-        Log.d("uriPaths",uriPaths.toString())
-        imageList = bitmapResize(applicationContext,uriPaths)
-
+        Log.d("uriPaths", uriPaths.toString())
+        imageList = bitmapResize(applicationContext, uriPaths)
         var multipartList = ArrayList<MultipartBody.Part>()
         for (i in 0 until uriList.size) {
             if (uriList.size == 0) break // 받아온 미디어가 없으면 반복문 탈출
@@ -347,9 +322,8 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
             val imageRequestBody =
                 RequestBody.create(
                     "image/*".toMediaTypeOrNull(),
-                    convertBitmapToByte(this@PostWriteActivity,bitmaplist[i])
+                    convertBitmapToByte(this@PostWriteActivity, bitmaplist[i])
                 )
-
             // 이미지에 대한 RequestBody 를 바탕으로 Multi form 데이터 리스트 생성
             multipartList.add(
                 MultipartBody.Part.createFormData(
@@ -376,25 +350,19 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
             if (readPermission == PackageManager.PERMISSION_DENIED) {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-                    ,
+                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
                     1
                 )
-            }
-            else {
+            } else {
                 var intent = Intent(Intent.ACTION_PICK)
                 intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 intent.type = "image/*"  // 갤러리에서 이미지 선택 가능하도록 허용
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) // 여러 개를 선택할 수 있도록 다중 옵션 지정
                 galleryActivityResult.launch(intent)
             }
-        }
-
-        else {
-
+        } else {
             if (writePermission == PackageManager.PERMISSION_DENIED || readPermission == PackageManager.PERMISSION_DENIED) {
                 // 권한 없다면 권한 요청
-
                 ActivityCompat.requestPermissions(
                     this,
                     arrayOf(
@@ -429,7 +397,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
         viewModel.getCategorySuccess.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
                 val count = viewModel.returnInt
-                Log.d("count",count.toString())
+                Log.d("count", count.toString())
                 if (count != null) {
                     selectBoardDialog(count)
                 }
@@ -440,13 +408,13 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
     private fun selectBoardDialog(count: Int) {
         val bottomDialogBinding = FragmentPostTypeSelectBinding.inflate(layoutInflater)
         val dialog = BottomSheetDialog(this, R.style.DialogCustomTheme)
-        dialog.behavior.state=  BottomSheetBehavior.STATE_EXPANDED
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         dialog.setCancelable(true)
         dialog.setCanceledOnTouchOutside(true)
         if (count == 4) {
             bottomDialogBinding.postTypeFourTv.visibility = View.VISIBLE
         } else {
-            bottomDialogBinding.postTypeFourTv.visibility = View. GONE
+            bottomDialogBinding.postTypeFourTv.visibility = View.GONE
         }
         dialog.setContentView(bottomDialogBinding.root)
         dialog.show()

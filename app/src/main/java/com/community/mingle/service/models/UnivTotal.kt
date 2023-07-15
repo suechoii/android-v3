@@ -22,6 +22,7 @@ data class PostResult(
     @SerializedName("nickname") val nickname: String,
     @SerializedName("likeCount") val likeCount: String,
     @SerializedName("boardType") val boardType: String? = null,
+    @SerializedName("categoryType") val categoryType: String,
     @SerializedName("commentCount") val commentCount: String,
     @SerializedName("createdAt") val createdAt: String,
     @SerializedName("blinded") var blinded: Boolean,

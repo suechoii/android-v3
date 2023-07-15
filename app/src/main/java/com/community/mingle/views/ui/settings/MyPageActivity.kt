@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
@@ -16,7 +15,6 @@ import com.community.mingle.utils.ResUtils
 import com.community.mingle.utils.UserPostType
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.views.adapter.OptionListAdapter
-import com.community.mingle.views.ui.board.PostEditActivity
 import com.community.mingle.views.ui.member.StartActivity
 import dagger.hilt.android.AndroidEntryPoint
 

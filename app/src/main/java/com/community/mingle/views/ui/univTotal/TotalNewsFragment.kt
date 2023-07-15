@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.FragmentUnivtotalPageBinding
 import com.community.mingle.service.models.PostResult
 import com.community.mingle.utils.base.BaseFragment
@@ -130,8 +131,8 @@ class TotalNewsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
 
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
-                intent.putExtra("type","광장")
-                intent.putExtra("board","밍글소식")
+                intent.putExtra(IntentConstants.BoardType,post.boardType)
+                intent.putExtra(IntentConstants.CategoryType,post.categoryType)
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("tabName", "밍글소식")
                 intent.putExtra("isReported",isReported)

@@ -9,7 +9,6 @@ import com.community.mingle.MainActivity
 import com.community.mingle.MingleApplication
 import com.community.mingle.utils.Constants.toast
 import com.community.mingle.viewmodel.SplashViewModel
-import com.community.mingle.views.ui.board.PostActivity
 import com.community.mingle.views.ui.member.StartActivity
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -1,11 +1,9 @@
 package com.community.mingle.views.ui.univTotal
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.FragmentUnivtotalPageBinding
 import com.community.mingle.service.models.PostResult
 import com.community.mingle.utils.base.BaseFragment
@@ -26,10 +25,10 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class UnivAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fragment_univtotal_page) {
+
     private val viewModel: UnivTotalListViewModel by viewModels()
-    private val viewModel2 : PostViewModel by viewModels()
+    private val viewModel2: PostViewModel by viewModels()
     private lateinit var univListAdapter: UnivTotalListAdapter
-    private lateinit var currentPostList: Array<PostResult>
     private var firstPosition: Int = 0
     private var clickedPosition: Int? = 0
     private var isFirst: Boolean = true
@@ -83,6 +82,7 @@ class UnivAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.frag
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.univAllList.collect {
+
                     univListAdapter.submitList(it)
                     binding.swipeRefresh.isRefreshing = false
                 }
@@ -115,24 +115,21 @@ class UnivAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.frag
 
         univListAdapter.setMyItemClickListener(object :
             UnivTotalListAdapter.MyItemClickListener {
-
-            override fun onItemClick(post: PostResult, position: Int,isBlind: Boolean, isReported: Boolean, reportText: String?) {
+            override fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
                 clickedPosition = position
-
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
-                intent.putExtra("type","잔디밭")
-                intent.putExtra("board","학생회")
-                intent.putExtra("tabName", "학생회게시판")
-                intent.putExtra("isBlind",isBlind)
-                intent.putExtra("reportText",reportText)
+                intent.putExtra(IntentConstants.BoardType,post.boardType)
+                intent.putExtra(IntentConstants.CategoryType,post.categoryType)
+                intent.putExtra("isBlind", isBlind)
+                intent.putExtra("reportText", reportText)
 
                 startActivity(intent)
             }
 
             override fun onCancelClick(post: PostResult, position: Int) {
                 clickedPosition = position
-                viewModel2.unblindPost("잔디밭",post.postId)
+                viewModel2.unblindPost("잔디밭", post.postId)
             }
         })
 
@@ -144,16 +141,10 @@ class UnivAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.frag
         binding.univtotalRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-
                 val lastPosition =
                     (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
-                val totalCount = recyclerView.adapter!!.itemCount - 1
                 firstPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition()
-
-                // 스크롤이 끝에 도달하면
-                if (!binding.univtotalRv.canScrollVertically(1) && lastPosition == totalCount && viewModel.univAllList.value.isNotEmpty()) {
-                    viewModel.loadNextAllUnivPosts()
-                }
+                viewModel.loadNextAllUnivPostsIfNeeded(binding.univtotalRv.canScrollVertically(1), lastPosition)
             }
         })
     }

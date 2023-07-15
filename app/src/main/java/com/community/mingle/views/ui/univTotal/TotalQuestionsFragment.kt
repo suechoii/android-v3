@@ -25,7 +25,6 @@ class TotalQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layo
     private val viewModel: UnivTotalListViewModel by viewModels()
     private val viewModel2 : PostViewModel by viewModels()
     private lateinit var totalListAdapter: UnivTotalListAdapter
-    private lateinit var currentPostList: Array<PostResult>
     private var lastPostId: Int = 0
     private var tempLastPostId: Int = 0
     private var firstPosition: Int = 0
@@ -87,7 +86,6 @@ class TotalQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layo
             totalListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
             isFirst = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel.lastPostId2.observe(binding.lifecycleOwner!!) {
@@ -99,7 +97,6 @@ class TotalQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layo
         viewModel.newUnivTotalList2.observe(binding.lifecycleOwner!!) {
             totalListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
@@ -134,8 +131,9 @@ class TotalQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layo
 
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
-                intent.putExtra("type","광장")
-                intent.putExtra("tabName", "질문게시판")
+
+                intent.putExtra("boardType",post.boardType)
+                intent.putExtra("categoryType",post.categoryType)
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)
@@ -164,9 +162,14 @@ class TotalQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layo
                 firstPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition()
 
                 // 스크롤이 끝에 도달하면
-                if (!binding.univtotalRv.canScrollVertically(1) && lastPosition == totalCount && lastPostId != -1) {
-                    viewModel.getTotalNextPosts(2, lastPostId)
-                }
+
+                viewModel.loadNextTotalIfNeeded(
+                    canScrollVertical = binding.univtotalRv.canScrollVertically(1),
+                    lastVisiblePostPos = lastPosition,
+                    lastPostId = lastPostId,
+                    totalCount = totalCount,
+                    category = 2
+                )
             }
         })
     }

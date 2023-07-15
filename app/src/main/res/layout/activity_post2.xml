@@ -49,8 +49,20 @@
                     android:layout_gravity="center_vertical"
                     android:fontFamily="@font/pretendard_regular"
                     android:textColor="@color/gray_03"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    tools:text="보드이름"/>
+
+                <TextView
+                    android:id="@+id/category_name_tv_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:textColor="@color/gray_03"
                     android:textSize="14sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    tools:text="카테고리"/>
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -112,8 +124,26 @@
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/pretendard_regular"
                 android:textColor="@color/gray_03"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="잔디밭"/>
+
+            <Space
+                android:layout_width="16dp"
+                android:layout_height="16dp"/>
+
+            <TextView
+                android:id="@+id/category_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="@color/gray_03"
                 android:textSize="14sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                tools:text="전체"/>
+
+
 
         </androidx.appcompat.widget.Toolbar>
 

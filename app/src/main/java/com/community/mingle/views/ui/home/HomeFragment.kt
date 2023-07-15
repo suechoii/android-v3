@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.FragmentHomeBinding
 import com.community.mingle.model.post.HomeHotPost
 import com.community.mingle.model.post.PostType
@@ -346,7 +347,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     putExtra("board", "학생회")
                 if (authorNickName == "팀 밍글")
                     putExtra("board", "밍글소식")
-                putExtra("type", boardTypeName)
+                putExtra(IntentConstants.BoardType, boardTypeName)
                 putExtra("isBlind", isBlind)
                 putExtra("isReported", isReported)
                 putExtra("reportText", reportText)

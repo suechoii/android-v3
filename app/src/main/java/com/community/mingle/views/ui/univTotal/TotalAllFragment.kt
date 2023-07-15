@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.FragmentUnivtotalPageBinding
 import com.community.mingle.service.models.PostResult
 import com.community.mingle.utils.base.BaseFragment
@@ -118,8 +119,8 @@ class TotalAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
 
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
-                intent.putExtra("type","잔디밭")
-                intent.putExtra("board","학생회")
+                intent.putExtra(IntentConstants.BoardType,post.boardType)
+                intent.putExtra(IntentConstants.CategoryType,post.categoryType)
                 intent.putExtra("tabName", "학생회게시판")
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("reportText",reportText)
@@ -144,13 +145,13 @@ class TotalAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
 
                 val lastPosition =
                     (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
-                val totalCount = recyclerView.adapter!!.itemCount - 1
                 firstPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition()
 
                 // 스크롤이 끝에 도달하면
-                if (!binding.univtotalRv.canScrollVertically(1) && lastPosition == totalCount && viewModel.totalAllList.value.isNotEmpty()) {
-                    viewModel.loadNextAllTotalPosts()
-                }
+                viewModel.loadNextAllTotalPostsIfNeeded(
+                    canScrollVertical = binding.univtotalRv.canScrollVertically(1),
+                    lastVisibleItemPosition = lastPosition,
+                )
             }
         })
     }

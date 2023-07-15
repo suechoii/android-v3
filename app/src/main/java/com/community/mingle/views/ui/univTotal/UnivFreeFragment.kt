@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.FragmentUnivtotalPageBinding
 import com.community.mingle.service.models.PostResult
 import com.community.mingle.utils.base.BaseFragment
@@ -89,7 +90,6 @@ class UnivFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
             univListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
             isFirst = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel.lastPostId1.observe(binding.lifecycleOwner!!) {
@@ -101,7 +101,6 @@ class UnivFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
         viewModel.newUnivTotalList1.observe(binding.lifecycleOwner!!) {
             univListAdapter.addUnivTotalList(it, isFirst)
             binding.swipeRefresh.isRefreshing = false
-            currentPostList = it.toTypedArray()
         }
 
         viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
@@ -139,10 +138,10 @@ class UnivFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
 
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
-                intent.putExtra("type","잔디밭")
+                intent.putExtra(IntentConstants.BoardType,post.boardType)
+                intent.putExtra(IntentConstants.CategoryType,post.categoryType)
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
-                intent.putExtra("tabName", "자유게시판")
                 intent.putExtra("reportText",reportText)
 
                 startActivity(intent)
@@ -168,9 +167,13 @@ class UnivFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
                 val totalCount = recyclerView.adapter!!.itemCount - 1
                 firstPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition()
                 // 스크롤이 끝에 도달하면
-                if (!binding.univtotalRv.canScrollVertically(1) && lastPosition == totalCount && lastPostId != -1) {
-                    viewModel.getUnivNextPosts(1, lastPostId)
-                }
+                viewModel.loadNextUnivIfNeeded(
+                    canScrollVertical = binding.univtotalRv.canScrollVertically(1),
+                    lastVisiblePostPosition = lastPosition,
+                    lastPostId = lastPostId,
+                    totalCount = totalCount,
+                    category = 1
+                )
             }
         })
     }

@@ -21,7 +21,7 @@ data class PostDetail(
     @SerializedName("commentCount") var commentCount: String,
     @SerializedName("createdAt") val createdAt: String,
     @SerializedName("viewCount") val viewCount: String,
-    @SerializedName("postImgUrl") val postImgUrl: java.util.ArrayList<URL>,
+    @SerializedName("postImgUrl") val postImgUrl: List<URL>,
     @SerializedName("myPost") val myPost: Boolean,
     @SerializedName("liked") val liked: Boolean,
     @SerializedName("scraped") val scraped: Boolean,

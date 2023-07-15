@@ -7,16 +7,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import androidx.activity.viewModels
-import androidx.core.text.trimmedLength
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.ActivityPostRewriteBinding
 import com.community.mingle.utils.KeyboardUtils.hideKeyboard
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.viewmodel.PostWriteViewModel
-import com.community.mingle.views.adapter.PostWriteImageAdapter
 import com.community.mingle.views.ui.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.runBlocking
 import kotlin.properties.Delegates
 
 
@@ -28,7 +26,7 @@ class PostEditActivity: BaseActivity<ActivityPostRewriteBinding>(R.layout.activi
     private var postId by Delegates.notNull<Int>()
     private lateinit var title: String
     private lateinit var content: String
-    private lateinit var tabName :String
+    private lateinit var categoryType :String
 
     private var postTitleFilled: Boolean = true
     private var postContentFilled: Boolean = true
@@ -47,7 +45,7 @@ class PostEditActivity: BaseActivity<ActivityPostRewriteBinding>(R.layout.activi
         boardType = intent.getStringExtra("type").toString()
         title = intent.getStringExtra("title").toString()
         content = intent.getStringExtra("content").toString()
-        tabName = intent.getStringExtra("tabName").toString()
+        categoryType = intent.getStringExtra(IntentConstants.CategoryType).toString()
 
         Log.d("title",title)
         Log.d("content",content)
@@ -133,8 +131,8 @@ class PostEditActivity: BaseActivity<ActivityPostRewriteBinding>(R.layout.activi
                 val intent = Intent(this@PostEditActivity, PostActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 intent.putExtra("postId", it)
-                intent.putExtra("type", boardType)
-                intent.putExtra("tabName", tabName)
+                intent.putExtra(IntentConstants.BoardType, boardType)
+                intent.putExtra(IntentConstants.CategoryType, categoryType)
                 startActivity(intent)
                 loadingDialog.dismiss()
 

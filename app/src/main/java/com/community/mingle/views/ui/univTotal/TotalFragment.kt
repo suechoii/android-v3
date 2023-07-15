@@ -7,6 +7,7 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.FragmentTotalBinding
 import com.community.mingle.model.post.TotalBoardType
 import com.community.mingle.utils.base.BaseFragment
@@ -49,7 +50,7 @@ class TotalFragment : BaseFragment<FragmentTotalBinding>(R.layout.fragment_total
         binding.pen.setOnClickListener {
             val intent = Intent(mContext, PostWriteActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.putExtra("type", "광장")
+            intent.putExtra(IntentConstants.BoardType, "광장")
             startActivity(intent)
         }
 

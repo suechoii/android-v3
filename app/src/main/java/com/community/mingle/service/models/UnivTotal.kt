@@ -22,9 +22,15 @@ data class PostResult(
     @SerializedName("nickname") val nickname: String,
     @SerializedName("likeCount") val likeCount: String,
     @SerializedName("boardType") val boardType: String? = null,
+    @SerializedName("categoryType") val categoryType: String,
     @SerializedName("commentCount") val commentCount: String,
     @SerializedName("createdAt") val createdAt: String,
     @SerializedName("blinded") var blinded: Boolean,
     @SerializedName("fileAttached") val fileAttached: Boolean,
     @SerializedName("reported") val reported: Boolean
-)
+): PostListItem
+
+sealed interface PostListItem {
+    object Loading: PostListItem
+    object NoMorePost: PostListItem
+}

@@ -9,6 +9,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.FragmentUnivBinding
 import com.community.mingle.model.post.UnivBoardType
 import com.community.mingle.utils.base.BaseFragment
@@ -66,7 +67,7 @@ class UnivFragment : BaseFragment<FragmentUnivBinding>(R.layout.fragment_univ) {
         binding.pen.setOnClickListener {
             val intent = Intent(mContext, PostWriteActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.putExtra("type", "잔디밭")
+            intent.putExtra(IntentConstants.CategoryType, "잔디밭")
             startActivity(intent)
             //requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
         }

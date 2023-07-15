@@ -58,5 +58,6 @@
     <string name="toNextPage">다음으로</string>
     <string name="total_board_tab_name_all">전체글</string>
     <string name="univ_board_tab_name_all">전체글</string>
+    <string name="no_more_posts">더 이상 게시글이 없습니다.</string>
 </resources>
 

@@ -9,8 +9,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.ActivityHotPostsBoardBinding
-import com.community.mingle.model.post.PostType
 import com.community.mingle.service.models.PostResult
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.viewmodel.HotPostsBoardViewModel
@@ -72,7 +72,8 @@ class HotPostsBoardActivity : BaseActivity<ActivityHotPostsBoardBinding>(R.layou
                         override fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
                             val intent = Intent(context, PostActivity::class.java)
                             intent.putExtra("postId", post.postId)
-                            intent.putExtra("type", post.boardType)
+                            intent.putExtra(IntentConstants.BoardType, post.boardType)
+                            intent.putExtra(IntentConstants.CategoryType, post.categoryType)
                             intent.putExtra("isBlind", isBlind)
                             intent.putExtra("isReported", isReported)
                             intent.putExtra("reportText", reportText)

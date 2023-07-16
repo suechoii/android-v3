@@ -27,7 +27,7 @@ android {
         applicationId "com.community.mingle"
         minSdk 21
         targetSdk 33
-        versionCode 20
+        versionCode 21
         versionName "1.19"
         multiDexEnabled true
 
@@ -35,13 +35,8 @@ android {
     }
     buildTypes {
         release {
-//            minifyEnabled true
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.release
-            debuggable true
         }
         debug {
-//            applicationIdSuffix = ".test"
         }
     }
 

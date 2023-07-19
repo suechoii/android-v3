@@ -1,5 +1,6 @@
 package com.community.mingle.di
 
+import com.community.mingle.BuildConfig
 import com.community.mingle.api.*
 import com.community.mingle.service.repository.AuthRepository
 import com.google.gson.GsonBuilder
@@ -13,22 +14,27 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 /* 네트워크 통신을 위한 모듈 */
 
 @Module
 @InstallIn(SingletonComponent::class)
-object NetworkModule  {
+object NetworkModule {
 
-    private const val BASE_URL = "https://dev.api.mingle.community/"
+    private const val DEV_BASE_URL = "https://dev.api.mingle.community/"
+    private const val PROD_BASE_URL = "https://prod.api.mingle.community/"
 
     /* Retrofit2 통신 모듈 */
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient,
+        @Named("BaseUrl") baseUrl: String,
+    ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .addConverterFactory(
                 GsonConverterFactory.create(
                     GsonBuilder().serializeNulls().setLenient().create()
@@ -41,7 +47,7 @@ object NetworkModule  {
     @Provides
     @Singleton
     fun provideAuthInterceptor(
-        getAuthRepository: AuthRepository
+        getAuthRepository: AuthRepository,
     ): AuthInterceptor {
         return AuthInterceptor(getAuthRepository)
     }
@@ -50,19 +56,19 @@ object NetworkModule  {
 
     @Singleton
     @Provides
-    fun okHttpClient( authInterceptor: AuthInterceptor): OkHttpClient {
+    fun okHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
         //ADD DISPATCHER WITH MAX REQUEST TO 1
         val dispatcher = Dispatcher()
         dispatcher.maxRequests = 1
 
         return OkHttpClient.Builder()
-                .dispatcher(dispatcher)
-                .addInterceptor(authInterceptor)
-                .readTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(20, TimeUnit.SECONDS)
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .addInterceptor(logger)
-                .build()
+            .dispatcher(dispatcher)
+            .addInterceptor(authInterceptor)
+            .readTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(20, TimeUnit.SECONDS)
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .addInterceptor(logger)
+            .build()
     }
 
     /* 회원 관련 API 를 위한 모듈 */
@@ -71,20 +77,18 @@ object NetworkModule  {
     fun provideMemberService(retrofit: Retrofit): MemberService {
         return retrofit.create(MemberService::class.java)
     }
-
-//    lateinit var authService : AuthService
-//    /* refresh API 를 위한 모듈 */
-//    @Singleton
-//    @Provides
-//    fun provideAuthService(retrofit: Retrofit): AuthService {
-//        authService = retrofit.create(AuthService::class.java)
-//        return authService
-//    }
-//
-//    fun getRefreshService() : AuthService{
-//        return authService
-//    }
-
+    //    lateinit var authService : AuthService
+    //    /* refresh API 를 위한 모듈 */
+    //    @Singleton
+    //    @Provides
+    //    fun provideAuthService(retrofit: Retrofit): AuthService {
+    //        authService = retrofit.create(AuthService::class.java)
+    //        return authService
+    //    }
+    //
+    //    fun getRefreshService() : AuthService{
+    //        return authService
+    //    }
     /* 홈 관련 API 를 위한 모듈 */
     @Singleton
     @Provides
@@ -120,16 +124,17 @@ object NetworkModule  {
         return retrofit.create(MarketService::class.java)
     }
 
-    private lateinit var refreshService : AuthService
+    private lateinit var refreshService: AuthService
     private val okHttp = OkHttpClient.Builder().addInterceptor(logger)
 
     @Singleton
     @Provides
-    fun getRefreshService(): AuthService {
-
+    fun getRefreshService(
+        @Named("BaseUrl") baseUrl: String,
+    ): AuthService {
         if (!::refreshService.isInitialized) {
             val retrofit = Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttp.build())
                 .build()
@@ -138,5 +143,14 @@ object NetworkModule  {
         }
 
         return refreshService
+    }
+
+    @Named("BaseUrl")
+    @Provides
+    fun getBaseUrl(): String {
+        return when (BuildConfig.BUILD_TYPE) {
+            "release" -> PROD_BASE_URL
+            else -> DEV_BASE_URL
+        }
     }
 }

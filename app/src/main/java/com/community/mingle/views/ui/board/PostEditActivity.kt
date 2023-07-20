@@ -26,7 +26,7 @@ class PostEditActivity: BaseActivity<ActivityPostRewriteBinding>(R.layout.activi
     private var postId by Delegates.notNull<Int>()
     private lateinit var title: String
     private lateinit var content: String
-    private lateinit var categoryType :String
+    private var categoryType :String? = null
 
     private var postTitleFilled: Boolean = true
     private var postContentFilled: Boolean = true
@@ -45,7 +45,7 @@ class PostEditActivity: BaseActivity<ActivityPostRewriteBinding>(R.layout.activi
         boardType = intent.getStringExtra("type").toString()
         title = intent.getStringExtra("title").toString()
         content = intent.getStringExtra("content").toString()
-        categoryType = intent.getStringExtra(IntentConstants.CategoryType).toString()
+        categoryType = intent.getStringExtra(IntentConstants.CategoryType)
 
         Log.d("title",title)
         Log.d("content",content)

@@ -7,6 +7,7 @@ data class HomeHotPost(
     val contents: String,
     val nickname: String,
     val likeCount: String,
+    val categoryType: String,
     val commentCount: String,
     val createdAt: String,
     var blinded: Boolean,

@@ -16,6 +16,7 @@ data class HomeResult(
     @SerializedName("title") val title: String,
     @SerializedName("contents") val contents: String,
     @SerializedName("boardType") val boardType: String? = null,
+    @SerializedName("categoryType") val categoryType: String,
     @SerializedName("nickname") val nickname: String,
     @SerializedName("likeCount") val likeCount: String,
     @SerializedName("commentCount") val commentCount: String,
@@ -33,6 +34,7 @@ data class HomeResult(
             "광장" -> PostType.Total
             else -> null
         },
+        categoryType = categoryType,
         nickname = nickname,
         likeCount = likeCount,
         commentCount = commentCount,

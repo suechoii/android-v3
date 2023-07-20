@@ -59,8 +59,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private val homeHotPostListAdapter: HomeHotPostListAdapter by lazy {
         HomeHotPostListAdapter(
             onItemClick = ::onHomeHotPostClick,
-            onCancelBlindClick = { _, position ->
-                onHomeHotPostCancelBlind(position)
+            onCancelBlindClick = { hotPost, position ->
+                onHomeHotPostCancelBlind(
+                    hotPost = hotPost,
+                    position = position,
+                )
             }
         )
     }
@@ -243,6 +246,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     isBlind = isBlind,
                     isReported = isReported,
                     reportText = reportText,
+                    categoryType = post.categoryType,
                 )
             }
 
@@ -271,6 +275,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                     isBlind = isBlind,
                     isReported = isReported,
                     reportText = reportText,
+                    categoryType = post.categoryType,
                 )
             }
 
@@ -336,6 +341,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         postId: Int,
         authorNickName: String,
         boardTypeName: String,
+        categoryType: String,
         isBlind: Boolean,
         isReported: Boolean,
         reportText: String?,
@@ -348,6 +354,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 if (authorNickName == "팀 밍글")
                     putExtra("board", "밍글소식")
                 putExtra(IntentConstants.BoardType, boardTypeName)
+                putExtra(IntentConstants.CategoryType, categoryType)
                 putExtra("isBlind", isBlind)
                 putExtra("isReported", isReported)
                 putExtra("reportText", reportText)
@@ -361,7 +368,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         startPostActivity(
             postId = post.postId,
             authorNickName = post.nickname,
-            boardTypeName = when(post.postType){
+            boardTypeName = when (post.postType) {
                 PostType.Total -> "광장"
                 PostType.Univ -> "잔디밭"
                 null -> ""
@@ -369,12 +376,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             isBlind = post.blinded,
             isReported = post.reported,
             reportText = post.title,
+            categoryType = post.categoryType,
         )
     }
 
-    private fun onHomeHotPostCancelBlind(position: Int) {
+    private fun onHomeHotPostCancelBlind(hotPost: HomeHotPost, position: Int) {
         unBlindPosition = position
-        //        postViewModel.unblindPost("잔디밭", post.postId)
-        // TODO: unblind hot post
+        postViewModel.unblindPost(
+            when (hotPost.postType) {
+                null -> return
+                PostType.Total -> "광장"
+                PostType.Univ -> "잔디밭"
+            }, hotPost.postId
+        )
     }
 }

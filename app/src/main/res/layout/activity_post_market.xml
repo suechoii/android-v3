@@ -697,7 +697,7 @@
                     android:layout_marginStart="61dp"
                     android:layout_marginEnd="49dp"
                     android:src="@drawable/detail_textfield"
-                    android:text="@={viewModel.cmt_content}"
+                    android:text="@={viewModel.write_content}"
                     android:hint="대화를 주고받아 보세요."
                     android:paddingLeft="8dp"
                     android:textColor="@color/gray_03"

@@ -49,7 +49,8 @@ class PostEditActivity: BaseActivity<ActivityPostRewriteBinding>(R.layout.activi
 
         Log.d("title",title)
         Log.d("content",content)
-
+        viewModel.updateTitle(title)
+        viewModel.updateContent(content)
         binding.postTitleEditEt.setText(title)
         binding.postContentEditEt.setText(content)
 

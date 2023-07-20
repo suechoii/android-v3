@@ -14,6 +14,7 @@ import com.community.mingle.service.models.Reply
 import com.community.mingle.service.models.ReportPost
 import com.community.mingle.service.repository.MarketRepository
 import com.community.mingle.utils.Event
+import com.community.mingle.utils.ImageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -174,7 +175,7 @@ constructor(
                 } else {
                     _loading.postValue(Event(false))
                     Log.d("tag_fail", "writePost Error: ${response.code()}")
-                    when(response.body()?.code) {
+                    when (response.body()?.code) {
                         null -> _alertMsg.postValue(Event("네트워크 오류가 발생했습니다."))
                         4000 -> _alertMsg.postValue(Event("서버에서 오류가 발생했습니다. 다시 시도해주세요."))
                         else -> _alertMsg.postValue(Event(response.body()!!.message))
@@ -228,12 +229,13 @@ constructor(
                         _successEvent.postValue(Event(itemId))
                         Log.d("tag_success", "editUnivPost: ${response.body()}")
                     } else {
+                        _successEvent.postValue(Event(-1))
                         Log.d("tag_fail", "editPost Error: ${response.code()}")
                     }
                 }
             }
+            _loading.postValue(Event(false))
         }
-
     }
 
     fun getMarketList(isRefreshing: Boolean) {

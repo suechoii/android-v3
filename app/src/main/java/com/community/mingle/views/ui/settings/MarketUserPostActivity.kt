@@ -1,22 +1,15 @@
 package com.community.mingle.views.ui.settings
 
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
-import androidx.viewpager2.widget.ViewPager2
 import com.community.mingle.R
 import com.community.mingle.databinding.ActivityUserPostBinding
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.viewmodel.MarketPostViewModel
-import com.community.mingle.viewmodel.SearchViewModel
 import com.community.mingle.views.adapter.MarketMyPageVPAdapter
-import com.community.mingle.views.adapter.ViewPagerAdapter
-import com.community.mingle.views.ui.search.SearchVPAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
 
 @AndroidEntryPoint
 class MarketUserPostActivity : BaseActivity<ActivityUserPostBinding>(R.layout.activity_user_post) {

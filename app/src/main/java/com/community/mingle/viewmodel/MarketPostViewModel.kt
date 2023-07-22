@@ -174,7 +174,7 @@ constructor(
                 } else {
                     _loading.postValue(Event(false))
                     Log.d("tag_fail", "writePost Error: ${response.code()}")
-                    when(response.body()?.code) {
+                    when (response.body()?.code) {
                         null -> _alertMsg.postValue(Event("네트워크 오류가 발생했습니다."))
                         4000 -> _alertMsg.postValue(Event("서버에서 오류가 발생했습니다. 다시 시도해주세요."))
                         else -> _alertMsg.postValue(Event(response.body()!!.message))
@@ -258,6 +258,9 @@ constructor(
                         Log.d("tag_fail", "getUnivList Error: ${response.code()}")
                     }
                 }
+
+            if (isRefreshing)
+                _loading.postValue(Event(false))
         }
     }
 
@@ -267,7 +270,6 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository.getItemList(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
                     Log.d("tag_success", "getNextMarketPosts: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && response.body()!!.result.itemListDTO.isNotEmpty()) {
@@ -281,6 +283,7 @@ constructor(
                     Log.d("tag_fail", "getMarketNextPosts Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -304,8 +307,6 @@ constructor(
             repository.createReport(ReportPost(tableType, itemId, reportTypeId))
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        _loading.postValue(Event(false))
-
                         when (response.body()!!.code) {
                             1000 -> {
                                 _isReportedPost.postValue(Event(true))
@@ -320,6 +321,7 @@ constructor(
                         Log.d("tag_fail", "reportPost Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -330,7 +332,6 @@ constructor(
             repository.createItemLike(itemId)
                 .onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == PostViewModel.OK) {
-                        _loading.postValue(Event(false))
                         _isLikedPost.postValue(Event(true))
                         Log.d("tag_success", "likePost: ${response.body()}")
                     } else if (response.body()!!.code == PostViewModel.DUP_LIKE) {
@@ -341,6 +342,7 @@ constructor(
                         Log.d("tag_fail", "likePost Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -349,13 +351,13 @@ constructor(
             repository.itemUnlike(itemId)
                 .onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == PostViewModel.OK) {
-                        _loading.postValue(Event(false))
                         _isUnlikePost.postValue(Event(true))
                         Log.d("tag_success", "unlikePost: ${response.body()}")
                     } else {
                         Log.d("tag_fail", "unlikePost Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -368,13 +370,13 @@ constructor(
                 .onSuccess { response ->
                     if (response.isSuccessful) {
                         _post.postValue(response.body()!!.result)
-                        _loading.postValue(Event(false))
                         _imageList.postValue(response.body()!!.result.postImgUrl)
                         Log.d("tag_success", response.body().toString())
                     } else {
                         Log.d("tag_fail", "getMarketPostDetail Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -384,9 +386,6 @@ constructor(
             repository.getComment(itemId)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        if (!isRefreshing) {
-                            _loading.postValue(Event(false))
-                        }
                         Log.d("tag_success", "getComments: ${response.body()}")
 
                         if (response.body()!!.code == 1000) {
@@ -397,6 +396,9 @@ constructor(
                         Log.d("tag_fail", "getComments Error: ${response.code()}")
                     }
                 }
+            if (!isRefreshing) {
+                _loading.postValue(Event(false))
+            }
         }
     }
 
@@ -429,7 +431,6 @@ constructor(
             repository.commentDelete(comment.commentId)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        _loading.postValue(Event(false))
                         if (response.body()!!.code == 1000) {
                             getComments(itemId, false)
                         }
@@ -438,6 +439,7 @@ constructor(
                         Log.d("tag_fail", "deleteComment Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -475,7 +477,6 @@ constructor(
             repository.commentDelete(replyId)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        _loading.postValue(Event(false))
                         if (response.body()!!.code == 1000) {
                             getComments(itemId, true)
                         }
@@ -485,6 +486,7 @@ constructor(
                         Log.d("tag_fail", "deleteReply Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -495,8 +497,6 @@ constructor(
             repository.modifyItemStatus(itemId, itemStatus)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        _loading.postValue(Event(false))
-
                         when (response.body()!!.code) {
                             PostViewModel.OK -> {
                                 _isChangeStatus.postValue(Event(true))
@@ -510,6 +510,7 @@ constructor(
                         Log.d("tag_fail", "changeStatus Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -521,8 +522,6 @@ constructor(
             repository.myItemList(100000000, itemStatus)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        if (!isRefreshing)
-                            _loading.postValue(Event(false))
                         if (response.body()!!.code == 1000 && response.body()!!.result.itemListDTO.isNotEmpty()) {
                             when (itemStatus) {
                                 "SELLING" -> {
@@ -565,6 +564,8 @@ constructor(
                         Log.d("tag_fail", "getMarketMyPageList Error: ${response.code()}")
                     }
                 }
+            if (!isRefreshing)
+                _loading.postValue(Event(false))
         }
     }
 

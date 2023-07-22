@@ -23,7 +23,7 @@ import javax.inject.Inject
 class MyPageViewModel
 @Inject
 constructor(
-    private val repository: MyPageRepository
+    private val repository: MyPageRepository,
 ) : ViewModel() {
 
     val univs = mutableMapOf<String, Int>()
@@ -62,56 +62,39 @@ constructor(
     val quitPassword: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
-
     private val _loading = MutableLiveData<Event<Boolean>>()
     val loading: LiveData<Event<Boolean>> = _loading
-
     private val _isEmailVerified = MutableLiveData<String>()
     val isEmailVerified: LiveData<String> get() = _isEmailVerified
-
     private val _isCodeVerified = MutableLiveData<String>()
     val isCodeVerified: LiveData<String> get() = _isCodeVerified
-
     private val _isPwVerified = MutableLiveData<String>()
     val isPwVerified: LiveData<String> get() = _isPwVerified
-
     private val _isPwConfirmVerified = MutableLiveData<String>()
     val isPwConfirmVerified: LiveData<String> get() = _isPwConfirmVerified
-
     private val _isNicknameVerified = MutableLiveData<String>()
     val isNicknameVerified: LiveData<String> get() = _isNicknameVerified
-
     private val _postList = MutableLiveData<List<PostResult>>()
     val postList: LiveData<List<PostResult>> get() = _postList
-
     private val _lastPostId = MutableLiveData<Int>()
     val lastPostId: LiveData<Int> get() = _lastPostId
-
     private val _newUnivTotalList = MutableLiveData<List<PostResult>>()
     val newUnivTotalList: LiveData<List<PostResult>> get() = _newUnivTotalList
-
     private val _clearUnivTotalList = MutableLiveData<Event<Boolean>>()
     val clearUnivTotalList: LiveData<Event<Boolean>> = _clearUnivTotalList
-
     private val _getUnivListSuccess = MutableLiveData<Event<Boolean>>()
     val getUnivListSuccess: LiveData<Event<Boolean>> = _getUnivListSuccess
-
     private val _getDomainSuccess = MutableLiveData<Event<Boolean>>()
     val getDomainSuccess: LiveData<Event<Boolean>> = _getDomainSuccess
-
     private val _sendCodeSuccess = MutableLiveData<Event<Boolean>>()
     val sendCodeSuccess: LiveData<Event<Boolean>> = _sendCodeSuccess
-
     private val _resetSuccess = MutableLiveData<Event<Boolean>>()
     val resetSuccess: LiveData<Event<Boolean>> = _resetSuccess
-
     private val _isTermSuccess = MutableLiveData<Event<Boolean>>()
     val isTermSuccess: LiveData<Event<Boolean>> = _isTermSuccess
-
     private val _isDeleteAccount = MutableLiveData<String>()
     val isDeleteAccount: LiveData<String> get() = _isDeleteAccount
-
-    private var univId : Int = 0
+    private var univId: Int = 0
     private var userEmail = ""
     var domain = ""
     private var userPw = ""
@@ -124,15 +107,17 @@ constructor(
     private fun modifyNickname(nickname: String) {
         viewModelScope.launch(Dispatchers.IO) {
             repository.modifyNickname(Nickname(nickname)).onSuccess { response ->
-                if (response.isSuccessful  ) {
+                if (response.isSuccessful) {
                     when (response.body()!!.code) {
-                        1000 ->  {
+                        1000 -> {
                             _isNicknameVerified.postValue("")
                             MingleApplication.pref.nickname = nickname
                         }
+
                         2017 -> {
-                            _isNicknameVerified.postValue(nickname+NICKNAME_DUP)
+                            _isNicknameVerified.postValue(nickname + NICKNAME_DUP)
                         }
+
                         else -> {
                             _isNicknameVerified.postValue(" ")
                         }
@@ -143,15 +128,11 @@ constructor(
     }
 
     fun getMyUnivPostList(postId: Int, isRefreshing: Boolean) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyUnivPost(postId).onSuccess { response ->
                 if (response.isSuccessful) {
-
-                    _loading.postValue(Event(false))
-
                     Log.d("tag_success", "getMyUnivPostList: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
@@ -163,18 +144,16 @@ constructor(
                     Log.d("tag_fail", "getMyUnivPostList Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 
     fun getMyTotalPostList(postId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyTotalPost(postId).onSuccess { response ->
                 if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
-
                     Log.d("tag_success", "getMyTotalPostList: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && !response.body()!!.result.postListDTO.isNullOrEmpty()) {
@@ -186,73 +165,65 @@ constructor(
                     Log.d("tag_fail", "getMyTotalPostList Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 
     fun getMyUnivNextPosts(lastPostId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyUnivPost(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyUnivNextPosts: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
-                        Log.d("추가",lastIdx.toString())
-                    }
-                    else if (response.body()!!.code == 3031) {
+                        Log.d("추가", lastIdx.toString())
+                    } else if (response.body()!!.code == 3031) {
                         _lastPostId.postValue(-1)
                     }
                 } else {
                     Log.d("tag_fail", "getUnivNextPosts Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 
     fun getMyTotalNextPosts(lastPostId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyTotalPost(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyTotalNextPosts: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
-                        Log.d("추가",lastIdx.toString())
-                    }
-                    else if (response.body()!!.code == 3031) {
+                        Log.d("추가", lastIdx.toString())
+                    } else if (response.body()!!.code == 3031) {
                         _lastPostId.postValue(-1)
                     }
                 } else {
                     Log.d("tag_fail", "getMyTotalNextPosts Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 
     fun getMyUnivCommentPostList(postId: Int, isRefreshing: Boolean) {
-
         if (!isRefreshing)
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyUnivComment(postId).onSuccess { response ->
                 if (response.isSuccessful) {
-
-                    if (!isRefreshing)
-                        _loading.postValue(Event(false))
-
                     Log.d("tag_success", "getMyUnivCommentPostList: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && !response.body()!!.result.postListDTO.isNullOrEmpty()) {
@@ -264,22 +235,18 @@ constructor(
                     Log.d("tag_fail", "getMyUnivCommentPostList Error: ${response.code()}")
                 }
             }
+            if (!isRefreshing)
+                _loading.postValue(Event(false))
         }
     }
 
-
     fun getMyTotalCommentPostList(postId: Int, isRefreshing: Boolean) {
-
         if (!isRefreshing)
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyTotalComment(postId).onSuccess { response ->
                 if (response.isSuccessful) {
-
-                    if (!isRefreshing)
-                        _loading.postValue(Event(false))
-
                     Log.d("tag_success", "getMyTotalCommentPostList: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && !response.body()!!.result.postListDTO.isNullOrEmpty()) {
@@ -291,71 +258,64 @@ constructor(
                     Log.d("tag_fail", "getMyTotalCommentPostList Error: ${response.code()}")
                 }
             }
+            if (!isRefreshing)
+                _loading.postValue(Event(false))
         }
     }
 
     fun getMyUnivNextCommentedPosts(lastPostId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyUnivComment(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyUnivNextCommentedPosts: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
-                    }
-                    else if (response.body()!!.code == 3031) {
+                    } else if (response.body()!!.code == 3031) {
                         _lastPostId.postValue(-1)
                     }
                 } else {
                     Log.d("tag_fail", "getMyUnivNextCommentedPosts Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 
     fun getMyTotalNextCommentedPosts(lastPostId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyTotalComment(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyTotalNextCommentedPosts: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
-                    }
-                    else if (response.body()!!.code == 3031) {
+                    } else if (response.body()!!.code == 3031) {
                         _lastPostId.postValue(-1)
                     }
                 } else {
                     Log.d("tag_fail", "getMyTotalNextCommentedPosts Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 
     fun getMyScrapUnivPostList(postId: Int, isRefreshing: Boolean) {
-
         if (!isRefreshing)
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyUnivScrap(postId).onSuccess { response ->
                 if (response.isSuccessful) {
-
-                    if (!isRefreshing)
-                        _loading.postValue(Event(false))
-
                     Log.d("tag_success", "getMyScrapUnivPostList: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && !response.body()!!.result.postListDTO.isNullOrEmpty()) {
@@ -367,21 +327,18 @@ constructor(
                     Log.d("tag_fail", "getMyScrapUnivPostList Error: ${response.code()}")
                 }
             }
+            if (!isRefreshing)
+                _loading.postValue(Event(false))
         }
     }
 
     fun getMyScrapTotalPostList(postId: Int, isRefreshing: Boolean) {
-
         if (!isRefreshing)
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyTotalScrap(postId).onSuccess { response ->
                 if (response.isSuccessful) {
-
-                    if (!isRefreshing)
-                        _loading.postValue(Event(false))
-
                     Log.d("tag_success", "getMyScrapTotalPostList: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && !response.body()!!.result.postListDTO.isNullOrEmpty()) {
@@ -392,72 +349,65 @@ constructor(
                 } else {
                     Log.d("tag_fail", "getMyScrapTotalPostList Error: ${response.code()}")
                 }
+                if (!isRefreshing)
+                    _loading.postValue(Event(false))
             }
         }
     }
 
     fun getMyUnivNextScrapedPosts(lastPostId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyUnivScrap(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyUnivNextScrapedPosts: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
-                    }
-                    else if (response.body()!!.code == 3031) {
+                    } else if (response.body()!!.code == 3031) {
                         _lastPostId.postValue(-1)
                     }
                 } else {
                     Log.d("tag_fail", "getMyUnivNextScrapedPosts Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 
     fun getMyTotalNextScrapedPosts(lastPostId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyTotalScrap(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
                     Log.d("tag_success", "getMyTotalNextScrapedPosts: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
-                    }
-                    else if (response.body()!!.code == 3031) {
+                    } else if (response.body()!!.code == 3031) {
                         _lastPostId.postValue(-1)
                     }
                 } else {
                     Log.d("tag_fail", "getMyTotalNextScrapedPosts Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 
     fun getMyLikedUnivPostList(postId: Int, isRefreshing: Boolean) {
-
         if (!isRefreshing)
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyLikedUniv(postId).onSuccess { response ->
                 if (response.isSuccessful) {
-
-                    if (!isRefreshing)
-                        _loading.postValue(Event(false))
-
                     Log.d("tag_success", "getMyLikedUnivPostList: ${response.body()}")
 
                     if (response.body()!!.result.postListDTO.isNotEmpty()) {
@@ -469,21 +419,18 @@ constructor(
                     Log.d("tag_fail", "getMyLikedUnivPostList Error: ${response.code()}")
                 }
             }
+            if (!isRefreshing)
+                _loading.postValue(Event(false))
         }
     }
 
     fun getMyLikedTotalPostList(postId: Int, isRefreshing: Boolean) {
-
         if (!isRefreshing)
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
             repository.getMyLikedTotal(postId).onSuccess { response ->
                 if (response.isSuccessful) {
-
-                    if (!isRefreshing)
-                        _loading.postValue(Event(false))
-
                     Log.d("tag_success", "getMyLikedTotalPostList: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
@@ -495,11 +442,12 @@ constructor(
                     Log.d("tag_fail", "getMyLikedTotalPostList Error: ${response.code()}")
                 }
             }
+            if (!isRefreshing)
+                _loading.postValue(Event(false))
         }
     }
 
     fun getMyUnivNextLikedPosts(lastPostId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -512,8 +460,7 @@ constructor(
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
-                    }
-                    else if (response.body()!!.code == 3031) {
+                    } else if (response.body()!!.code == 3031) {
                         _lastPostId.postValue(-1)
                     }
                 } else {
@@ -524,7 +471,6 @@ constructor(
     }
 
     fun getMyTotalNextLikedPosts(lastPostId: Int) {
-
         _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -537,8 +483,7 @@ constructor(
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)
-                    }
-                    else if (response.body()!!.code == 3031) {
+                    } else if (response.body()!!.code == 3031) {
                         _lastPostId.postValue(-1)
                     }
                 } else {
@@ -552,12 +497,11 @@ constructor(
         repository.getUnivList().onSuccess { response ->
             if (response.isSuccessful) {
                 for (i in response.body()!!.result) {
-                    univs[i.name]=i.univIdx
+                    univs[i.name] = i.univIdx
                 }
                 _getUnivListSuccess.postValue(Event(true))
-            }
-            else {
-                Log.d("fail","getUniv: ${response.body()}")
+            } else {
+                Log.d("fail", "getUniv: ${response.body()}")
             }
         }
     }
@@ -568,17 +512,16 @@ constructor(
         univId = _univId
     }
 
-    fun getUnivId() : Int{
+    fun getUnivId(): Int {
         return univId
     }
 
-    fun getDomain(univId : Int) = viewModelScope.launch(Dispatchers.IO) {
+    fun getDomain(univId: Int) = viewModelScope.launch(Dispatchers.IO) {
         repository.getDomain(univId).onSuccess { response ->
             if (response.isSuccessful) {
                 domain = response.body()!!.result[0].domain
                 _getDomainSuccess.postValue(Event(true))
-            }
-            else {
+            } else {
                 Log.d("fail", "getDomain: ${response.body()}")
             }
         }
@@ -596,14 +539,16 @@ constructor(
                         _isEmailVerified.postValue("")
                         userEmail = "$email@$domain"
                     }
+
                     1000 -> {
                         _isEmailVerified.postValue(EMAIL_ERROR)
                     }
+
                     else -> {
                         _isEmailVerified.postValue("쑤쑤")
                     }
                 }
-                Log.d("tag_success", response.body().toString()+"ah:"+isEmailVerified.value.toString()+"hi")
+                Log.d("tag_success", response.body().toString() + "ah:" + isEmailVerified.value.toString() + "hi")
             } else {
                 Log.d("tag_fail", "checkEmail Error: ${response.code()}")
             }
@@ -615,12 +560,12 @@ constructor(
         Log.d("email", userEmail)
         viewModelScope.launch(Dispatchers.IO) {
             Email(userEmail).let {
-                repository.sendCode(it).onSuccess  { response ->
+                repository.sendCode(it).onSuccess { response ->
                     if (response.isSuccessful) {
                         if (response.body()!!.code == 1000) {
                             _sendCodeSuccess.postValue(Event(true))
                             _loading.postValue(Event(false))
-                            Log.d("tag_success",response.body().toString())
+                            Log.d("tag_success", response.body().toString())
                         } else {
                             Log.d("tag_fail", "sendCode Error: ${response.code()}")
                         }
@@ -637,7 +582,7 @@ constructor(
     }
 
     private fun checkCode(code: String) = viewModelScope.launch(Dispatchers.IO) {
-        Code(userEmail,code).let {
+        Code(userEmail, code).let {
             repository.checkCode(it).onSuccess { response ->
                 if (response.isSuccessful) {
                     if (response.body()!!.code == 2013) {
@@ -649,7 +594,7 @@ constructor(
                     } else {
                         _isCodeVerified.postValue(" ")
                     }
-                    Log.d("tag_success",response.body().toString())
+                    Log.d("tag_success", response.body().toString())
                 } else {
                     Log.d("tag_fail", "checkCode Error: ${response.code()}")
                 }
@@ -680,7 +625,6 @@ constructor(
 
     fun resetPwd() {
         _loading.postValue(Event(true))
-
         val user = OldUser(
             email = userEmail, pwd = userPw, ""
         )
@@ -702,22 +646,20 @@ constructor(
     }
 
     fun delAccount() {
-        Log.d("quit",quitEmail.value+quitPassword.value)
+        Log.d("quit", quitEmail.value + quitPassword.value)
         deleteAccount(quitEmail.value!!, quitPassword.value!!)
     }
 
-    private fun deleteAccount(email:String, pw:String) = viewModelScope.launch(Dispatchers.IO) {
+    private fun deleteAccount(email: String, pw: String) = viewModelScope.launch(Dispatchers.IO) {
         _loading.postValue(Event(true))
-        OldUser(email,pw,"").let {
+        OldUser(email, pw, "").let {
             repository.deleteAccount(it).onSuccess { response ->
                 if (response.isSuccessful && response.body()!!.code == 1000) {
                     _isDeleteAccount.postValue("")
-                }
-                else {
-                    if(response.body()!!.code == 3011 || response.body()!!.code == 3016 ) {
+                } else {
+                    if (response.body()!!.code == 3011 || response.body()!!.code == 3016) {
                         _isDeleteAccount.postValue(USER_ERROR)
-                    }
-                    else {
+                    } else {
                         Log.d("tag_fail", "delete Error: ${response.code()}")
                     }
                 }

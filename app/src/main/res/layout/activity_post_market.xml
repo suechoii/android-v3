@@ -700,6 +700,8 @@
                     android:text="@={viewModel.cmt_content}"
                     android:hint="대화를 주고받아 보세요."
                     android:paddingLeft="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:maxLines="2"
                     android:textColor="@color/gray_03"
                     android:textSize="11sp"
                     android:fontFamily="@font/pretendard_medium"

@@ -64,6 +64,7 @@ constructor(
             }.onFailure {
                 // TODO: 배너 불러오기 실패 오류
             }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -81,10 +82,10 @@ constructor(
                 } else {
                     Log.d("tag_", "getUnivRecentList Error: ${response.code()}")
                 }
-                _loading.postValue(Event(false))
             }.onFailure {
                 // TODO: 오류 메시지 띄우기
             }
+            _loading.postValue(Event(false))
         }
     }
 

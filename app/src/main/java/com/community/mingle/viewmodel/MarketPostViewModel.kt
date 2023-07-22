@@ -78,7 +78,6 @@ constructor(
     val comment: LiveData<Comment2> get() = _comment
     private val _reply = MutableLiveData<Reply>()
     val reply: LiveData<Reply> get() = _reply
-    val cmt_content = MutableLiveData("")
 
     /* 거래게시판 마이페이지 리스트 불러오기 */
     /* 판매내역 */
@@ -403,7 +402,7 @@ constructor(
     fun writeComment(itemId: Int, anonymous: Boolean) {
         val comment = MarketCommentSend(
             isAnonymous = anonymous,
-            content = cmt_content.value!!,
+            content = write_content.value!!,
             itemId = itemId
         )
 
@@ -444,7 +443,7 @@ constructor(
     fun writeReply(itemId: Int, mentionId: Int, parentReplyId: Int, anonymous: Boolean) {
         val reply = MarketReplySend(
             isAnonymous = anonymous,
-            content = cmt_content.value!!,
+            content = write_content.value!!,
             mentionId = mentionId,
             parentCommentId = parentReplyId,
             itemId = itemId

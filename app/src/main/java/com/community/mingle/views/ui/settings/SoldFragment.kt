@@ -36,12 +36,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class SoldFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragment_market_mypage) {
     private val viewModel: MarketPostViewModel by viewModels()
     private lateinit var marketListAdapter: MarketMyPageListAdapter
-    private lateinit var currentMarketPostList: Array<MarketPostResult>
     private var lastPostId: Int = 0
     private var tempLastPostId: Int = 0
     private var firstPosition: Int = 0
     private var clickedPosition: Int? = 0
-    private var isFirst: Boolean = true
     private var currentStatus: String = "SOLDOUT"
 
     //var isFirstClicked : Boolean = true
@@ -72,16 +70,11 @@ class SoldFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragment
         }
 
         viewModel.marketSoldoutList.observe(binding.lifecycleOwner!!) {
-            if (it == null) {
-                marketListAdapter.clearMarketList()
-            }
-            marketListAdapter.addMarketList(it, isFirst)
-            isFirst = false
-            currentMarketPostList = it.toTypedArray()
+            marketListAdapter.submitList(it)
         }
 
         viewModel.clearMarketList.observe(binding.lifecycleOwner!!) {
-            marketListAdapter.clearMarketList()
+            marketListAdapter.submitList(emptyList())
         }
 
         viewModel.lastMarketSoldoutPostId.observe(binding.lifecycleOwner!!) {
@@ -90,16 +83,11 @@ class SoldFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragment
                 tempLastPostId = lastPostId
         }
 
-        viewModel.newMarketSoldoutList.observe(binding.lifecycleOwner!!) {
-            marketListAdapter.addMarketList(it, isFirst)
-            currentMarketPostList = it.toTypedArray()
-        }
-
         viewModel.isChangeStatus.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     if (currentStatus != "SOLDOUT") {
-                        marketListAdapter.clearMarketList()
+                        marketListAdapter.submitList(emptyList())
                         viewModel.getMarketItemList(true,"SOLDOUT")
                         viewModel.getMarketItemList(true,currentStatus)
                     }

@@ -33,14 +33,13 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragment_market_mypage) {
+
     private val viewModel: MarketPostViewModel by viewModels()
     private lateinit var marketListAdapter: MarketMyPageListAdapter
-    private lateinit var currentMarketPostList: Array<MarketPostResult>
     private var lastPostId: Int = 0
     private var tempLastPostId: Int = 0
     private var firstPosition: Int = 0
     private var clickedPosition: Int? = 0
-    private var isFirst: Boolean = true
     private var currentStatus: String = "SELLING"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,12 +65,7 @@ class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragm
         }
 
         viewModel.marketSellingList.observe(binding.lifecycleOwner!!) {
-            if (it == null) {
-                marketListAdapter.clearMarketList()
-            }
-            marketListAdapter.addMarketList(it, isFirst)
-            isFirst = false
-            currentMarketPostList = it.toTypedArray()
+            marketListAdapter.submitList(it)
         }
 
 
@@ -81,18 +75,13 @@ class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragm
                 tempLastPostId = lastPostId
         }
 
-        viewModel.newMarketSellingList.observe(binding.lifecycleOwner!!) {
-            marketListAdapter.addMarketList(it, isFirst)
-            currentMarketPostList = it.toTypedArray()
-        }
-
         viewModel.isChangeStatus.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     if (currentStatus != "SELLING") {
-                        marketListAdapter.clearMarketList()
+                        marketListAdapter.submitList(emptyList())
                         viewModel.getMarketItemList(true, "SELLING")
-                        viewModel.getMarketItemList(true,currentStatus)
+                        viewModel.getMarketItemList(true, currentStatus)
                     }
                 }
             }
@@ -105,13 +94,10 @@ class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragm
 
         binding.mypageMarketRv.apply {
             adapter = marketListAdapter
-            layoutManager = LinearLayoutManager(context)
-            hasFixedSize()
         }
 
         marketListAdapter.setMyItemClickListener(object :
             MarketMyPageListAdapter.MyItemClickListener {
-
             override fun onItemClick(post: MarketPostResult, position: Int) {
                 clickedPosition = position
                 val intent = Intent(activity, MarketPostActivity::class.java)
@@ -129,14 +115,13 @@ class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragm
         binding.mypageMarketRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-
                 val lastPosition =
                     (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
                 val totalCount = recyclerView.adapter!!.itemCount - 1
                 firstPosition = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstCompletelyVisibleItemPosition()
                 // 스크롤이 끝에 도달하면
                 if (!binding.mypageMarketRv.canScrollVertically(1) && lastPosition == totalCount && lastPostId != -1) {
-                    viewModel.getMarketItemNextPosts(lastPostId,"SELLING")
+                    viewModel.getMarketItemNextPosts(lastPostId, "SELLING")
                 }
             }
         })
@@ -145,7 +130,7 @@ class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragm
     private fun showChangeStatusDialog(itemId: Int) {
         val bottomDialogBinding = BottomDialogChangeStatusBinding.inflate(layoutInflater)
         val dialog = BottomSheetDialog(requireContext(), R.style.DialogCustomTheme)
-        dialog.behavior.state=  BottomSheetBehavior.STATE_EXPANDED
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         dialog.setCancelable(true)
         dialog.setCanceledOnTouchOutside(true)
         dialog.setContentView(bottomDialogBinding.root)
@@ -154,14 +139,16 @@ class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragm
         bottomDialogBinding.navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.status_one -> {
-                    viewModel.changeStatus(itemId,"SELLING")
+                    viewModel.changeStatus(itemId, "SELLING")
                     dialog.dismiss()
                 }
+
                 R.id.status_two -> {
-                    viewModel.changeStatus(itemId,"RESERVED")
+                    viewModel.changeStatus(itemId, "RESERVED")
                     currentStatus = "RESERVED"
                     dialog.dismiss()
                 }
+
                 R.id.status_three -> {
                     viewModel.changeStatus(itemId, "SOLDOUT")
                     currentStatus = "SOLDOUT"

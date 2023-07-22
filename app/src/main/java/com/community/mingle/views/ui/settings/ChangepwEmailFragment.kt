@@ -5,6 +5,7 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentChangepwEmailBinding
 import com.community.mingle.utils.base.BaseChangepwFragment
@@ -58,7 +59,11 @@ class ChangepwEmailFragment :
         }
 
         /* 이메일 파트 */
-        changepwViewModel.getDomain(changepwViewModel.getUnivId())
+        if (MingleApplication.pref.accessToken == null) {
+            changepwViewModel.getDomain(changepwViewModel.getUnivId())
+        } else {
+            changepwViewModel.getMemberDomain()
+        }
 
         changepwViewModel.getDomainSuccess.observe(binding.lifecycleOwner!!) {
             binding.domainTv.text = changepwViewModel.domain

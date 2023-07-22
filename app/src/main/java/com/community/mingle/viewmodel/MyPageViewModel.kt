@@ -584,6 +584,18 @@ constructor(
         }
     }
 
+    fun getMemberDomain() = viewModelScope.launch(Dispatchers.IO) {
+        repository.getMemberDomain().onSuccess { response ->
+            if (response.isSuccessful) {
+                domain = response.body()!!.result.domain
+                _getDomainSuccess.postValue(Event(true))
+            }
+            else {
+                Log.d("fail", "getDomain: ${response.body()}")
+            }
+        }
+    }
+
     fun validateEmail() {
         checkEmail(email.value!!)
     }

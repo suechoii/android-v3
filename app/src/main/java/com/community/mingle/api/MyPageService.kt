@@ -116,4 +116,8 @@ interface MyPageService {
         @Query("postId") postId: Int
     ) : Response<PostListResponse>
 
+    @GET("/auth/member/domain")
+    suspend fun getMemberDomain(
+    ) : Response<MemberDomainResponse>
+
 }

@@ -249,7 +249,7 @@ constructor(
                 if (response.isSuccessful) {
                     Log.d("tag_success", "getMyTotalCommentPostList: ${response.body()}")
 
-                    if (response.body()!!.code == 1000 && !response.body()!!.result.postListDTO.isNullOrEmpty()) {
+                    if (response.body()!!.code == 1000 && response.body()!!.result.postListDTO.isNotEmpty()) {
                         _postList.postValue(response.body()!!.result.postListDTO)
                         val lastIdx = response.body()!!.result.postListDTO.lastIndex
                         _lastPostId.postValue(response.body()!!.result.postListDTO[lastIdx].postId)

@@ -124,7 +124,7 @@
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/pretendard_regular"
                 android:textColor="@color/gray_03"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="잔디밭"/>
 

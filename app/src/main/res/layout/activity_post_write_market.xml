@@ -131,8 +131,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
+            app:endIconTint="@color/gray_01"
             app:boxStrokeColor="@color/gray_01"
-            android:background="@color/dropdown_bg_selector"
             app:layout_constraintBottom_toBottomOf="@id/price_et"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/price_et">

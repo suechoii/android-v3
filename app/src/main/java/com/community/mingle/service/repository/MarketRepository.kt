@@ -97,4 +97,10 @@ constructor(private val marketService: MarketService) {
     suspend fun myItemList(itemId: Int, itemStatus: String): Result<Response<MarketListResponse>> = runCatching {
         marketService.getMyItemList(itemId, itemStatus)
     }
+
+    suspend fun getMarketCurrencies() : Result<List<String>> = runCatching {
+        val response = marketService.getMarketCurrencies()
+        if(!response.isSuccess) throw Exception(response.message)
+        return@runCatching response.result
+    }
 }

@@ -71,10 +71,6 @@ class MarketSearchActivity : BaseActivity<ActivitySearchMarketBinding>(R.layout.
                         binding.beginSearchTv.text = ""
                         viewModel.getMarketSearchList(query, false)
                     }
-                    else {
-                        viewModel.isNewMarketList()
-                    }
-
                 }
             }
         })

@@ -13,11 +13,13 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.trimmedLength
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.R
 import com.community.mingle.databinding.ActivityPostWriteMarketBinding
@@ -35,6 +37,7 @@ import com.community.mingle.views.adapter.MarketPostWriteImageAdapter
 import com.community.mingle.views.ui.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -122,53 +125,13 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
                 }
             }
         }
-    private val requestActivity =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                try {
-                    // 이미지 다중 선택시
-                    if (it.data?.clipData != null) {
-                        val count = it.data!!.clipData!!.itemCount
-
-                        if (count > 10 || (imageAdapter.itemCount + count) > 10) {
-                            DialogUtils.showCustomOneTextDialog(
-                                this,
-                                "선택 가능 사진 최대 개수는 10장입니다.",
-                                "확인"
-                            )
-                        } else {
-                            val list = mutableListOf<Bitmap>()
-                            for (i in 0 until count) {
-                                uriPaths.add(it.data!!.clipData!!.getItemAt(i).uri)
-                                list.add(uriToBitmap(it.data!!.clipData!!.getItemAt(i).uri, this))
-                            }
-
-                            if (binding.writeImageRv.adapter!!.itemCount == 0) {
-                                binding.writeImageRv.visibility = View.VISIBLE
-                            }
-
-                            imageAdapter.addItems(list)
-                        }
-                    }
-                    // 이미지 단일 선택시
-                    else if (it.data?.data != null) {
-                        if (binding.writeImageRv.adapter!!.itemCount == 0) {
-                            binding.writeImageRv.visibility = View.VISIBLE
-                        }
-                        uriPaths.add(it.data?.data!!)
-                        imageAdapter.addItem(uriToBitmap(it.data?.data!!, this))
-                    }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initViewModel()
         initView()
+        setMarketCurrenciesListener()
         initRV()
         processIntent()
     }
@@ -432,6 +395,21 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
         dialog.setIcon(android.R.drawable.ic_dialog_alert)
         dialog.setNegativeButton("확인", null)
         dialog.show()
+    }
+
+    private fun setMarketCurrenciesListener() {
+        lifecycleScope.launch {
+            viewModel.marketCurrencies
+                .collect { currencies ->
+                    binding.priceCurrenciesDropdownItem.setAdapter(
+                        ArrayAdapter(
+                            this@MarketPostWriteActivity,
+                            R.layout.item_dropdown,
+                            currencies
+                        )
+                    )
+                }
+        }
     }
 
 }

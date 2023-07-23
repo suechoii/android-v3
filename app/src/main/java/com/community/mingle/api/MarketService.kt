@@ -128,6 +128,6 @@ interface MarketService {
     ): Response<MarketListResponse>
 
     @GET("/item/currency")
-    suspend fun getSelectableCurrencies(
+    suspend fun getMarketCurrencies(
     ): MarketCurrencyResponse
 }

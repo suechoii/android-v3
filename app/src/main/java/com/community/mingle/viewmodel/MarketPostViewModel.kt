@@ -16,6 +16,8 @@ import com.community.mingle.service.repository.MarketRepository
 import com.community.mingle.utils.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -119,13 +121,12 @@ constructor(
     val successEvent: LiveData<Event<Int>> = _successEvent
     private val _searchMarketList = MutableLiveData<List<MarketPostResult>>()
     val searchMarketList: LiveData<List<MarketPostResult>> get() = _searchMarketList
-    private val _newMarketSearchList = MutableLiveData<List<MarketPostResult>>()
-    val newMarketSearchList: LiveData<List<MarketPostResult>> get() = _newMarketSearchList
+    private val _marketCurrencies = MutableStateFlow(emptyList<String>())
+    val marketCurrencies = _marketCurrencies.asStateFlow()
 
-    fun isNewMarketList() {
-        _newMarketSearchList.postValue(emptyList())
+    init {
+        loadMarketCurrencies()
     }
-
     private fun check(): Boolean {
         var checkValue = true
 
@@ -217,16 +218,16 @@ constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             if (newImageList != null) {
-                repository.modifyItemPost(itemId, title, content, price, location, chatUrl, newImageList, isAnonymous, itemImagesToAdd).onSuccess {
-                        response ->
-                    if (response.isSuccessful && response.body()!!.code == 1000) {
-                        _successEvent.postValue(Event(itemId))
-                        Log.d("tag_success", "editUnivPost: ${response.body()}")
-                    } else {
-                        _successEvent.postValue(Event(-1))
-                        Log.d("tag_fail", "editPost Error: ${response.code()}")
+                repository.modifyItemPost(itemId, title, content, price, location, chatUrl, newImageList, isAnonymous, itemImagesToAdd)
+                    .onSuccess { response ->
+                        if (response.isSuccessful && response.body()!!.code == 1000) {
+                            _successEvent.postValue(Event(itemId))
+                            Log.d("tag_success", "editUnivPost: ${response.body()}")
+                        } else {
+                            _successEvent.postValue(Event(-1))
+                            Log.d("tag_fail", "editPost Error: ${response.code()}")
+                        }
                     }
-                }
             }
         }
         _loading.postValue(Event(false))
@@ -707,8 +708,12 @@ constructor(
     fun showMyReplyOptionDialog(reply: Reply) {
         _showMyReplyOptionDialog.postValue(Event(reply))
     }
+
+    private fun loadMarketCurrencies() {
+        viewModelScope.launch {
+            repository.getMarketCurrencies()
+                .onSuccess { currencies -> _marketCurrencies.value = currencies }
+                .onFailure { _marketCurrencies.value = emptyList() }
+        }
+    }
 }
-
-
-
-

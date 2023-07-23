@@ -158,6 +158,10 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
             // 게시글 임시 저장할지, 삭제할지
             finish()
         }
+
+        binding.priceCurrenciesDropdownItem.setOnItemClickListener { _, _, position, _ ->
+            viewModel.selectCurrencyByPosition(position)
+        }
     }
 
     private fun initRV() {

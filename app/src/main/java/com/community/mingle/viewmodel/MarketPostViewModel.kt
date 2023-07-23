@@ -123,6 +123,8 @@ constructor(
     val searchMarketList: LiveData<List<MarketPostResult>> get() = _searchMarketList
     private val _marketCurrencies = MutableStateFlow(emptyList<String>())
     val marketCurrencies = _marketCurrencies.asStateFlow()
+    var selectedCurrency = ""
+        private set
 
     init {
         loadMarketCurrencies()
@@ -715,5 +717,9 @@ constructor(
                 .onSuccess { currencies -> _marketCurrencies.value = currencies }
                 .onFailure { _marketCurrencies.value = emptyList() }
         }
+    }
+
+    fun selectCurrencyByPosition(position: Int) {
+        selectedCurrency = marketCurrencies.value[position]
     }
 }

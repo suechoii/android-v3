@@ -2,11 +2,11 @@ package com.community.mingle.service.repository
 
 import com.community.mingle.api.MarketService
 import com.community.mingle.service.models.CommentList
-import com.community.mingle.service.models.MarketCommentSend
-import com.community.mingle.service.models.MarketItemDetailResponse
-import com.community.mingle.service.models.MarketListResponse
-import com.community.mingle.service.models.MarketReplySend
-import com.community.mingle.service.models.MarketWritePostResponse
+import com.community.mingle.service.models.market.MarketCommentSend
+import com.community.mingle.service.models.market.MarketItemDetailResponse
+import com.community.mingle.service.models.market.MarketListResponse
+import com.community.mingle.service.models.market.MarketReplySend
+import com.community.mingle.service.models.market.MarketWritePostResponse
 import com.community.mingle.service.models.PostCommentResponse
 import com.community.mingle.service.models.ReportPost
 import com.community.mingle.service.models.ReportResponse

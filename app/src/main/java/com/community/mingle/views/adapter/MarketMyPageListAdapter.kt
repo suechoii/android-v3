@@ -5,13 +5,10 @@ import android.graphics.Color
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -23,13 +20,10 @@ import com.bumptech.glide.Glide
 import com.community.mingle.BR
 import com.community.mingle.MainActivity
 import com.community.mingle.R
-import com.community.mingle.databinding.ItemMarketDefaultBinding
 import com.community.mingle.databinding.ItemMarketMypageBinding
-import com.community.mingle.service.models.MarketPostResult
+import com.community.mingle.service.models.market.MarketPostResult
 import com.community.mingle.utils.DialogUtils.showYesNoDialog
-import com.community.mingle.utils.ResUtils
 import com.community.mingle.viewmodel.MarketPostViewModel
-import com.community.mingle.views.ui.board.PostEditActivity
 import com.community.mingle.views.ui.market.MarketPostEditActivity
 
 class MarketMyPageListAdapter : ListAdapter<MarketPostResult, MarketMyPageListAdapter.MarketViewHolder>(

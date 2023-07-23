@@ -15,7 +15,7 @@
 
         <variable
             name="item"
-            type="com.community.mingle.service.models.ItemDetail" />
+            type="com.community.mingle.service.models.market.ItemDetail" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

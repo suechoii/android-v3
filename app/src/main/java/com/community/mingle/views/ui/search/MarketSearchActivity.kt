@@ -7,23 +7,14 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
-import com.community.mingle.databinding.ActivitySearchBinding
 import com.community.mingle.databinding.ActivitySearchMarketBinding
-import com.community.mingle.service.models.MarketPostResult
+import com.community.mingle.service.models.market.MarketPostResult
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.viewmodel.MarketPostViewModel
-import com.community.mingle.viewmodel.MyPageViewModel
-import com.community.mingle.viewmodel.PostViewModel
-import com.community.mingle.viewmodel.SearchViewModel
-import com.community.mingle.views.adapter.MarketListAdapter
-import com.community.mingle.views.adapter.UnivTotalListAdapter
 import com.community.mingle.views.ui.market.MarketPostActivity
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 

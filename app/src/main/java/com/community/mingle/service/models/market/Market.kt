@@ -1,8 +1,6 @@
-package com.community.mingle.service.models
+package com.community.mingle.service.models.market
 
 import com.google.gson.annotations.SerializedName
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import java.net.URL
 
 class MarketListResponse (

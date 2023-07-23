@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.community.mingle.BR
 import com.community.mingle.R
 import com.community.mingle.databinding.ItemMarketDefaultBinding
-import com.community.mingle.service.models.MarketPostResult
+import com.community.mingle.service.models.market.MarketPostResult
 
 
 class MarketListAdapter : RecyclerView.Adapter<MarketListAdapter.MarketViewHolder>() {

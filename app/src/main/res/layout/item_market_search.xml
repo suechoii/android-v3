@@ -6,7 +6,7 @@
     <data>
         <variable
             name="item"
-            type="com.community.mingle.service.models.MarketPostResult" />
+            type="com.community.mingle.service.models.market.MarketPostResult" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

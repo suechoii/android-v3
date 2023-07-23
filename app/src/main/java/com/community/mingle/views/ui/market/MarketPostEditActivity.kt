@@ -177,13 +177,9 @@ class MarketPostEditActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.la
         if (isChecked) {
             viewModel.isFree.value = true
             viewModel.write_price.value = "0"
-            binding.btnFreeTv.setTextColor(ResUtils.getColor(R.color.orange_02))
-            binding.btnFreeTick.setColorFilter(ResUtils.getColor(R.color.orange_02))
         } else {
             viewModel.isFree.value = false
             viewModel.write_price.value = binding.priceEt.text.toString()
-            binding.btnFreeTv.setTextColor(ResUtils.getColor(R.color.gray_03))
-            binding.btnFreeTick.setColorFilter(ResUtils.getColor(R.color.gray_03))
         }
     }
 
@@ -215,8 +211,8 @@ class MarketPostEditActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.la
 
 
         if (price == "0") {
-            binding.btnFreeTv.setTextColor(ResUtils.getColor(R.color.orange_02))
-            binding.btnFreeTick.setColorFilter(ResUtils.getColor(R.color.orange_02))
+//            binding.btnFreeTv.setTextColor(ResUtils.getColor(R.color.orange_02))
+//            binding.btnFreeTick.setColorFilter(ResUtils.getColor(R.color.orange_02))
         }
 
         viewModel.write_title.observe(binding.lifecycleOwner!!) {
@@ -285,12 +281,12 @@ class MarketPostEditActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.la
             }
         }
 
-        binding.btnFree.setOnClickListener {
-            if (viewModel.isFree.value == true)
-                setFreeCheckStatus(false)
-            else
-                setFreeCheckStatus(true)
-        }
+//        binding.btnFree.setOnClickListener {
+//            if (viewModel.isFree.value == true)
+//                setFreeCheckStatus(false)
+//            else
+//                setFreeCheckStatus(true)
+//        }
 
         binding.postReturnIv.setOnClickListener {
             // 게시글 임시 저장할지, 삭제할지

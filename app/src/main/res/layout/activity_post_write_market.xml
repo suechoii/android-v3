@@ -117,7 +117,7 @@
             app:layout_constraintTop_toBottomOf="@id/image_select_btn" />
 
         <View
-            android:id="@+id/line"
+            android:id="@+id/line_title_price"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:layout_marginTop="6dp"
@@ -125,15 +125,53 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_et" />
 
+        <RadioGroup
+            android:id="@+id/sellOrShare_radioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line_title_price">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:button="@drawable/ic_anon_untick"
+                tools:buttonTint="@color/radio_group_color_selector"
+                tools:textColor="@color/radio_group_color_selector"
+                android:text="판매하기"
+                android:textSize="12sp"
+                android:layout_marginEnd="20dp"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                tools:buttonTint="@color/radio_group_color_selector"
+                tools:textColor="@color/radio_group_color_selector"
+                android:button="@drawable/ic_anon_untick"
+                android:text="나눔하기"
+                android:textSize="12sp" />
+        </RadioGroup>
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="6dp"
+            android:background="@color/gray_01"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sellOrShare_radioGroup" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/price_currencies_dropdown"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            app:endIconTint="@color/gray_02"
-            app:boxStrokeColor="@color/gray_02"
             app:boxBackgroundColor="@color/white"
+            app:boxStrokeColor="@color/gray_02"
+            app:endIconTint="@color/gray_02"
             app:layout_constraintBottom_toBottomOf="@id/price_et"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/price_et">
@@ -141,13 +179,13 @@
             <AutoCompleteTextView
                 android:id="@+id/price_currencies_dropdown_item"
                 android:layout_width="wrap_content"
-                android:paddingStart="10dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="0dp"
-                android:paddingBottom="0dp"
-                tools:text="TST"
                 android:layout_height="40dp"
-                android:inputType="none" />
+                android:inputType="none"
+                android:paddingStart="10dp"
+                android:paddingTop="0dp"
+                android:paddingEnd="0dp"
+                android:paddingBottom="0dp"
+                tools:text="TST" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <EditText
@@ -166,40 +204,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/price_currencies_dropdown"
             app:layout_constraintTop_toBottomOf="@id/line" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/btn_free"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/price_et">
-
-            <TextView
-                android:id="@+id/btn_free_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="@font/pretendard_semibold"
-                android:text="나눔"
-                android:textColor="@color/gray_03"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/btn_free_tick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="11.5dp"
-                android:src="@drawable/ic_anon_untick"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:id="@+id/line2"

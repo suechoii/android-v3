@@ -205,14 +205,10 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
     private fun setFreeCheckStatus(isChecked: Boolean) {
         if (isChecked) {
             viewModel.isFree.value = true
-            viewModel.write_price.value = "0"
-            binding.btnFreeTv.setTextColor(ResUtils.getColor(R.color.orange_02))
-            binding.btnFreeTick.setColorFilter(ResUtils.getColor(R.color.orange_02))
+            viewModel.write_price.value = "나눔해주시는 경우 가격을 정할 수 없습니다."
         } else {
             viewModel.isFree.value = false
             viewModel.write_price.value = binding.priceEt.text.toString()
-            binding.btnFreeTv.setTextColor(ResUtils.getColor(R.color.gray_03))
-            binding.btnFreeTick.setColorFilter(ResUtils.getColor(R.color.gray_03))
         }
     }
 
@@ -229,12 +225,12 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
                 setAnonymousCheckStatus(true)
         }
 
-        binding.btnFree.setOnClickListener {
-            if (viewModel.isFree.value == true)
-                setFreeCheckStatus(false)
-            else
-                setFreeCheckStatus(true)
-        }
+//        binding.btnFree.setOnClickListener {
+//            if (viewModel.isFree.value == true)
+//                setFreeCheckStatus(false)
+//            else
+//                setFreeCheckStatus(true)
+//        }
 
         binding.postSendTv.setOnClickListener {
             hideKeyboard()

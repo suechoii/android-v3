@@ -768,6 +768,7 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                     putExtra("postId", postId)
                     putExtra("title", binding.titleTv.text.toString())
                     putExtra("content", binding.contentTv.text.toString())
+                    putExtra(IntentConstants.CategoryType, categoryType)
                 }
 
                 requestEditPost.launch(intent)

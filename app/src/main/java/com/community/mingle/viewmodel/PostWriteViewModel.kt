@@ -134,4 +134,12 @@ constructor(
         }
 
     }
+
+    fun updateTitle(title: String) {
+        this.title.postValue(title)
+    }
+
+    fun updateContent(content: String) {
+        this.content.postValue(content)
+    }
 }

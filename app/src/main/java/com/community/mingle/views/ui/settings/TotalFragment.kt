@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.FragmentUnivtotalMypageBinding
 import com.community.mingle.service.models.PostResult
 import com.community.mingle.utils.UserPostType.MY_COMMENT_POST
@@ -83,16 +84,6 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
                 viewModel.getMyLikedTotalPostList(10000000,false)
             }
         }
-
-//        viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
-//            event.getContentIfNotHandled()?.let {
-//                if (it) {
-//                    binding.layoutProgress.root.visibility = View.VISIBLE
-//                } else {
-//                    binding.layoutProgress.root.visibility = View.GONE
-//                }
-//            }
-//        }
 
         viewModel2.loading.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -174,12 +165,14 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)
+                intent.putExtra(IntentConstants.BoardType, post.boardType)
+                intent.putExtra(IntentConstants.CategoryType, post.categoryType)
                 startActivity(intent)
             }
 
             override fun onCancelClick(post: PostResult, position: Int) {
                 clickedPosition = position
-                viewModel2.unblindPost("광장",post.postId.toInt())
+                viewModel2.unblindPost("광장", post.postId)
             }
         })
 

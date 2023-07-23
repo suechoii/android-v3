@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.FragmentUnivtotalMypageBinding
 import com.community.mingle.service.models.PostResult
 import com.community.mingle.utils.UserPostType.MY_COMMENT_POST
@@ -169,10 +170,11 @@ class UnivFragment(private val option: String) : BaseFragment<FragmentUnivtotalM
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", item.postId)
                 intent.putExtra("type","잔디밭")
-//                intent.putExtra("tabName", )
                 intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)
+                intent.putExtra(IntentConstants.BoardType, item.boardType)
+                intent.putExtra(IntentConstants.CategoryType, item.categoryType)
                 startActivity(intent)
             }
 

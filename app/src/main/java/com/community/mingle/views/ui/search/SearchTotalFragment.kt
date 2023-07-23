@@ -4,17 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSearchPageBinding
 import com.community.mingle.service.models.PostResult
-import com.community.mingle.utils.base.BaseFragment
 import com.community.mingle.utils.base.BaseSearchFragment
 import com.community.mingle.viewmodel.PostViewModel
-import com.community.mingle.viewmodel.SearchViewModel
 import com.community.mingle.views.adapter.UnivTotalListAdapter
 import com.community.mingle.views.ui.board.PostActivity
 import dagger.hilt.android.AndroidEntryPoint

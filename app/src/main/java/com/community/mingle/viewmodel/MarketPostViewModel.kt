@@ -14,6 +14,7 @@ import com.community.mingle.service.models.Reply
 import com.community.mingle.service.models.ReportPost
 import com.community.mingle.service.repository.MarketRepository
 import com.community.mingle.utils.Event
+import com.community.mingle.utils.ImageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -193,6 +194,7 @@ constructor(
         val content = write_content.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val location = write_location.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val chatUrl = write_chatUrl.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
+        val isAnonymous = isAnon.value!!.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         if (isFree.value == true) {
             price = "0".toRequestBody("text/plain".toMediaTypeOrNull())
         }
@@ -216,17 +218,19 @@ constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             if (newImageList != null) {
-                repository.modifyItemPost(itemId, title, content, price, location, chatUrl, newImageList, itemImagesToAdd).onSuccess { response ->
+                repository.modifyItemPost(itemId, title, content, price, location, chatUrl, newImageList, isAnonymous, itemImagesToAdd).onSuccess {
+                        response ->
                     if (response.isSuccessful && response.body()!!.code == 1000) {
                         _successEvent.postValue(Event(itemId))
                         Log.d("tag_success", "editUnivPost: ${response.body()}")
                     } else {
+                        _successEvent.postValue(Event(-1))
                         Log.d("tag_fail", "editPost Error: ${response.code()}")
                     }
                 }
             }
         }
-
+        _loading.postValue(Event(false))
     }
 
     fun getMarketList(isRefreshing: Boolean) {

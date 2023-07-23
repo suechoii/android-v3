@@ -48,9 +48,9 @@ import java.io.IOException
 import java.net.URL
 import kotlin.properties.Delegates
 
-
 @AndroidEntryPoint
-class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.layout.activity_post_write_market) {
+class MarketPostEditActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.layout.activity_post_write_market) {
+
     private val viewModel: MarketPostViewModel by viewModels()
     private lateinit var loadingDialog: LoadingDialog
     private var itemId by Delegates.notNull<Int>()
@@ -59,32 +59,23 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
     private lateinit var place: String
     private lateinit var price: String
     private lateinit var chatUrl: String
-
     private var urlStrings: ArrayList<String> = ArrayList<String>()
-
     private var uriList: ArrayList<Uri> = ArrayList() // 이미지에 대한 Uri 리스트
-    private var fileNameList : ArrayList<String> = ArrayList<String>()  // 미디어 파일명 리스트 초기화
-
+    private var fileNameList: ArrayList<String> = ArrayList<String>()  // 미디어 파일명 리스트 초기화
     private var bitmaplist: ArrayList<Bitmap> = ArrayList() // original bitmap list
-    private var deletedUrls : ArrayList<String> = ArrayList()
-
+    private var deletedUrls: ArrayList<String> = ArrayList()
     private var postTitleFilled: Boolean = true
     private var postPriceFilled: Boolean = true
     private var postContentFilled: Boolean = true
-
-    private lateinit var bitmapList : List<Bitmap>
-
+    private lateinit var bitmapList: List<Bitmap>
     private lateinit var imageAdapter: MarketPostWriteImageAdapter
-
     private val galleryActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == Activity.RESULT_OK) {
             try {
                 // 이미지 다중 선택시
                 if (it.data?.clipData != null) {
                     var clipData = it.data?.clipData
-
                     //val count = it.data!!.clipData!!.itemCount
-
                     if (clipData!!.itemCount > 10 || (imageAdapter.itemCount + clipData.itemCount) > 10) {
                         DialogUtils.showCustomOneTextDialog(
                             this,
@@ -112,13 +103,11 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
                         }
 
                         imageAdapter.addItems(list)
-                        binding.postPhotoCountTv.text = imageAdapter.itemCount.toString()+"/10"
+                        binding.postPhotoCountTv.text = imageAdapter.itemCount.toString() + "/10"
                     }
                 }
-
                 // 이미지 단일 선택시
                 else if (it.data?.data != null) {
-
                     if (binding.writeImageRv.adapter!!.itemCount == 0) {
                         binding.writeImageRv.visibility = View.VISIBLE
                     }
@@ -131,13 +120,14 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
                     uriList.add(it.data?.data!!)
                     bitmaplist.add(ImageUtils.uriToBitmap(it.data?.data!!, this))
                     imageAdapter.addItem(ImageUtils.uriToBitmap(it.data?.data!!, this))
-                    binding.postPhotoCountTv.text = imageAdapter.itemCount.toString()+"/10"
+                    binding.postPhotoCountTv.text = imageAdapter.itemCount.toString() + "/10"
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
             }
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         imageAdapter = MarketPostWriteImageAdapter()
@@ -156,18 +146,17 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
             addItemDecoration(spaceDecoration)
             hasFixedSize()
         }
-
         // x 버튼 눌러 이미지 리사이클러뷰의 이미지 아이템 삭제
         imageAdapter.setOnPostWriteImageClickListener(object :
             MarketPostWriteImageAdapter.OnPostWriteImageClickListener {
             override fun onClickBtDelete(bitmap: Bitmap, position: Int) {
                 imageAdapter.removeItem(position)
-                binding.postPhotoCountTv.text = imageAdapter.itemCount.toString()+"/10"
+                binding.postPhotoCountTv.text = imageAdapter.itemCount.toString() + "/10"
                 if (binding.writeImageRv.adapter!!.itemCount == 0) {
                     binding.writeImageRv.visibility = View.GONE
                 }
                 if (bitmap in bitmapList) {
-                    if (getUrlFromBitmap(bitmap,urlStrings) != null) {
+                    if (getUrlFromBitmap(bitmap, urlStrings) != null) {
                         getUrlFromBitmap(bitmap, urlStrings)?.let { deletedUrls.add(it) }
                     }
                 }
@@ -184,15 +173,13 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
         }
     }
 
-
     private fun setFreeCheckStatus(isChecked: Boolean) {
         if (isChecked) {
             viewModel.isFree.value = true
             viewModel.write_price.value = "0"
             binding.btnFreeTv.setTextColor(ResUtils.getColor(R.color.orange_02))
             binding.btnFreeTick.setColorFilter(ResUtils.getColor(R.color.orange_02))
-        }
-        else {
+        } else {
             viewModel.isFree.value = false
             viewModel.write_price.value = binding.priceEt.text.toString()
             binding.btnFreeTv.setTextColor(ResUtils.getColor(R.color.gray_03))
@@ -202,21 +189,21 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
 
     private fun processIntent() {
         // 이 부분은 이제 어떤 탭에서 넘어오는지에 따라 정해짐
-        itemId = intent.getIntExtra("itemId",-1)
+        itemId = intent.getIntExtra("itemId", -1)
         title = intent.getStringExtra("title").toString()
         content = intent.getStringExtra("content").toString()
         price = intent.getStringExtra("price").toString()
         chatUrl = intent.getStringExtra("chatUrl").toString()
         place = intent.getStringExtra("place").toString()
         urlStrings = intent.getStringArrayListExtra("imageList") as ArrayList<String>
-        Log.d("urlStrings",urlStrings.toString())
+        Log.d("urlStrings", urlStrings.toString())
 
         if (urlStrings != null) {
             runBlocking {
                 getBitmapList(urlStrings)
             }
         }
-        binding.postPhotoCountTv.text = urlStrings.size.toString()+"/10"
+        binding.postPhotoCountTv.text = urlStrings.size.toString() + "/10"
 
         viewModel.write_title.value = title
         viewModel.write_content.value = content
@@ -224,7 +211,7 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
         viewModel.write_location.value = place
         viewModel.write_chatUrl.value = chatUrl
 
-        imageAdapter.addItems(bitmapList as List<Bitmap>)
+        imageAdapter.addItems(bitmapList)
 
 
         if (price == "0") {
@@ -232,7 +219,7 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
             binding.btnFreeTick.setColorFilter(ResUtils.getColor(R.color.orange_02))
         }
 
-        viewModel.write_title.observe (binding.lifecycleOwner!!) {
+        viewModel.write_title.observe(binding.lifecycleOwner!!) {
             if (it.trimmedLength() > 0) {
                 postTitleFilled = true
                 // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530
@@ -246,11 +233,10 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
                 binding.postSendTv.isEnabled = false
             }
         }
-
         // 게시글 본문 리스너
-        viewModel.write_content.observe (binding.lifecycleOwner!!) {
+        viewModel.write_content.observe(binding.lifecycleOwner!!) {
             if (it.isNotEmpty()) {
-                binding.wordCountTv.text = it.length.toString()+"/1000"
+                binding.wordCountTv.text = it.length.toString() + "/1000"
             }
             if (it.trimmedLength() > 0) {
                 postContentFilled = true
@@ -266,7 +252,7 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
             }
         }
 
-        viewModel.write_price.observe (binding.lifecycleOwner!!) {
+        viewModel.write_price.observe(binding.lifecycleOwner!!) {
             if (it.trimmedLength() > 0) {
                 postPriceFilled = true
                 // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530
@@ -283,7 +269,7 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
 
         viewModel.write_location.observe(binding.lifecycleOwner!!) {
             if (it.isNotEmpty()) {
-                binding.wordCount2Tv.text = it.length.toString()+"/1000"
+                binding.wordCount2Tv.text = it.length.toString() + "/1000"
             }
         }
     }
@@ -312,7 +298,7 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
         }
     }
 
-    private suspend fun getBitmapList(s:ArrayList<String>) = withContext(Dispatchers.IO) {
+    private suspend fun getBitmapList(s: ArrayList<String>) = withContext(Dispatchers.IO) {
         bitmapList = bitmapFromUrl(s)
     }
 
@@ -325,20 +311,22 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
 
         binding.postSendTv.setOnClickListener {
             hideKeyboard()
-            runBlocking {
-                getImageList()
-            }
+            getImageList()
         }
 
         viewModel.successEvent.observe(this) { event ->
-            event.getContentIfNotHandled()?.let {
-                val intent = Intent(this@MarketPostEditActivity, MarketPostActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                intent.putExtra("itemId", it)
-                startActivity(intent)
-                loadingDialog.dismiss()
-
-                finish()
+            event.getContentIfNotHandled()?.let { itemId ->
+                if (itemId == -1) {
+                    DialogUtils.showCustomOneTextDialog(this, "게시글 수정에 실패했습니다.", "확인")
+                    loadingDialog.dismiss()
+                } else {
+                    val intent = Intent(this@MarketPostEditActivity, MarketPostActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    intent.putExtra("itemId", itemId)
+                    startActivity(intent)
+                    loadingDialog.dismiss()
+                    finish()
+                }
             }
         }
     }
@@ -356,22 +344,17 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
             if (readPermission == PackageManager.PERMISSION_DENIED) {
                 ActivityCompat.requestPermissions(
                     this,
-                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES)
-                    ,
+                    arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
                     1
                 )
-            }
-            else {
+            } else {
                 var intent = Intent(Intent.ACTION_PICK)
                 intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                 intent.type = "image/*"  // 갤러리에서 이미지 선택 가능하도록 허용
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true) // 여러 개를 선택할 수 있도록 다중 옵션 지정
                 galleryActivityResult.launch(intent)
             }
-        }
-
-        else {
-
+        } else {
             if (writePermission == PackageManager.PERMISSION_DENIED || readPermission == PackageManager.PERMISSION_DENIED) {
                 // 권한 없다면 권한 요청
                 ActivityCompat.requestPermissions(
@@ -395,33 +378,30 @@ class MarketPostEditActivity: BaseActivity<ActivityPostWriteMarketBinding>(R.lay
     }
 
     private fun getImageList() {
-        var multipartList = ArrayList<MultipartBody.Part>() // imagesToAdd
-
-        for (i in 0 until uriList.size) {
-            if (uriList.size == 0) break // 받아온 미디어가 없으면 반복문 탈출
-            // 이미지,영상에 대한 RequestBody 생성 (image/* video/*)
-            val imageRequestBody =
-                RequestBody.create(
-                    "image/*".toMediaTypeOrNull(),
-                    ImageUtils.convertBitmapToByte(this@MarketPostEditActivity,bitmaplist[i])
+        val multipartList = ArrayList<MultipartBody.Part>() // imagesToAdd
+        if (uriList.isNotEmpty()) {
+            for (i in 0 until uriList.size) {
+                // 이미지,영상에 대한 RequestBody 생성 (image/* video/*)
+                val imageRequestBody =
+                    RequestBody.create(
+                        "image/*".toMediaTypeOrNull(),
+                        ImageUtils.convertBitmapToByte(this@MarketPostEditActivity, bitmaplist[i])
+                    )
+                // 이미지에 대한 RequestBody 를 바탕으로 Multi form 데이터 리스트 생성
+                multipartList.add(
+                    MultipartBody.Part.createFormData(
+                        "itemImagesToAdd",
+                        fileNameList[i],
+                        imageRequestBody
+                    )
                 )
-
-            // 이미지에 대한 RequestBody 를 바탕으로 Multi form 데이터 리스트 생성
-            multipartList.add(
-                MultipartBody.Part.createFormData(
-                    "itemImagesToAdd",
-                    fileNameList[i],
-                    imageRequestBody
-                )
-            )
-            Log.d("filenameadijdajd",fileNameList[i])
+                Log.d("filenameadijdajd", fileNameList[i])
+            }
         }
-
         //val deletedUrls = compareBitmaps(bitmapList as ArrayList<Bitmap>, imageAdapter.getItems() as ArrayList<Bitmap?>)
-        Log.d("bitmap List: "+bitmapList.toString(),imageAdapter.getItems().toString())
-        Log.d("deletedUrls",deletedUrls.toString())
-
-        viewModel.editPost(itemId,deletedUrls,multipartList?: null)
+        Log.d("bitmap List: $bitmapList", imageAdapter.getItems().toString())
+        Log.d("deletedUrls", deletedUrls.toString())
+        viewModel.editPost(itemId, deletedUrls, multipartList)
     }
 
 }

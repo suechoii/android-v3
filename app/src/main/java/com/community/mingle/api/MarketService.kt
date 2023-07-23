@@ -62,6 +62,7 @@ interface MarketService {
         @Part("location") location: RequestBody,
         @Part("chatUrl") chatUrl: RequestBody,
         @Part("itemImageUrlsToDelete") itemImageUrlsToDelete: RequestBody,
+        @Part ("isAnonymous") anonymous: RequestBody,
         @Part itemImagesToAdd: ArrayList<MultipartBody.Part>?
     ) : Response<ResultResponse>
 

@@ -57,9 +57,10 @@ constructor(private val marketService: MarketService) {
         location: RequestBody,
         chatUrl: RequestBody,
         itemImageUrlsToDelete: RequestBody,
+        isAnonymous: RequestBody,
         itemImagesToAdd: ArrayList<MultipartBody.Part>?,
     ):Result<Response<ResultResponse>> = runCatching {
-        marketService.modifyItemPost(itemId, title, content, price, location, chatUrl, itemImageUrlsToDelete, itemImagesToAdd)
+        marketService.modifyItemPost(itemId, title, content, price, location, chatUrl, itemImageUrlsToDelete,isAnonymous, itemImagesToAdd)
     }
     suspend fun deleteItemPost(itemId: Int):Result<Response<ResultResponse>> = runCatching {
         marketService.deleteItemPost(itemId)

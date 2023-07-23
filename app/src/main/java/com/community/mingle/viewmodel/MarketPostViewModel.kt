@@ -79,7 +79,6 @@ constructor(
     val comment: LiveData<Comment2> get() = _comment
     private val _reply = MutableLiveData<Reply>()
     val reply: LiveData<Reply> get() = _reply
-    val cmt_content = MutableLiveData("")
 
     /* 거래게시판 마이페이지 리스트 불러오기 */
     /* 판매내역 */
@@ -95,12 +94,6 @@ constructor(
     val lastMarketReservedPostId: LiveData<Int> get() = _lastMarketReservedPostId
     private val _lastMarketSoldoutPostId = MutableLiveData<Int>()
     val lastMarketSoldoutPostId: LiveData<Int> get() = _lastMarketSoldoutPostId
-    private val _newMarketSellingList = MutableLiveData<List<MarketPostResult>>()
-    val newMarketSellingList: LiveData<List<MarketPostResult>> get() = _newMarketSellingList
-    private val _newMarketReservedList = MutableLiveData<List<MarketPostResult>>()
-    val newMarketReservedList: LiveData<List<MarketPostResult>> get() = _newMarketReservedList
-    private val _newMarketSoldoutList = MutableLiveData<List<MarketPostResult>>()
-    val newMarketSoldoutList: LiveData<List<MarketPostResult>> get() = _newMarketSoldoutList
 
     /* 찜한내역 */
     private val _marketMyPageList = MutableLiveData<List<MarketPostResult>>()
@@ -260,6 +253,9 @@ constructor(
                         Log.d("tag_fail", "getUnivList Error: ${response.code()}")
                     }
                 }
+
+            if (isRefreshing)
+                _loading.postValue(Event(false))
         }
     }
 
@@ -269,7 +265,6 @@ constructor(
         viewModelScope.launch(Dispatchers.IO) {
             repository.getItemList(lastPostId).onSuccess { response ->
                 if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
                     Log.d("tag_success", "getNextMarketPosts: ${response.body()}")
 
                     if (response.body()!!.code == 1000 && response.body()!!.result.itemListDTO.isNotEmpty()) {
@@ -283,6 +278,7 @@ constructor(
                     Log.d("tag_fail", "getMarketNextPosts Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -306,8 +302,6 @@ constructor(
             repository.createReport(ReportPost(tableType, itemId, reportTypeId))
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        _loading.postValue(Event(false))
-
                         when (response.body()!!.code) {
                             1000 -> {
                                 _isReportedPost.postValue(Event(true))
@@ -322,6 +316,7 @@ constructor(
                         Log.d("tag_fail", "reportPost Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -332,7 +327,6 @@ constructor(
             repository.createItemLike(itemId)
                 .onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == PostViewModel.OK) {
-                        _loading.postValue(Event(false))
                         _isLikedPost.postValue(Event(true))
                         Log.d("tag_success", "likePost: ${response.body()}")
                     } else if (response.body()!!.code == PostViewModel.DUP_LIKE) {
@@ -343,6 +337,7 @@ constructor(
                         Log.d("tag_fail", "likePost Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -351,13 +346,13 @@ constructor(
             repository.itemUnlike(itemId)
                 .onSuccess { response ->
                     if (response.isSuccessful && response.body()!!.code == PostViewModel.OK) {
-                        _loading.postValue(Event(false))
                         _isUnlikePost.postValue(Event(true))
                         Log.d("tag_success", "unlikePost: ${response.body()}")
                     } else {
                         Log.d("tag_fail", "unlikePost Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -370,13 +365,13 @@ constructor(
                 .onSuccess { response ->
                     if (response.isSuccessful) {
                         _post.postValue(response.body()!!.result)
-                        _loading.postValue(Event(false))
                         _imageList.postValue(response.body()!!.result.postImgUrl)
                         Log.d("tag_success", response.body().toString())
                     } else {
                         Log.d("tag_fail", "getMarketPostDetail Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -386,9 +381,6 @@ constructor(
             repository.getComment(itemId)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        if (!isRefreshing) {
-                            _loading.postValue(Event(false))
-                        }
                         Log.d("tag_success", "getComments: ${response.body()}")
 
                         if (response.body()!!.code == 1000) {
@@ -399,13 +391,16 @@ constructor(
                         Log.d("tag_fail", "getComments Error: ${response.code()}")
                     }
                 }
+            if (!isRefreshing) {
+                _loading.postValue(Event(false))
+            }
         }
     }
 
     fun writeComment(itemId: Int, anonymous: Boolean) {
         val comment = MarketCommentSend(
             isAnonymous = anonymous,
-            content = cmt_content.value!!,
+            content = write_content.value!!,
             itemId = itemId
         )
 
@@ -431,7 +426,6 @@ constructor(
             repository.commentDelete(comment.commentId)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        _loading.postValue(Event(false))
                         if (response.body()!!.code == 1000) {
                             getComments(itemId, false)
                         }
@@ -440,13 +434,14 @@ constructor(
                         Log.d("tag_fail", "deleteComment Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
     fun writeReply(itemId: Int, mentionId: Int, parentReplyId: Int, anonymous: Boolean) {
         val reply = MarketReplySend(
             isAnonymous = anonymous,
-            content = cmt_content.value!!,
+            content = write_content.value!!,
             mentionId = mentionId,
             parentCommentId = parentReplyId,
             itemId = itemId
@@ -477,7 +472,6 @@ constructor(
             repository.commentDelete(replyId)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        _loading.postValue(Event(false))
                         if (response.body()!!.code == 1000) {
                             getComments(itemId, true)
                         }
@@ -487,6 +481,7 @@ constructor(
                         Log.d("tag_fail", "deleteReply Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -497,8 +492,6 @@ constructor(
             repository.modifyItemStatus(itemId, itemStatus)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        _loading.postValue(Event(false))
-
                         when (response.body()!!.code) {
                             PostViewModel.OK -> {
                                 _isChangeStatus.postValue(Event(true))
@@ -512,6 +505,7 @@ constructor(
                         Log.d("tag_fail", "changeStatus Error: ${response.code()}")
                     }
                 }
+            _loading.postValue(Event(false))
         }
     }
 
@@ -520,29 +514,33 @@ constructor(
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.myItemList(100000000, itemStatus)
+            repository.myItemList(Int.MAX_VALUE, itemStatus)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
-                        if (!isRefreshing)
-                            _loading.postValue(Event(false))
                         if (response.body()!!.code == 1000 && response.body()!!.result.itemListDTO.isNotEmpty()) {
                             when (itemStatus) {
                                 "SELLING" -> {
-                                    _marketSellingList.postValue(response.body()!!.result.itemListDTO)
+                                    val list = _marketSellingList.value?.plus(response.body()!!.result.itemListDTO)
+                                        ?: response.body()!!.result.itemListDTO
+                                    _marketSellingList.postValue(list)
                                     val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                                     _lastMarketSellingPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
                                     Log.d("tag_success", response.body().toString())
                                 }
 
                                 "RESERVED" -> {
-                                    _marketReservedList.postValue(response.body()!!.result.itemListDTO)
+                                    val list = _marketReservedList.value?.plus(response.body()!!.result.itemListDTO)
+                                        ?: response.body()!!.result.itemListDTO
+                                    _marketReservedList.postValue(list)
                                     val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                                     _lastMarketReservedPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
                                     Log.d("tag_success", response.body().toString())
                                 }
 
                                 else -> {
-                                    _marketSoldoutList.postValue(response.body()!!.result.itemListDTO)
+                                    val list = _marketSoldoutList.value?.plus(response.body()!!.result.itemListDTO)
+                                        ?: response.body()!!.result.itemListDTO
+                                    _marketSoldoutList.postValue(list)
                                     val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                                     _lastMarketSoldoutPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
                                     Log.d("tag_success", response.body().toString())
@@ -567,6 +565,8 @@ constructor(
                         Log.d("tag_fail", "getMarketMyPageList Error: ${response.code()}")
                     }
                 }
+            if (isRefreshing)
+                _loading.postValue(Event(false))
         }
     }
 
@@ -582,19 +582,25 @@ constructor(
                     if (response.body()!!.code == 1000 && response.body()!!.result.itemListDTO.isNotEmpty()) {
                         when (itemStatus) {
                             "SELLING" -> {
-                                _newMarketSellingList.postValue(response.body()!!.result.itemListDTO)
+                                val list = _marketSellingList.value?.plus(response.body()!!.result.itemListDTO)
+                                    ?: response.body()!!.result.itemListDTO
+                                _marketSellingList.postValue(list)
                                 val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                                 _lastMarketSellingPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
                             }
 
                             "RESERVED" -> {
-                                _marketReservedList.postValue(response.body()!!.result.itemListDTO)
+                                val list = _marketReservedList.value?.plus(response.body()!!.result.itemListDTO)
+                                    ?: response.body()!!.result.itemListDTO
+                                _marketReservedList.postValue(list)
                                 val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                                 _lastMarketReservedPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
                             }
 
                             else -> {
-                                _marketSoldoutList.postValue(response.body()!!.result.itemListDTO)
+                                val list = _marketSoldoutList.value?.plus(response.body()!!.result.itemListDTO)
+                                    ?: response.body()!!.result.itemListDTO
+                                _marketSoldoutList.postValue(list)
                                 val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                                 _lastMarketSoldoutPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
                             }
@@ -618,6 +624,7 @@ constructor(
                     Log.d("tag_fail", "getMarketMyPageNextPosts Error: ${response.code()}")
                 }
             }
+            _loading.postValue(Event(false))
         }
     }
 

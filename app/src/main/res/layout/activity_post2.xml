@@ -597,7 +597,9 @@
                     android:hint="대화를 주고받아 보세요."
                     android:paddingLeft="8dp"
                     android:textColor="@color/gray_03"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     android:textSize="11sp"
+                    android:maxLines="2"
                     android:fontFamily="@font/pretendard_medium"
                     android:background="@drawable/detail_textfield"/>
 

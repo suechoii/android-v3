@@ -108,7 +108,7 @@ constructor(
     private val _showMyReplyOptionDialog = MutableLiveData<Event<Reply>>()
     val showMyReplyOptionDialog: LiveData<Event<Reply>> = _showMyReplyOptionDialog
     val write_title = MutableLiveData("")
-    val write_price = MutableLiveData("")
+    val writePrice = MutableLiveData("")
     val write_content = MutableLiveData("")
     val write_location = MutableLiveData("")
     val write_chatUrl = MutableLiveData("")
@@ -126,6 +126,8 @@ constructor(
     var selectedCurrency = ""
         private set
 
+    private var prevWritePrice = ""
+
     init {
         loadMarketCurrencies()
     }
@@ -135,7 +137,7 @@ constructor(
         if (write_title.value.isNullOrBlank()) {
             _alertMsg.value = Event("제목을 입력해주세요")
             checkValue = false
-        } else if (write_price.value.isNullOrBlank() || write_price.value!!.toDoubleOrNull() == null) {
+        } else if (writePrice.value.isNullOrBlank() || writePrice.value!!.toDoubleOrNull() == null) {
             _alertMsg.value = Event("가격을 입력해주세요. 반드시 숫자만 입력해주세요.")
         } else if (write_content.value.isNullOrBlank()) {
             _alertMsg.value = Event("내용을 입력해주세요")
@@ -150,7 +152,7 @@ constructor(
 
         _loading.postValue(Event(true))
         val postTitle = write_title.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
-        var postPrice = write_price.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
+        var postPrice = writePrice.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val postContent = write_content.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val postLocation = write_location.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val postChatUrl = write_chatUrl.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -192,7 +194,7 @@ constructor(
     fun editPost(itemId: Int, itemImageUrlsToDelete: List<String>?, itemImagesToAdd: ArrayList<MultipartBody.Part>?) {
         _loading.postValue(Event(true))
         val title = write_title.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
-        var price = write_price.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
+        var price = writePrice.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val content = write_content.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val location = write_location.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val chatUrl = write_chatUrl.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -721,5 +723,15 @@ constructor(
 
     fun selectCurrencyByPosition(position: Int) {
         selectedCurrency = marketCurrencies.value[position]
+    }
+    fun setFreeCheckStatus(isCheckedFree: Boolean) {
+        if(isCheckedFree){
+            isFree.value = true
+            prevWritePrice = writePrice.value!!
+            writePrice.value = "나눔해주시는 경우 가격을 정할 수 없습니다."
+        } else {
+            isFree.value = false
+            writePrice.value = prevWritePrice
+        }
     }
 }

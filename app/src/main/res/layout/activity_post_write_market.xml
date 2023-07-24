@@ -131,24 +131,28 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:orientation="horizontal"
+            android:layout_marginTop="6dp"
             app:layout_constraintStart_toStartOf="parent"
+            tools:checkedButton="@id/sell_radio_btn"
             app:layout_constraintTop_toBottomOf="@id/line_title_price">
 
             <RadioButton
+                android:id="@+id/sell_radio_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:button="@drawable/ic_anon_untick"
-                tools:buttonTint="@color/radio_group_color_selector"
-                tools:textColor="@color/radio_group_color_selector"
+                android:buttonTint="@color/radio_group_color_selector"
+                android:textColor="@color/radio_group_color_selector"
                 android:text="판매하기"
                 android:textSize="12sp"
                 android:layout_marginEnd="20dp"/>
 
             <RadioButton
+                android:id="@+id/share_radio_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                tools:buttonTint="@color/radio_group_color_selector"
-                tools:textColor="@color/radio_group_color_selector"
+                android:buttonTint="@color/radio_group_color_selector"
+                android:textColor="@color/radio_group_color_selector"
                 android:button="@drawable/ic_anon_untick"
                 android:text="나눔하기"
                 android:textSize="12sp" />
@@ -163,56 +167,63 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sellOrShare_radioGroup" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/price_currencies_dropdown"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            app:boxBackgroundColor="@color/white"
-            app:boxStrokeColor="@color/gray_02"
-            app:endIconTint="@color/gray_02"
-            app:layout_constraintBottom_toBottomOf="@id/price_et"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/price_et">
+        <LinearLayout
+            android:id="@+id/price_container"
+            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/line"
+            android:layout_height="wrap_content">
 
-            <AutoCompleteTextView
-                android:id="@+id/price_currencies_dropdown_item"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/price_currencies_dropdown"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:inputType="none"
-                android:paddingStart="10dp"
-                android:paddingTop="0dp"
-                android:paddingEnd="0dp"
-                android:paddingBottom="0dp"
-                tools:text="TST" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                app:boxBackgroundColor="@color/white"
+                app:boxStrokeColor="@color/gray_02"
+                android:paddingBottom="4dp"
+                app:endIconTint="@color/gray_02"
+                app:layout_constraintBottom_toBottomOf="@id/price_et"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/price_et">
 
-        <EditText
-            android:id="@+id/price_et"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:background="@null"
-            android:fontFamily="@font/pretendard_regular"
-            android:hint="희망하는 가격을 입력하세요*"
-            android:inputType="text"
-            android:maxLines="1"
-            android:text="@={viewModel.write_price}"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/price_currencies_dropdown"
-            app:layout_constraintTop_toBottomOf="@id/line" />
+                <AutoCompleteTextView
+                    android:id="@+id/price_currencies_dropdown_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:inputType="none"
+                    android:paddingStart="10dp"
+                    android:paddingTop="0dp"
+                    android:paddingEnd="0dp"
+                    android:paddingBottom="0dp"
+                    tools:text="TST" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <EditText
+                android:id="@+id/price_et"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:background="@null"
+                android:fontFamily="@font/pretendard_regular"
+                android:hint="희망하는 가격을 입력하세요*"
+                android:inputType="text"
+                android:maxLines="1"
+                android:text="@={viewModel.writePrice}"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
+
 
         <View
             android:id="@+id/line2"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="6dp"
             android:background="@color/gray_01"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/price_et" />
+            app:layout_constraintTop_toBottomOf="@id/price_container" />
 
         <EditText
             android:id="@+id/desc_et"

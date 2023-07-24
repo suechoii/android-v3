@@ -3,6 +3,7 @@ package com.community.mingle.views.ui.market
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -12,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,7 +21,9 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.trimmedLength
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.R
 import com.community.mingle.databinding.ActivityPostWriteMarketBinding
@@ -131,7 +135,9 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
 
         initViewModel()
         initView()
+        initSellOrShareRadioGroup()
         setMarketCurrenciesListener()
+        setSellOrShareChangedListener()
         initRV()
         processIntent()
     }
@@ -201,22 +207,10 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
         }
     }
 
-    // 무료나눔 확인 함수
-    private fun setFreeCheckStatus(isChecked: Boolean) {
-        if (isChecked) {
-            viewModel.isFree.value = true
-            viewModel.write_price.value = "나눔해주시는 경우 가격을 정할 수 없습니다."
-        } else {
-            viewModel.isFree.value = false
-            viewModel.write_price.value = binding.priceEt.text.toString()
-        }
-    }
-
     private fun initViewModel() {
         binding.viewModel = viewModel
 
         setAnonymousCheckStatus(true)
-        setFreeCheckStatus(false)
 
         binding.btnAnonymous.setOnClickListener {
             if (viewModel.isAnon.value == true)
@@ -224,14 +218,6 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
             else
                 setAnonymousCheckStatus(true)
         }
-
-//        binding.btnFree.setOnClickListener {
-//            if (viewModel.isFree.value == true)
-//                setFreeCheckStatus(false)
-//            else
-//                setFreeCheckStatus(true)
-//        }
-
         binding.postSendTv.setOnClickListener {
             hideKeyboard()
             runBlocking {
@@ -272,7 +258,7 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
             }
         }
 
-        viewModel.write_price.observe(binding.lifecycleOwner!!) {
+        viewModel.writePrice.observe(binding.lifecycleOwner!!) {
             if (it.trimmedLength() > 0) {
                 postPriceFilled = true
                 // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530
@@ -409,6 +395,49 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
                         )
                     )
                 }
+        }
+    }
+
+    private fun initSellOrShareRadioGroup() {
+        binding.sellOrShareRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.sell_radio_btn -> {
+                    viewModel.setFreeCheckStatus(false)
+                }
+
+                R.id.share_radio_btn -> {
+                    viewModel.setFreeCheckStatus(true)
+                }
+            }
+        }
+        binding.sellOrShareRadioGroup.check(R.id.sell_radio_btn)
+    }
+
+    private fun setSellOrShareChangedListener() {
+        viewModel.isFree.observe(this@MarketPostWriteActivity) { isFree ->
+            if (isFree) {
+                binding.priceContainer.apply {
+                    isEnabled = false
+                    setBackgroundColor(ContextCompat.getColor(this@MarketPostWriteActivity, R.color.gray_01))
+                }
+                binding.priceCurrenciesDropdown.isEnabled = false
+                binding.priceEt.apply {
+                    isEnabled = false
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+                    setTextColor(ContextCompat.getColor(this@MarketPostWriteActivity, R.color.gray_03))
+                }
+            } else {
+                binding.priceContainer.apply {
+                    isEnabled = true
+                    setBackgroundColor(ContextCompat.getColor(this@MarketPostWriteActivity, R.color.transparent))
+                }
+                binding.priceCurrenciesDropdown.isEnabled = true
+                binding.priceEt.apply {
+                    isEnabled = true
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                    setTextColor(Color.BLACK)
+                }
+            }
         }
     }
 

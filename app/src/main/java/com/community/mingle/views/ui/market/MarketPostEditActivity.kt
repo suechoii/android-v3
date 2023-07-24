@@ -5,35 +5,28 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.net.toFile
 import androidx.core.text.trimmedLength
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.R
-import com.community.mingle.databinding.ActivityPostRewriteBinding
 import com.community.mingle.databinding.ActivityPostWriteMarketBinding
 import com.community.mingle.utils.DialogUtils
 import com.community.mingle.utils.ImageUtils
 import com.community.mingle.utils.ImageUtils.bitmapFromUrl
 import com.community.mingle.utils.KeyboardUtils.hideKeyboard
 import com.community.mingle.utils.RecyclerViewUtils
-import com.community.mingle.utils.ResUtils
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.viewmodel.MarketPostViewModel
-import com.community.mingle.viewmodel.PostWriteViewModel
 import com.community.mingle.views.adapter.MarketPostWriteImageAdapter
 import com.community.mingle.views.adapter.PostWriteImageAdapter
 import com.community.mingle.views.ui.LoadingDialog
@@ -176,10 +169,10 @@ class MarketPostEditActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.la
     private fun setFreeCheckStatus(isChecked: Boolean) {
         if (isChecked) {
             viewModel.isFree.value = true
-            viewModel.write_price.value = "0"
+            viewModel.writePrice.value = "0"
         } else {
             viewModel.isFree.value = false
-            viewModel.write_price.value = binding.priceEt.text.toString()
+            viewModel.writePrice.value = binding.priceEt.text.toString()
         }
     }
 
@@ -203,7 +196,7 @@ class MarketPostEditActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.la
 
         viewModel.write_title.value = title
         viewModel.write_content.value = content
-        viewModel.write_price.value = price
+        viewModel.writePrice.value = price
         viewModel.write_location.value = place
         viewModel.write_chatUrl.value = chatUrl
 
@@ -248,7 +241,7 @@ class MarketPostEditActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.la
             }
         }
 
-        viewModel.write_price.observe(binding.lifecycleOwner!!) {
+        viewModel.writePrice.observe(binding.lifecycleOwner!!) {
             if (it.trimmedLength() > 0) {
                 postPriceFilled = true
                 // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530

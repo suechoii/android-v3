@@ -194,7 +194,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="8dp"
-                        android:text="HKD"
+                        android:text="@{viewModel.marketPostCurrency}"
                         android:fontFamily="@font/pretendard_semibold"
                         android:letterSpacing="-0.01"
                         android:textColor="@color/black"

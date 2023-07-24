@@ -133,15 +133,16 @@ constructor(
     val marketCurrencies = _marketCurrencies.asStateFlow()
     var selectedCurrency = ""
         private set
-
+    private val _marketPostCurrency = MutableStateFlow("")
+    val marketPostCurrency = _marketPostCurrency.asStateFlow()
     private var prevWritePrice = ""
-
     private val _imageBitmapList = MutableStateFlow(emptyList<Bitmap>())
     val imageBitmapList = _imageBitmapList.asStateFlow()
 
     init {
         loadMarketCurrencies()
     }
+
     private fun check(): Boolean {
         var checkValue = true
 
@@ -367,6 +368,7 @@ constructor(
                     if (response.isSuccessful) {
                         _post.postValue(response.body()!!.result)
                         _imageList.postValue(response.body()!!.result.postImgUrl)
+                        _marketPostCurrency.value = response.body()!!.result.currency
                         Log.d("tag_success", response.body().toString())
                     } else {
                         Log.d("tag_fail", "getMarketPostDetail Error: ${response.code()}")
@@ -723,8 +725,9 @@ constructor(
     fun setCurrency(currency: String) {
         selectedCurrency = currency
     }
+
     fun setFreeCheckStatus(isCheckedFree: Boolean) {
-        if(isCheckedFree){
+        if (isCheckedFree) {
             isFree.value = true
             prevWritePrice = writePrice.value!!
             writePrice.value = "나눔해주시는 경우 가격을 정할 수 없습니다."
@@ -733,6 +736,7 @@ constructor(
             writePrice.value = prevWritePrice
         }
     }
+
     fun loadImageListFromUrl(urls: ArrayList<String>) {
         viewModelScope.launch {
             _imageBitmapList.value = ImageUtils.bitmapFromUrl(urls)

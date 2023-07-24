@@ -13,6 +13,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.text.trimmedLength
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
@@ -41,6 +44,7 @@ import com.community.mingle.views.adapter.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.net.URL
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
@@ -94,7 +98,7 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MingleApplication.pref.isBlind = false
-        imageList = ArrayList<URL>()
+        imageList = ArrayList()
 
         processIntent()
         initViewModel()

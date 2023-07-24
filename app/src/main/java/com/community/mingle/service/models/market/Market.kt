@@ -58,7 +58,8 @@ data class ItemDetail(
     @SerializedName("blinded") val blinded: Boolean,
     @SerializedName("fileAttached") val fileAttached: Boolean,
     @SerializedName("reported") val reported: Boolean,
-    @SerializedName("admin") val admin: Boolean
+    @SerializedName("admin") val admin: Boolean,
+    @SerializedName("currency") val currency: String,
 )
 
 /* 보내는 댓글 */

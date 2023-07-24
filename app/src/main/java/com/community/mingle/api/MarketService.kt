@@ -23,6 +23,7 @@ interface MarketService {
         @Part("content") content: RequestBody,
         @Part("location") location: RequestBody,
         @Part("chatUrl") chatUrl: RequestBody,
+        @Part("currency") currency: RequestBody,
         @Part("isAnonymous") anonymous: Boolean,
         @Part multipartFile: ArrayList<MultipartBody.Part>?,
     ): Response<MarketWritePostResponse>
@@ -69,6 +70,7 @@ interface MarketService {
         @Part("chatUrl") chatUrl: RequestBody,
         @Part("itemImageUrlsToDelete") itemImageUrlsToDelete: RequestBody,
         @Part("isAnonymous") anonymous: RequestBody,
+        @Part("currency") currency: RequestBody,
         @Part itemImagesToAdd: ArrayList<MultipartBody.Part>?,
     ): Response<ResultResponse>
 

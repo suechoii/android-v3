@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -14,9 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.community.mingle.BR
 import com.community.mingle.R
-import com.community.mingle.databinding.ItemMarketDefaultBinding
 import com.community.mingle.databinding.ItemMarketSearchBinding
-import com.community.mingle.service.models.MarketPostResult
+import com.community.mingle.service.models.market.MarketPostResult
 
 
 class MarketSearchListAdapter : RecyclerView.Adapter<MarketSearchListAdapter.MarketViewHolder>() {

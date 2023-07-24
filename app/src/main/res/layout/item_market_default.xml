@@ -6,7 +6,7 @@
     <data>
         <variable
             name="item"
-            type="com.community.mingle.service.models.MarketPostResult" />
+            type="com.community.mingle.service.models.market.MarketPostResult" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,9 +16,10 @@
 
         <TextView
             android:id="@+id/titletext"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{item.title}"
+            app:layout_constraintEnd_toStartOf="@id/fav_btn"
             android:fontFamily="@font/pretendard_regular"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -123,8 +124,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/anonymous"
             app:layout_constraintTop_toTopOf="parent" />
-
-            // 나중에 viewmodel이랑 연결 시켜서 현재 시간으로 바꾸기
 
             <TextView
                 android:id="@+id/time"

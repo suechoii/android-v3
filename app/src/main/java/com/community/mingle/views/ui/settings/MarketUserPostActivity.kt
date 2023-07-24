@@ -18,8 +18,6 @@ class MarketUserPostActivity : BaseActivity<ActivityUserPostBinding>(R.layout.ac
 
     private val information = arrayListOf("판매중","예약중","판매완료")
 
-    private val viewModel: MarketPostViewModel by viewModels()
-
     private lateinit var viewPagerAdapter: MarketMyPageVPAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

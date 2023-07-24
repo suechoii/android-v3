@@ -1,35 +1,32 @@
 package com.community.mingle.views.ui.market
 
-import android.R.attr.data
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.Rect
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.text.toSpanned
 import androidx.core.text.trimmedLength
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.community.mingle.MainActivity
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
-import com.community.mingle.databinding.ActivityPost2Binding
 import com.community.mingle.databinding.ActivityPostMarketBinding
 import com.community.mingle.databinding.BottomDialogChangeStatusBinding
 import com.community.mingle.databinding.BottomDialogReportBinding
 import com.community.mingle.service.models.*
+import com.community.mingle.service.models.market.ItemDetail
 import com.community.mingle.utils.Constants.DELETE_COMMENT
 import com.community.mingle.utils.Constants.REPORT_COMMENT
 import com.community.mingle.utils.Constants.toast
@@ -41,15 +38,13 @@ import com.community.mingle.utils.KeyboardUtils.hideKeyboard
 import com.community.mingle.utils.KeyboardUtils.requestFocusAndShowKeyboard
 import com.community.mingle.utils.RecyclerViewUtils
 import com.community.mingle.utils.ResUtils
-import com.community.mingle.utils.ScrollViewUtils.smoothScrollToView
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.viewmodel.MarketPostViewModel
-import com.community.mingle.viewmodel.PostViewModel
 import com.community.mingle.views.adapter.*
-import com.community.mingle.views.ui.board.ImageSlideActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.net.URL
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
@@ -103,7 +98,7 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MingleApplication.pref.isBlind = false
-        imageList = ArrayList<URL>()
+        imageList = ArrayList()
 
         processIntent()
         initViewModel()
@@ -735,6 +730,8 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
                     putExtra("price", binding.priceTv.text.toString())
                     putExtra("chatUrl", binding.linkFilledTv.text.toString())
                     putExtra("place", binding.placeFilledTv.text.toString())
+                    putExtra("currency", binding.priceHkdTv.text.toString())
+                    putExtra("isAnon", binding.anonTv.text == "익명")
                     val urlStrings = imageList.map { it.toString() }
                     putStringArrayListExtra("imageList", urlStrings as ArrayList<String>)
                 }

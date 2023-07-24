@@ -1,9 +1,7 @@
 package com.community.mingle.views.ui.market
 
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,17 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentMarketBinding
-import com.community.mingle.databinding.FragmentUnivtotalPageBinding
-import com.community.mingle.service.models.MarketPostResult
-import com.community.mingle.service.models.PostResult
-import com.community.mingle.utils.ResUtils
+import com.community.mingle.service.models.market.MarketPostResult
 import com.community.mingle.utils.base.BaseFragment
 import com.community.mingle.viewmodel.MarketPostViewModel
-import com.community.mingle.viewmodel.PostViewModel
-import com.community.mingle.viewmodel.UnivTotalListViewModel
 import com.community.mingle.views.adapter.MarketListAdapter
-import com.community.mingle.views.adapter.UnivTotalListAdapter
-import com.community.mingle.views.ui.board.PostActivity
 import com.community.mingle.views.ui.notification.NotiActivity
 import com.community.mingle.views.ui.search.MarketSearchActivity
 import com.community.mingle.views.ui.settings.MyPageActivity

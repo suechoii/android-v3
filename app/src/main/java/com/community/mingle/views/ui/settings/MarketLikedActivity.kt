@@ -5,24 +5,16 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.R
 import com.community.mingle.databinding.ActivityMarketLikedBinding
-import com.community.mingle.databinding.ActivityTermsBinding
-import com.community.mingle.service.models.MarketPostResult
-import com.community.mingle.utils.UserPostType.PRIVACY_TERMS
-import com.community.mingle.utils.UserPostType.SERVICE_TERMS
+import com.community.mingle.service.models.market.MarketPostResult
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.viewmodel.MarketPostViewModel
-import com.community.mingle.viewmodel.MyPageViewModel
 import com.community.mingle.views.adapter.MarketListAdapter
-import com.community.mingle.views.adapter.MarketMyPageListAdapter
 import com.community.mingle.views.ui.LoadingDialog
 import com.community.mingle.views.ui.market.MarketPostActivity
-import com.community.mingle.views.ui.member.SignupActivity
-import com.community.mingle.views.ui.member.TermsDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

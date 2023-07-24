@@ -3,6 +3,7 @@ package com.community.mingle.views.ui.market
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -12,12 +13,17 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.trimmedLength
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.R
 import com.community.mingle.databinding.ActivityPostWriteMarketBinding
@@ -35,6 +41,7 @@ import com.community.mingle.views.adapter.MarketPostWriteImageAdapter
 import com.community.mingle.views.ui.LoadingDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -70,7 +77,6 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
                     // 이미지 다중 선택시
                     if (it.data?.clipData != null) {
                         var clipData = it.data?.clipData
-                        //val count = it.data!!.clipData!!.itemCount
                         if (clipData!!.itemCount > 10 || (imageAdapter.itemCount + clipData.itemCount) > 10) {
                             DialogUtils.showCustomOneTextDialog(
                                 this,
@@ -122,53 +128,15 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
                 }
             }
         }
-    private val requestActivity =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                try {
-                    // 이미지 다중 선택시
-                    if (it.data?.clipData != null) {
-                        val count = it.data!!.clipData!!.itemCount
-
-                        if (count > 10 || (imageAdapter.itemCount + count) > 10) {
-                            DialogUtils.showCustomOneTextDialog(
-                                this,
-                                "선택 가능 사진 최대 개수는 10장입니다.",
-                                "확인"
-                            )
-                        } else {
-                            val list = mutableListOf<Bitmap>()
-                            for (i in 0 until count) {
-                                uriPaths.add(it.data!!.clipData!!.getItemAt(i).uri)
-                                list.add(uriToBitmap(it.data!!.clipData!!.getItemAt(i).uri, this))
-                            }
-
-                            if (binding.writeImageRv.adapter!!.itemCount == 0) {
-                                binding.writeImageRv.visibility = View.VISIBLE
-                            }
-
-                            imageAdapter.addItems(list)
-                        }
-                    }
-                    // 이미지 단일 선택시
-                    else if (it.data?.data != null) {
-                        if (binding.writeImageRv.adapter!!.itemCount == 0) {
-                            binding.writeImageRv.visibility = View.VISIBLE
-                        }
-                        uriPaths.add(it.data?.data!!)
-                        imageAdapter.addItem(uriToBitmap(it.data?.data!!, this))
-                    }
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initViewModel()
         initView()
+        initSellOrShareRadioGroup()
+        setMarketCurrenciesListener()
+        setSellOrShareChangedListener()
         initRV()
         processIntent()
     }
@@ -194,6 +162,10 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
         binding.postReturnIv.setOnClickListener {
             // 게시글 임시 저장할지, 삭제할지
             finish()
+        }
+
+        binding.priceCurrenciesDropdownItem.setOnItemClickListener { _, _, position, _ ->
+            viewModel.selectCurrencyByPosition(position)
         }
     }
 
@@ -234,26 +206,10 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
         }
     }
 
-    // 무료나눔 확인 함수
-    private fun setFreeCheckStatus(isChecked: Boolean) {
-        if (isChecked) {
-            viewModel.isFree.value = true
-            viewModel.write_price.value = "0"
-            binding.btnFreeTv.setTextColor(ResUtils.getColor(R.color.orange_02))
-            binding.btnFreeTick.setColorFilter(ResUtils.getColor(R.color.orange_02))
-        } else {
-            viewModel.isFree.value = false
-            viewModel.write_price.value = binding.priceEt.text.toString()
-            binding.btnFreeTv.setTextColor(ResUtils.getColor(R.color.gray_03))
-            binding.btnFreeTick.setColorFilter(ResUtils.getColor(R.color.gray_03))
-        }
-    }
-
     private fun initViewModel() {
         binding.viewModel = viewModel
 
         setAnonymousCheckStatus(true)
-        setFreeCheckStatus(false)
 
         binding.btnAnonymous.setOnClickListener {
             if (viewModel.isAnon.value == true)
@@ -261,14 +217,6 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
             else
                 setAnonymousCheckStatus(true)
         }
-
-        binding.btnFree.setOnClickListener {
-            if (viewModel.isFree.value == true)
-                setFreeCheckStatus(false)
-            else
-                setFreeCheckStatus(true)
-        }
-
         binding.postSendTv.setOnClickListener {
             hideKeyboard()
             runBlocking {
@@ -309,7 +257,7 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
             }
         }
 
-        viewModel.write_price.observe(binding.lifecycleOwner!!) {
+        viewModel.writePrice.observe(binding.lifecycleOwner!!) {
             if (it.trimmedLength() > 0) {
                 postPriceFilled = true
                 // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530
@@ -432,6 +380,64 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
         dialog.setIcon(android.R.drawable.ic_dialog_alert)
         dialog.setNegativeButton("확인", null)
         dialog.show()
+    }
+
+    private fun setMarketCurrenciesListener() {
+        lifecycleScope.launch {
+            viewModel.marketCurrencies
+                .collect { currencies ->
+                    binding.priceCurrenciesDropdownItem.setAdapter(
+                        ArrayAdapter(
+                            this@MarketPostWriteActivity,
+                            R.layout.item_dropdown,
+                            currencies
+                        )
+                    )
+                }
+        }
+    }
+
+    private fun initSellOrShareRadioGroup() {
+        binding.sellOrShareRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.sell_radio_btn -> {
+                    viewModel.setFreeCheckStatus(false)
+                }
+
+                R.id.share_radio_btn -> {
+                    viewModel.setFreeCheckStatus(true)
+                }
+            }
+        }
+        binding.sellOrShareRadioGroup.check(R.id.sell_radio_btn)
+    }
+
+    private fun setSellOrShareChangedListener() {
+        viewModel.isFree.observe(this@MarketPostWriteActivity) { isFree ->
+            if (isFree) {
+                binding.priceContainer.apply {
+                    isEnabled = false
+                    setBackgroundColor(ContextCompat.getColor(this@MarketPostWriteActivity, R.color.gray_01))
+                }
+                binding.priceCurrenciesDropdown.isEnabled = false
+                binding.priceEt.apply {
+                    isEnabled = false
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+                    setTextColor(ContextCompat.getColor(this@MarketPostWriteActivity, R.color.gray_03))
+                }
+            } else {
+                binding.priceContainer.apply {
+                    isEnabled = true
+                    setBackgroundColor(ContextCompat.getColor(this@MarketPostWriteActivity, R.color.transparent))
+                }
+                binding.priceCurrenciesDropdown.isEnabled = true
+                binding.priceEt.apply {
+                    isEnabled = true
+                    setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                    setTextColor(Color.BLACK)
+                }
+            }
+        }
     }
 
 }

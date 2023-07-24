@@ -2,17 +2,19 @@ package com.community.mingle.service.repository
 
 import com.community.mingle.api.MarketService
 import com.community.mingle.service.models.CommentList
-import com.community.mingle.service.models.MarketCommentSend
-import com.community.mingle.service.models.MarketItemDetailResponse
-import com.community.mingle.service.models.MarketListResponse
-import com.community.mingle.service.models.MarketReplySend
-import com.community.mingle.service.models.MarketWritePostResponse
+import com.community.mingle.service.models.market.MarketCommentSend
+import com.community.mingle.service.models.market.MarketItemDetailResponse
+import com.community.mingle.service.models.market.MarketListResponse
+import com.community.mingle.service.models.market.MarketReplySend
+import com.community.mingle.service.models.market.MarketWritePostResponse
 import com.community.mingle.service.models.PostCommentResponse
 import com.community.mingle.service.models.ReportPost
 import com.community.mingle.service.models.ReportResponse
 import com.community.mingle.service.models.ResultResponse
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -23,21 +25,37 @@ class MarketRepository
 constructor(private val marketService: MarketService) {
 
     suspend fun createItemPost(
-        title: RequestBody, price: RequestBody, content: RequestBody, location: RequestBody, chatUrl: RequestBody,
-        isAnonymous: Boolean, multipartFile: ArrayList<MultipartBody.Part>?,
-    ):Result<Response<MarketWritePostResponse>> = runCatching {
-        marketService.createItemPost(title, price, content, location, chatUrl, isAnonymous, multipartFile)
+        title: RequestBody,
+        price: RequestBody,
+        content: RequestBody,
+        location: RequestBody,
+        chatUrl: RequestBody,
+        isAnonymous: Boolean,
+        multipartFile: ArrayList<MultipartBody.Part>?,
+        currency: String,
+    ): Result<Response<MarketWritePostResponse>> = runCatching {
+        val currencyRequestBody = currency.toRequestBody("text/plain".toMediaTypeOrNull())
+        marketService.createItemPost(
+            title = title,
+            price = price,
+            content = content,
+            location = location,
+            chatUrl = chatUrl,
+            currency = currencyRequestBody,
+            anonymous = isAnonymous,
+            multipartFile = multipartFile
+        )
     }
 
-    suspend fun createItemLike(itemId: Int) :Result<Response<ResultResponse>> = runCatching {
+    suspend fun createItemLike(itemId: Int): Result<Response<ResultResponse>> = runCatching {
         marketService.createItemLike(itemId)
     }
 
-    suspend fun createReport(post: ReportPost):Result<Response<ReportResponse>> = runCatching {
+    suspend fun createReport(post: ReportPost): Result<Response<ReportResponse>> = runCatching {
         marketService.createReport(post)
     }
 
-    suspend fun commentPost(comment: MarketCommentSend):Result<Response<PostCommentResponse>> = runCatching {
+    suspend fun commentPost(comment: MarketCommentSend): Result<Response<PostCommentResponse>> = runCatching {
         marketService.commentPost(comment)
     }
 
@@ -59,22 +77,36 @@ constructor(private val marketService: MarketService) {
         itemImageUrlsToDelete: RequestBody,
         isAnonymous: RequestBody,
         itemImagesToAdd: ArrayList<MultipartBody.Part>?,
-    ):Result<Response<ResultResponse>> = runCatching {
-        marketService.modifyItemPost(itemId, title, content, price, location, chatUrl, itemImageUrlsToDelete,isAnonymous, itemImagesToAdd)
+        currency: String,
+    ): Result<Response<ResultResponse>> = runCatching {
+        val currencyRequestBody = currency.toRequestBody("text/plain".toMediaTypeOrNull())
+        marketService.modifyItemPost(
+            itemId = itemId,
+            title = title,
+            content = content,
+            price = price,
+            location = location,
+            chatUrl = chatUrl,
+            itemImageUrlsToDelete = itemImageUrlsToDelete,
+            anonymous = isAnonymous,
+            currency = currencyRequestBody,
+            itemImagesToAdd = itemImagesToAdd,
+        )
     }
-    suspend fun deleteItemPost(itemId: Int):Result<Response<ResultResponse>> = runCatching {
+
+    suspend fun deleteItemPost(itemId: Int): Result<Response<ResultResponse>> = runCatching {
         marketService.deleteItemPost(itemId)
     }
 
-    suspend fun modifyItemStatus(itemId: Int, itemStatus: String):Result<Response<ResultResponse>> = runCatching {
+    suspend fun modifyItemStatus(itemId: Int, itemStatus: String): Result<Response<ResultResponse>> = runCatching {
         marketService.modifyItemStatus(itemId, itemStatus)
     }
 
-    suspend fun commentDelete(itemCommentId: Int):Result<Response<ResultResponse>> = runCatching {
+    suspend fun commentDelete(itemCommentId: Int): Result<Response<ResultResponse>> = runCatching {
         marketService.commentDelete(itemCommentId)
     }
 
-    suspend fun getItemList(itemId: Int) :Result<Response<MarketListResponse>> = runCatching {
+    suspend fun getItemList(itemId: Int): Result<Response<MarketListResponse>> = runCatching {
         marketService.getItemList(itemId)
     }
 
@@ -96,5 +128,11 @@ constructor(private val marketService: MarketService) {
 
     suspend fun myItemList(itemId: Int, itemStatus: String): Result<Response<MarketListResponse>> = runCatching {
         marketService.getMyItemList(itemId, itemStatus)
+    }
+
+    suspend fun getMarketCurrencies(): Result<List<String>> = runCatching {
+        val response = marketService.getMarketCurrencies()
+        if (!response.isSuccess) throw Exception(response.message)
+        return@runCatching response.result
     }
 }

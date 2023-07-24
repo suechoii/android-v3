@@ -1,22 +1,29 @@
 package com.community.mingle.viewmodel
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.community.mingle.service.models.Comment2
-import com.community.mingle.service.models.ItemDetail
-import com.community.mingle.service.models.MarketCommentSend
-import com.community.mingle.service.models.MarketPostResult
-import com.community.mingle.service.models.MarketReplySend
 import com.community.mingle.service.models.Reply
 import com.community.mingle.service.models.ReportPost
+import com.community.mingle.service.models.market.ItemDetail
+import com.community.mingle.service.models.market.MarketCommentSend
+import com.community.mingle.service.models.market.MarketPostResult
+import com.community.mingle.service.models.market.MarketReplySend
 import com.community.mingle.service.repository.MarketRepository
 import com.community.mingle.utils.Event
 import com.community.mingle.utils.ImageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -30,6 +37,8 @@ import javax.inject.Inject
 class MarketPostViewModel
 @Inject
 constructor(
+    @ApplicationContext
+    private val context: Context,
     private val repository: MarketRepository,
 ) : ViewModel() {
 
@@ -100,14 +109,12 @@ constructor(
     val marketMyPageList: LiveData<List<MarketPostResult>> get() = _marketMyPageList
     private val _lastMarketMyPagePostId = MutableLiveData<Int>()
     val lastMarketMyPagePostId: LiveData<Int> get() = _lastMarketMyPagePostId
-    private val _newMarketMyPageList = MutableLiveData<List<MarketPostResult>>()
-    val newMarketMyPageList: LiveData<List<MarketPostResult>> get() = _newMarketMyPageList
     private val _showReplyOptionDialog = MutableLiveData<Event<Reply>>()
     val showReplyOptionDialog: LiveData<Event<Reply>> = _showReplyOptionDialog
     private val _showMyReplyOptionDialog = MutableLiveData<Event<Reply>>()
     val showMyReplyOptionDialog: LiveData<Event<Reply>> = _showMyReplyOptionDialog
     val write_title = MutableLiveData("")
-    val write_price = MutableLiveData("")
+    val writePrice = MutableLiveData("")
     val write_content = MutableLiveData("")
     val write_location = MutableLiveData("")
     val write_chatUrl = MutableLiveData("")
@@ -120,11 +127,18 @@ constructor(
     val successEvent: LiveData<Event<Int>> = _successEvent
     private val _searchMarketList = MutableLiveData<List<MarketPostResult>>()
     val searchMarketList: LiveData<List<MarketPostResult>> get() = _searchMarketList
-    private val _newMarketSearchList = MutableLiveData<List<MarketPostResult>>()
-    val newMarketSearchList: LiveData<List<MarketPostResult>> get() = _newMarketSearchList
+    private val _marketCurrencies = MutableStateFlow(emptyList<String>())
+    val marketCurrencies = _marketCurrencies.asStateFlow()
+    var selectedCurrency = ""
+        private set
+    private val _marketPostCurrency = MutableStateFlow("")
+    val marketPostCurrency = _marketPostCurrency.asStateFlow()
+    private var prevWritePrice = ""
+    private val _imageBitmapList = MutableStateFlow(emptyList<Bitmap>())
+    val imageBitmapList = _imageBitmapList.asStateFlow()
 
-    fun isNewMarketList() {
-        _newMarketSearchList.postValue(emptyList())
+    init {
+        loadMarketCurrencies()
     }
 
     private fun check(): Boolean {
@@ -133,9 +147,11 @@ constructor(
         if (write_title.value.isNullOrBlank()) {
             _alertMsg.value = Event("제목을 입력해주세요")
             checkValue = false
-        } else if (write_price.value.isNullOrBlank() || write_price.value!!.toDoubleOrNull() == null) {
+        }
+        else if (writePrice.value.isNullOrBlank() || writePrice.value!!.toDoubleOrNull() == null) {
             _alertMsg.value = Event("가격을 입력해주세요. 반드시 숫자만 입력해주세요.")
-        } else if (write_content.value.isNullOrBlank()) {
+        }
+        else if (write_content.value.isNullOrBlank()) {
             _alertMsg.value = Event("내용을 입력해주세요")
             checkValue = false
         }
@@ -148,7 +164,7 @@ constructor(
 
         _loading.postValue(Event(true))
         val postTitle = write_title.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
-        var postPrice = write_price.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
+        var postPrice = writePrice.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val postContent = write_content.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val postLocation = write_location.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val postChatUrl = write_chatUrl.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -161,11 +177,21 @@ constructor(
         Log.d("imageList", imageList.toString())
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.createItemPost(postTitle, postPrice, postContent, postLocation, postChatUrl, isAnon.value!!, imageList).onSuccess { response ->
+            repository.createItemPost(
+                title = postTitle,
+                price = postPrice,
+                content = postContent,
+                location = postLocation,
+                chatUrl = postChatUrl,
+                isAnonymous = isAnon.value!!,
+                multipartFile = imageList,
+                currency = selectedCurrency
+            ).onSuccess { response ->
                 if (response.isSuccessful && response.body()!!.code == 1000) {
                     _successEvent.postValue(Event(response.body()!!.result.itemId))
                     Log.d("tag_success", "writePost: ${response.body()}")
-                } else {
+                }
+                else {
                     _loading.postValue(Event(false))
                     Log.d("tag_fail", "writePost Error: ${response.code()}")
                     when (response.body()?.code) {
@@ -190,7 +216,7 @@ constructor(
     fun editPost(itemId: Int, itemImageUrlsToDelete: List<String>?, itemImagesToAdd: ArrayList<MultipartBody.Part>?) {
         _loading.postValue(Event(true))
         val title = write_title.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
-        var price = write_price.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
+        var price = writePrice.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val content = write_content.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val location = write_location.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
         val chatUrl = write_chatUrl.value!!.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -198,36 +224,32 @@ constructor(
         if (isFree.value == true) {
             price = "0".toRequestBody("text/plain".toMediaTypeOrNull())
         }
-        Log.d("itemImagesToDelete", itemImageUrlsToDelete.toString())
         val newImageList: RequestBody? = itemImageUrlsToDelete?.let { stringsToRequestBody(it) }
-        Log.d("requestbodyDelete", newImageList.toString())
-        //        if (itemImageUrlsToDelete != null) {
-        //            for (url in itemImageUrlsToDelete) {
-        //                url.toRequestBody("text/plain".toMediaTypeOrNull())
-        //                newImageList.add(url)
-        //            }
-        //        }
-        //        if (itemImageUrlsToDelete != null) {
-        //            for (url in itemImageUrlsToDelete) {
-        //                val urlString = url.replaceFirst("^\"|\"$", "")
-        //                newImageList.add(urlString)
-        //            }
-        //        }
-        //        Log.d("moripain",newImageList.toString())
-        Log.d("moji", itemImagesToAdd.toString())
 
         viewModelScope.launch(Dispatchers.IO) {
             if (newImageList != null) {
-                repository.modifyItemPost(itemId, title, content, price, location, chatUrl, newImageList, isAnonymous, itemImagesToAdd).onSuccess {
-                        response ->
-                    if (response.isSuccessful && response.body()!!.code == 1000) {
-                        _successEvent.postValue(Event(itemId))
-                        Log.d("tag_success", "editUnivPost: ${response.body()}")
-                    } else {
-                        _successEvent.postValue(Event(-1))
-                        Log.d("tag_fail", "editPost Error: ${response.code()}")
+                repository.modifyItemPost(
+                    itemId = itemId,
+                    title = title,
+                    content = content,
+                    price = price,
+                    location = location,
+                    chatUrl = chatUrl,
+                    itemImageUrlsToDelete = newImageList,
+                    isAnonymous = isAnonymous,
+                    itemImagesToAdd = itemImagesToAdd,
+                    currency = selectedCurrency,
+                )
+                    .onSuccess { response ->
+                        if (response.isSuccessful && response.body()!!.code == 1000) {
+                            _successEvent.postValue(Event(itemId))
+                            Log.d("tag_success", "editUnivPost: ${response.body()}")
+                        }
+                        else {
+                            _successEvent.postValue(Event(-1))
+                            Log.d("tag_fail", "editPost Error: ${response.code()}")
+                        }
                     }
-                }
             }
         }
         _loading.postValue(Event(false))
@@ -248,10 +270,12 @@ constructor(
                             val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                             _lastMarketPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
                             Log.d("tag_success", response.body().toString())
-                        } else if (response.body()!!.code == 3031) {
+                        }
+                        else if (response.body()!!.code == 3031) {
                             _marketList.postValue(emptyList())
                         }
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "getUnivList Error: ${response.code()}")
                     }
                 }
@@ -273,10 +297,12 @@ constructor(
                         _marketList.postValue(response.body()!!.result.itemListDTO)
                         val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                         _lastMarketPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
-                    } else if (response.body()!!.code == 3031) {
+                    }
+                    else if (response.body()!!.code == 3031) {
                         _lastMarketPostId.postValue(-1)
                     }
-                } else {
+                }
+                else {
                     Log.d("tag_fail", "getMarketNextPosts Error: ${response.code()}")
                 }
             }
@@ -290,7 +316,8 @@ constructor(
                 .onSuccess { response ->
                     if (response.isSuccessful) {
                         Log.d("tag_success", response.body().toString())
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "deletePost Error: ${response.code()}")
                     }
                 }
@@ -314,7 +341,8 @@ constructor(
                                 _isReportedPost.postValue(Event(false))
                             }
                         }
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "reportPost Error: ${response.code()}")
                     }
                 }
@@ -331,11 +359,13 @@ constructor(
                     if (response.isSuccessful && response.body()!!.code == PostViewModel.OK) {
                         _isLikedPost.postValue(Event(true))
                         Log.d("tag_success", "likePost: ${response.body()}")
-                    } else if (response.body()!!.code == PostViewModel.DUP_LIKE) {
+                    }
+                    else if (response.body()!!.code == PostViewModel.DUP_LIKE) {
                         _isLikedPost.postValue(Event(false))
                         unlikeMarketPost(itemId)
                         Log.d("tag_fail", "likePost Error: ${response.code()}")
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "likePost Error: ${response.code()}")
                     }
                 }
@@ -350,7 +380,8 @@ constructor(
                     if (response.isSuccessful && response.body()!!.code == PostViewModel.OK) {
                         _isUnlikePost.postValue(Event(true))
                         Log.d("tag_success", "unlikePost: ${response.body()}")
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "unlikePost Error: ${response.code()}")
                     }
                 }
@@ -368,8 +399,10 @@ constructor(
                     if (response.isSuccessful) {
                         _post.postValue(response.body()!!.result)
                         _imageList.postValue(response.body()!!.result.postImgUrl)
+                        _marketPostCurrency.value = response.body()!!.result.currency
                         Log.d("tag_success", response.body().toString())
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "getMarketPostDetail Error: ${response.code()}")
                     }
                 }
@@ -389,7 +422,8 @@ constructor(
                             _loading.postValue(Event(false))
                             _commentList.postValue(response.body()!!.result)
                         }
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "getComments Error: ${response.code()}")
                     }
                 }
@@ -414,7 +448,8 @@ constructor(
                     val result: List<Comment2> = repository.getComment(itemId).getOrNull()?.body()?.result ?: emptyList()
                     _newCommentList.postValue(result)
                     Log.d("tag_success", "writeComment: ${response.body()}")
-                } else {
+                }
+                else {
                     Log.d("tag_fail", "writeComment Error: $response")
                 }
             }
@@ -432,7 +467,8 @@ constructor(
                             getComments(itemId, false)
                         }
                         Log.d("tag_success", "deleteComment: ${response.body()}")
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "deleteComment Error: ${response.code()}")
                     }
                 }
@@ -460,7 +496,8 @@ constructor(
                         _replySuccessEvent.postValue(Event(true))
                     }
                     Log.d("tag_success", "writeReply: ${response.body()}")
-                } else {
+                }
+                else {
                     Log.d("tag_fail", "writeReply Error: $response")
                 }
             }
@@ -479,7 +516,8 @@ constructor(
                         }
                         // if it doesn't work, then result = repository.getUnivComment(postId).body()!!.result[position].cocomments
                         Log.d("tag_success", "deleteReply: ${response.body()}")
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "deleteReply Error: ${response.code()}")
                     }
                 }
@@ -503,7 +541,8 @@ constructor(
                                 _isChangeStatus.postValue(Event(false))
                             }
                         }
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "changeStatus Error: ${response.code()}")
                     }
                 }
@@ -548,7 +587,8 @@ constructor(
                                     Log.d("tag_success", response.body().toString())
                                 }
                             }
-                        } else if (response.body()!!.code == 3034) {
+                        }
+                        else if (response.body()!!.code == 3034) {
                             when (itemStatus) {
                                 "SELLING" -> {
                                     _marketSellingList.postValue(emptyList())
@@ -563,7 +603,8 @@ constructor(
                                 }
                             }
                         }
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "getMarketMyPageList Error: ${response.code()}")
                     }
                 }
@@ -607,7 +648,8 @@ constructor(
                                 _lastMarketSoldoutPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
                             }
                         }
-                    } else if (response.body()!!.code == 3034) {
+                    }
+                    else if (response.body()!!.code == 3034) {
                         when (itemStatus) {
                             "SELLING" -> {
                                 _lastMarketSellingPostId.postValue(-1)
@@ -622,7 +664,8 @@ constructor(
                             }
                         }
                     }
-                } else {
+                }
+                else {
                     Log.d("tag_fail", "getMarketMyPageNextPosts Error: ${response.code()}")
                 }
             }
@@ -645,10 +688,12 @@ constructor(
                             val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                             _lastMarketMyPagePostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
                             Log.d("tag_success", response.body().toString())
-                        } else if (response.body()!!.code == 3031) {
+                        }
+                        else if (response.body()!!.code == 3031) {
                             _marketMyPageList.postValue(emptyList())
                         }
-                    } else {
+                    }
+                    else {
                         Log.d("tag_fail", "getMarketLikedList Error: ${response.code()}")
                     }
                 }
@@ -668,10 +713,12 @@ constructor(
                         _marketMyPageList.postValue(response.body()!!.result.itemListDTO)
                         val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                         _lastMarketMyPagePostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
-                    } else if (response.body()!!.code == 3031) {
+                    }
+                    else if (response.body()!!.code == 3031) {
                         _lastMarketMyPagePostId.postValue(-1)
                     }
-                } else {
+                }
+                else {
                     Log.d("tag_fail", "getMarketLikedNextPosts Error: ${response.code()}")
                 }
             }
@@ -690,11 +737,14 @@ constructor(
                             _loading.postValue(Event(false))
                         if (response.body()!!.code == 1000 && response.body()!!.result.itemListDTO.isNotEmpty()) {
                             _searchMarketList.postValue(response.body()!!.result.itemListDTO)
-                        } else if (response.body()!!.code == 3035) {
-                            _searchMarketList.postValue(emptyList())
-                        } else {
                         }
-                    } else {
+                        else if (response.body()!!.code == 3035) {
+                            _searchMarketList.postValue(emptyList())
+                        }
+                        else {
+                        }
+                    }
+                    else {
                         Log.d("tag_fail", "getMarketSearchList Error: ${response.code()}")
                     }
                 }
@@ -708,8 +758,46 @@ constructor(
     fun showMyReplyOptionDialog(reply: Reply) {
         _showMyReplyOptionDialog.postValue(Event(reply))
     }
+
+    private fun loadMarketCurrencies() {
+        viewModelScope.launch {
+            repository.getMarketCurrencies()
+                .onSuccess { currencies -> _marketCurrencies.value = currencies }
+                .onFailure { _marketCurrencies.value = emptyList() }
+        }
+    }
+
+    fun selectCurrencyByPosition(position: Int) {
+        selectedCurrency = marketCurrencies.value[position]
+    }
+
+    fun setCurrency(currency: String) {
+        selectedCurrency = currency
+    }
+
+    fun setFreeCheckStatus(isCheckedFree: Boolean) {
+        if (isCheckedFree) {
+            isFree.value = true
+            prevWritePrice = writePrice.value!!
+            writePrice.value = "나눔해주시는 경우 가격을 정할 수 없습니다."
+        }
+        else {
+            isFree.value = false
+            writePrice.value = prevWritePrice
+        }
+    }
+
+    fun loadImageListFromUrl(urls: ArrayList<String>) {
+        viewModelScope.launch {
+            _imageBitmapList.value = ImageUtils.bitmapFromUrl(urls)
+        }
+    }
+
+    fun addImageFromUri(uri: Uri) {
+        viewModelScope.launch {
+            _imageBitmapList.update {
+                it.plus(ImageUtils.uriToBitmap(uri, context))
+            }
+        }
+    }
 }
-
-
-
-

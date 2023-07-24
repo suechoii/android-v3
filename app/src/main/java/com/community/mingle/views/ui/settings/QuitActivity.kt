@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.community.mingle.R
-import com.community.mingle.databinding.ActivityChangePasswordBinding
 import com.community.mingle.databinding.ActivityQuitBinding
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -1,16 +1,10 @@
 package com.community.mingle.service.repository
 
 import com.community.mingle.api.MyPageService
-import com.community.mingle.service.models.Code
-import com.community.mingle.service.models.Email
-import com.community.mingle.service.models.Nickname
-import com.community.mingle.service.models.OldUser
-import com.community.mingle.service.models.PostListResponse
-import com.community.mingle.service.models.ResultResponse
-import com.community.mingle.service.models.UnivDomainResponse
-import com.community.mingle.service.models.UnivListResponse
+import com.community.mingle.service.models.*
 import retrofit2.Response
 import javax.inject.Inject
+import kotlin.Result
 
 class MyPageRepository
 @Inject
@@ -88,6 +82,10 @@ constructor(private val myPageService: MyPageService) {
 
     suspend fun getMyTotalScrap(postId: Int): Result<Response<PostListResponse>> = runCatching {
         myPageService.getMyTotalScrap(postId)
+    }
+
+    suspend fun getMemberDomain(): Result<Response<MemberDomainResponse>> = runCatching {
+        myPageService.getMemberDomain()
     }
 
 }

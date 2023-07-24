@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_changepw"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/changepwEmailFragment">
+
+    <fragment
+        android:id="@+id/changepwEmailFragment"
+        android:name="com.community.mingle.views.ui.settings.ChangepwEmailFragment"
+        android:label="fragment_changepw_email"
+        tools:layout="@layout/fragment_changepw_email" >
+        <action
+            android:id="@+id/action_changepwEmailFragment_to_changepwNumberFragment"
+            app:destination="@id/changepwNumberFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"/>
+        <argument
+            android:name="univId"
+            app:argType="integer"/>
+        <argument
+            android:name="email"
+            app:argType="string"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/changepwNumberFragment"
+        android:name="com.community.mingle.views.ui.settings.ChangepwNumberFragment"
+        android:label="fragment_changepw_number"
+        tools:layout="@layout/fragment_changepw_number" >
+        <action
+            android:id="@+id/action_changepwNumberFragment_to_changepwPasswordFragment"
+            app:destination="@id/changepwPasswordFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"/>
+        <argument
+            android:name="univId"
+            app:argType="integer"/>
+        <argument
+            android:name="email"
+            app:argType="string"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/changepwPasswordFragment"
+        android:name="com.community.mingle.views.ui.settings.ChangepwPasswordFragment"
+        android:label="fragment_changepw_password"
+        tools:layout="@layout/fragment_changepw_password">
+        <action
+            android:id="@+id/action_changepwPasswordFragment_to_changepwDoneFragment"
+            app:destination="@id/changepwDoneFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left" />
+        <argument
+            android:name="univId"
+            app:argType="integer"/>
+        <argument
+            android:name="email"
+            app:argType="string"/>
+        <argument
+            android:name="pwd"
+            app:argType="string"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/changepwDoneFragment"
+        android:name="com.community.mingle.views.ui.settings.ChangepwDoneFragment"
+        android:label="fragment_changepw_done"
+        tools:layout="@layout/fragment_changepw_done">
+        <argument
+            android:name="pwd"
+            app:argType="string"/>
+    </fragment>
+
+</navigation>

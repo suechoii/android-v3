@@ -2,6 +2,7 @@ package com.community.mingle.views.adapter
 
 import android.graphics.Bitmap
 import android.media.Image
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -85,6 +86,12 @@ class MarketPostWriteImageAdapter :
     }
 
     fun addItems(items: List<Bitmap>) {
+        this.imageList.addAll(items)
+        notifyDataSetChanged()
+    }
+
+    fun setItems(items: List<Bitmap>) {
+        this.imageList.clear()
         this.imageList.addAll(items)
         notifyDataSetChanged()
     }

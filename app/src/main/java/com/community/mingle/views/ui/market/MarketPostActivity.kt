@@ -726,6 +726,8 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
                     putExtra("price", binding.priceTv.text.toString())
                     putExtra("chatUrl", binding.linkFilledTv.text.toString())
                     putExtra("place", binding.placeFilledTv.text.toString())
+                    putExtra("currency", binding.priceHkdTv.text.toString())
+                    putExtra("isAnon", binding.anonTv.text == "익명")
                     val urlStrings = imageList.map { it.toString() }
                     putStringArrayListExtra("imageList", urlStrings as ArrayList<String>)
                 }

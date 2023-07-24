@@ -1,23 +1,29 @@
 package com.community.mingle.viewmodel
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.community.mingle.service.models.Comment2
+import com.community.mingle.service.models.Reply
+import com.community.mingle.service.models.ReportPost
 import com.community.mingle.service.models.market.ItemDetail
 import com.community.mingle.service.models.market.MarketCommentSend
 import com.community.mingle.service.models.market.MarketPostResult
 import com.community.mingle.service.models.market.MarketReplySend
-import com.community.mingle.service.models.Reply
-import com.community.mingle.service.models.ReportPost
 import com.community.mingle.service.repository.MarketRepository
 import com.community.mingle.utils.Event
+import com.community.mingle.utils.ImageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -31,6 +37,8 @@ import javax.inject.Inject
 class MarketPostViewModel
 @Inject
 constructor(
+    @ApplicationContext
+    private val context: Context,
     private val repository: MarketRepository,
 ) : ViewModel() {
 
@@ -128,6 +136,9 @@ constructor(
 
     private var prevWritePrice = ""
 
+    private val _imageBitmapList = MutableStateFlow(emptyList<Bitmap>())
+    val imageBitmapList = _imageBitmapList.asStateFlow()
+
     init {
         loadMarketCurrencies()
     }
@@ -202,23 +213,7 @@ constructor(
         if (isFree.value == true) {
             price = "0".toRequestBody("text/plain".toMediaTypeOrNull())
         }
-        Log.d("itemImagesToDelete", itemImageUrlsToDelete.toString())
         val newImageList: RequestBody? = itemImageUrlsToDelete?.let { stringsToRequestBody(it) }
-        Log.d("requestbodyDelete", newImageList.toString())
-        //        if (itemImageUrlsToDelete != null) {
-        //            for (url in itemImageUrlsToDelete) {
-        //                url.toRequestBody("text/plain".toMediaTypeOrNull())
-        //                newImageList.add(url)
-        //            }
-        //        }
-        //        if (itemImageUrlsToDelete != null) {
-        //            for (url in itemImageUrlsToDelete) {
-        //                val urlString = url.replaceFirst("^\"|\"$", "")
-        //                newImageList.add(urlString)
-        //            }
-        //        }
-        //        Log.d("moripain",newImageList.toString())
-        Log.d("moji", itemImagesToAdd.toString())
 
         viewModelScope.launch(Dispatchers.IO) {
             if (newImageList != null) {
@@ -724,6 +719,10 @@ constructor(
     fun selectCurrencyByPosition(position: Int) {
         selectedCurrency = marketCurrencies.value[position]
     }
+
+    fun setCurrency(currency: String) {
+        selectedCurrency = currency
+    }
     fun setFreeCheckStatus(isCheckedFree: Boolean) {
         if(isCheckedFree){
             isFree.value = true
@@ -732,6 +731,19 @@ constructor(
         } else {
             isFree.value = false
             writePrice.value = prevWritePrice
+        }
+    }
+    fun loadImageListFromUrl(urls: ArrayList<String>) {
+        viewModelScope.launch {
+            _imageBitmapList.value = ImageUtils.bitmapFromUrl(urls)
+        }
+    }
+
+    fun addImageFromUri(uri: Uri) {
+        viewModelScope.launch {
+            _imageBitmapList.update {
+                it.plus(ImageUtils.uriToBitmap(uri, context))
+            }
         }
     }
 }

@@ -137,6 +137,8 @@ class MarketMyPageListAdapter : ListAdapter<MarketPostResult, MarketMyPageListAd
                                 putExtra("price", marketPostResult.price)
                                 putExtra("chatUrl", marketPostResult.chatUrl)
                                 putExtra("place", marketPostResult.location)
+                                putExtra("currency", binding.priceHkdTv.text.toString())
+                                putExtra("isAnon", marketPostResult.nickName == "익명")
                                 val urlStrings = marketPostResult.itemImgList.map { it.toString() }
                                 putStringArrayListExtra("imageList", urlStrings as ArrayList<String>)
                                 Log.d("checkUrlString", urlStrings.toString())

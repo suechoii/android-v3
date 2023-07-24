@@ -77,7 +77,6 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
                     // 이미지 다중 선택시
                     if (it.data?.clipData != null) {
                         var clipData = it.data?.clipData
-                        //val count = it.data!!.clipData!!.itemCount
                         if (clipData!!.itemCount > 10 || (imageAdapter.itemCount + clipData.itemCount) > 10) {
                             DialogUtils.showCustomOneTextDialog(
                                 this,

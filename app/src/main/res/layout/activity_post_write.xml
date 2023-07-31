@@ -90,6 +90,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@null"
+        android:textColorHint="@color/gray_02"
         android:hint="제목을 입력해주세요"
         android:text="@={viewModel.title}"
         android:fontFamily="@font/pretendard_regular"
@@ -117,6 +118,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:textColorHint="@color/gray_02"
         android:background="@null"
         android:fontFamily="@font/pretendard_regular"
         android:gravity="start"
@@ -153,14 +155,14 @@
         tools:listitem="@layout/item_post_write_image"/>
 
 
-    <ImageView
+    <View
         android:id="@+id/post_line_down_iv"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
         android:layout_marginBottom="48dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@drawable/ic_line_write" />
+        android:background="@color/gray_01" />
 
     <ImageView
         android:id="@+id/post_photo_iv"

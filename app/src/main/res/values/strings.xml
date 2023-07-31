@@ -38,7 +38,7 @@
 
     <string name="guideline_post_detail"> \u2022 운영규칙을 위반하는 댓글은 삭제될 수 있습니다.\n\u2022 악의적인 글 혹은 댓글은 오른쪽 상단 버튼을 통해 신고가 가능합니다.</string>
 
-    <string name="guideline_post_write">밍글에서 나누고 싶은 이야기가 있나요? \n  \u2022 운영규칙을 위반하는 게시글은 삭제 될 수 있습니다. \n  \u2022 다른 유저들에게 불쾌감을 줄 수 있는 내용은 신고로 제재\n     될 수 있습니다. \n  \u2022 더 상세한 내용은 <b>밍글 가이드라인</b>을 참고하세요.</string>
+    <string name="guideline_post_write">밍글에서 나누고 싶은 이야기가 있나요? \n  \u2022 운영규칙을 위반하는 게시글은 삭제 될 수 있습니다. \n  \u2022 다른 유저들에게 불쾌감을 줄 수 있는 내용은 신고로 제재\n     될 수 있습니다. \n  \u2022 더 상세한 내용은 <b><u>밍글 가이드라인</u></b>을 참고하세요.</string>
     <string name="notification">알림</string>
     <string name="hot_posts">불타오르는 게시글</string>
 

@@ -110,8 +110,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/slider_vp"
-                            app:progressMode="true"
-                            tools:selectedItemPosition="1"
+                            app:progressMode="false"
                             app:selectedDotColor="@color/orange_04" />
 
                         <View

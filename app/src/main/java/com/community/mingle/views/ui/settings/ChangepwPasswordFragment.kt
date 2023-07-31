@@ -3,6 +3,7 @@ package com.community.mingle.views.ui.settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentChangepwPasswordBinding
@@ -133,12 +134,14 @@ class ChangepwPasswordFragment :
                     binding.reEnterPwCorrectIv.visibility = View.VISIBLE
                     binding.reEnterPwWrongIv.visibility = View.INVISIBLE
                     binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+                    binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                     binding.nextBtn.isEnabled = true
                 }
                 else {
                     binding.reEnterPwCorrectIv.visibility = View.INVISIBLE
                     binding.reEnterPwWrongIv.visibility = View.VISIBLE
                     binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_disabled)
+                    binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_04))
                     binding.nextBtn.isEnabled = false
                 }
             }

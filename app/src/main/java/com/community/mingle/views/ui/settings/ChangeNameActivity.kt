@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.MingleApplication
@@ -19,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ChangeNameActivity : BaseActivity<ActivityChangeNameBinding>(R.layout.activity_change_name) {
+
     private val viewModel: MyPageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +64,8 @@ class ChangeNameActivity : BaseActivity<ActivityChangeNameBinding>(R.layout.acti
                 binding.nameGrey.visibility = View.VISIBLE
 
 
-            } else {
+            }
+            else {
                 binding.nameOrange.visibility = View.VISIBLE
                 binding.nameGrey.visibility = View.GONE
             }
@@ -78,14 +81,16 @@ class ChangeNameActivity : BaseActivity<ActivityChangeNameBinding>(R.layout.acti
                 binding.countTv.text = count.toString() + "/10"
                 if (binding.nameEdit.text.isNotEmpty()) {
                     binding.saveBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+                    binding.saveBtn.setTextColor(ContextCompat.getColor(this@ChangeNameActivity, R.color.black))
                     binding.saveBtn.isEnabled = true
-                } else {
+                }
+                else {
                     binding.saveBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_disabled)
+                    binding.saveBtn.setTextColor(ContextCompat.getColor(this@ChangeNameActivity, R.color.gray_04))
                     binding.saveBtn.isEnabled = false
                 }
 
             }
-
 
             override fun afterTextChanged(p0: Editable?) {
 
@@ -100,8 +105,6 @@ class ChangeNameActivity : BaseActivity<ActivityChangeNameBinding>(R.layout.acti
         }
         return false
     }
-
-
 
 
 }

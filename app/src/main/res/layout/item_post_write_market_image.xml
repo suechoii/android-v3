@@ -10,9 +10,11 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_post_write_market_image_container"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:background="@drawable/layout_market_item">
+        android:background="@drawable/layout_market_item"
+        android:clipToOutline="true">
 
         <ImageView
             android:id="@+id/iv_image"

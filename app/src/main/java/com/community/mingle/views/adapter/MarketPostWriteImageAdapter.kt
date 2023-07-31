@@ -41,6 +41,7 @@ class MarketPostWriteImageAdapter :
             parent,
             false
         )
+        binding.itemPostWriteMarketImageContainer.clipToOutline = true
 
         return PostWriteImageViewHolder(binding)
     }
@@ -59,7 +60,6 @@ class MarketPostWriteImageAdapter :
         fun bind(bitmap: Bitmap, position: Int) {
             //binding.setVariable(BR.item, uri))
             //images.add()
-            binding.textViewRepresentativeImage.clipToOutline = true
             binding.textViewRepresentativeImage.isVisible = position == 0
 
             binding.ivImage.apply {

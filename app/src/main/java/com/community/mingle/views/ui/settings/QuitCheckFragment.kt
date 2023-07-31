@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
@@ -38,9 +39,11 @@ class QuitCheckFragment :
     private fun onCheckedChanged(compoundButton: CompoundButton) {
         if (binding.checkbox.isChecked) {
             binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+            binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
             binding.nextBtn.isEnabled = true
         } else {
             binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_disabled)
+            binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_04))
             binding.nextBtn.isEnabled = false
         }
     }

@@ -136,7 +136,7 @@
                 android:id="@+id/market_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="중고거래"
+                android:text="장터"
                 android:fontFamily="@font/pretendard_medium"
                 android:textSize="18sp"
                 android:textColor="@color/black"

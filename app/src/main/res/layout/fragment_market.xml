@@ -38,7 +38,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="12dp"
                 android:fontFamily="@font/pretendard_semibold"
-                android:text="거래게시판"
+                android:text="장터"
                 android:textColor="@color/blackGray"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"

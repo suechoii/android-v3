@@ -14,7 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp">
+        android:id="@+id/password_change_email_container">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

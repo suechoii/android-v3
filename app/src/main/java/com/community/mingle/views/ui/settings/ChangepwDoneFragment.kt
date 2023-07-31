@@ -3,10 +3,14 @@ package com.community.mingle.views.ui.settings
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentChangepwDoneBinding
@@ -17,6 +21,7 @@ import com.community.mingle.utils.base.BaseSignupFragment
 import com.community.mingle.views.ui.LoadingDialog
 import com.community.mingle.views.ui.member.LoginActivity
 import com.community.mingle.views.ui.member.StartActivity
+import com.community.mingle.views.ui_common.ScreenUtil
 
 class ChangepwDoneFragment :
     BaseChangepwFragment<FragmentChangepwDoneBinding>(R.layout.fragment_changepw_done) {
@@ -32,6 +37,13 @@ class ChangepwDoneFragment :
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.doneContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
     }
 
     override fun initView() {

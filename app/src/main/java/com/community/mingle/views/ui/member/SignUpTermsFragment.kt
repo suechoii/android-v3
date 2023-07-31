@@ -1,11 +1,17 @@
 package com.community.mingle.views.ui.member
 
+import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CompoundButton
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSignupTermsBinding
 import com.community.mingle.utils.base.BaseSignupFragment
+import com.community.mingle.views.ui_common.ScreenUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -71,6 +77,13 @@ class SignUpTermsFragment :
             }
         }
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.termsContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
     }
 
     private fun onCheckedChanged(compoundButton: CompoundButton) { when (compoundButton.id) {

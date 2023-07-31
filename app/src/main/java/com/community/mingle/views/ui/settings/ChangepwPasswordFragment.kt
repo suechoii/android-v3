@@ -1,9 +1,13 @@
 package com.community.mingle.views.ui.settings
 
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentChangepwPasswordBinding
@@ -12,12 +16,19 @@ import com.community.mingle.utils.Constants.toast
 import com.community.mingle.utils.base.BaseChangepwFragment
 import com.community.mingle.utils.base.BaseSignupFragment
 import com.community.mingle.views.ui.LoadingDialog
+import com.community.mingle.views.ui_common.ScreenUtil
 
 class ChangepwPasswordFragment :
     BaseChangepwFragment<FragmentChangepwPasswordBinding>(R.layout.fragment_changepw_password){
 
     private lateinit var loadingDialog: LoadingDialog
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.passwordChangePasswordContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
+    }
     override fun initView() {
         loadingDialog = LoadingDialog(this@ChangepwPasswordFragment.requireContext())
         // password -> number 이동

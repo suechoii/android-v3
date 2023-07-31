@@ -3,9 +3,13 @@ package com.community.mingle.views.ui.member
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -17,8 +21,10 @@ import com.community.mingle.extension.clicks
 import com.community.mingle.extension.throttleFirst
 import com.community.mingle.utils.Constants.toast
 import com.community.mingle.utils.base.BaseSignupFragment
+import com.community.mingle.views.ui_common.ScreenUtil
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -58,7 +64,24 @@ class SignUpCountryFragment : BaseSignupFragment<FragmentSignupCountrySelectionB
 
         binding.buttonNext.setOnClickListener {
             findNavController().safeNavigate(R.id.action_signupCountryFragment_to_signupSchoolFragment)
+        }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                signupViewModel.selectedCountry.collect {
+                    if(it != null) {
+                        binding.buttonNext.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                        binding.buttonNext.isEnabled = true
+                    }
+                    else {
+                        binding.buttonNext.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_04))
+                        binding.buttonNext.isEnabled = false
+                    }
+                }
+            }
+        }
+        binding.fragmentSignupCountrySelectionContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
         }
     }
 

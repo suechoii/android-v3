@@ -1,13 +1,18 @@
 package com.community.mingle.views.ui.member
 
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSignupPasswordBinding
 import com.community.mingle.utils.base.BaseSignupFragment
+import com.community.mingle.views.ui_common.ScreenUtil
 
 class SignUpPasswordFragment :
     BaseSignupFragment<FragmentSignupPasswordBinding>(R.layout.fragment_signup_password){
@@ -25,6 +30,12 @@ class SignUpPasswordFragment :
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.fragmentSignupPasswordContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
+    }
     override fun initViewModel() {
         binding.viewModel = signupViewModel
 

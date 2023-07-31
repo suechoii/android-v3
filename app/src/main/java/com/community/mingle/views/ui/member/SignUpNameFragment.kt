@@ -2,16 +2,21 @@ package com.community.mingle.views.ui.member
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSignupNameBinding
 import com.community.mingle.utils.Constants.toast
 import com.community.mingle.utils.base.BaseSignupFragment
 import com.community.mingle.views.ui.LoadingDialog
+import com.community.mingle.views.ui_common.ScreenUtil
 
 class SignUpNameFragment :
     BaseSignupFragment<FragmentSignupNameBinding>(R.layout.fragment_signup_name) {
@@ -27,6 +32,12 @@ class SignUpNameFragment :
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.fragmentSignupNameContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
+    }
     override fun initViewModel() {
         binding.viewModel = signupViewModel
 

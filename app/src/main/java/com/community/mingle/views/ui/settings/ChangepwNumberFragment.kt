@@ -1,12 +1,16 @@
 package com.community.mingle.views.ui.settings
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Chronometer
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
@@ -14,11 +18,19 @@ import com.community.mingle.databinding.FragmentChangepwNumberBinding
 import com.community.mingle.databinding.FragmentSignupNumberBinding
 import com.community.mingle.utils.base.BaseChangepwFragment
 import com.community.mingle.utils.base.BaseSignupFragment
+import com.community.mingle.views.ui_common.ScreenUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ChangepwNumberFragment :
     BaseChangepwFragment<FragmentChangepwNumberBinding>(R.layout.fragment_changepw_number), Chronometer.OnChronometerTickListener{
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.passwordChangeNumberContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
+    }
     override fun initView() {
         // 3분 타이머 시작
         binding.chronometer.base = SystemClock.elapsedRealtime() + 180000

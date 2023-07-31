@@ -12,9 +12,9 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragment_signup_email_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="30dp">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -91,9 +91,10 @@
 
             <EditText
                 android:id="@+id/enter_id_tv"
-                android:layout_width="200dp"
+                android:layout_width="0dp"
                 android:layout_height="44dp"
                 android:background="@null"
+                app:layout_constraintEnd_toStartOf="@id/et_symbol_iv"
                 android:fontFamily="@font/pretendard_regular"
                 android:hint="학교 이메일 작성"
                 android:inputType="text"
@@ -141,10 +142,10 @@
             <TextView
                 android:id="@+id/domain_tv"
                 android:gravity="center_vertical"
-                tools:text="swu.ac.kr"
+                tools:text="connect.hku.hk"
                 app:layout_constraintBottom_toBottomOf="@id/et_symbol_iv"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/pretendard_regular"

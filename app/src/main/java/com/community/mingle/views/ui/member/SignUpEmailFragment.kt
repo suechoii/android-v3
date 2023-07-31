@@ -3,6 +3,7 @@ package com.community.mingle.views.ui.member
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
@@ -17,12 +18,11 @@ class SignUpEmailFragment :
     override fun initView() {
         // email -> school 이동
         binding.returnIv.setOnClickListener {
-            //requireActivity().supportFragmentManager.popBackStack()
             requireActivity().onBackPressed()
         }
 
         // email -> code 이동
-        binding.nextBtnEnabled.setOnClickListener {
+        binding.requestAuthBtn.setOnClickListener {
             signupViewModel.validateEmail()
 
             signupViewModel.isEmailVerified.observe(viewLifecycleOwner) {
@@ -81,12 +81,20 @@ class SignUpEmailFragment :
                 p3: Int
             ) {
                 if (binding.enterIdTv.text.toString().isNotEmpty()) {
-                    binding.nextBtnEnabled.visibility = View.VISIBLE
-                    binding.nextBtnDisabled.visibility = View.GONE
+                    binding.requestAuthBtn.isClickable = true
+                    binding.requestAuthBtn.isEnabled = true
+                    binding.requestAuthBtn.isFocusable = true
+                    binding.requestAuthBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+                    binding.requestButtonIv.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                    binding.requestButtonTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                 }
                 else {
-                    binding.nextBtnEnabled.visibility = View.GONE
-                    binding.nextBtnDisabled.visibility = View.VISIBLE
+                    binding.requestAuthBtn.isClickable = false
+                    binding.requestAuthBtn.isEnabled = false
+                    binding.requestAuthBtn.isFocusable = false
+                    binding.requestAuthBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_disabled)
+                    binding.requestButtonIv.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray_04))
+                    binding.requestButtonTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_04))
                 }
             }
 

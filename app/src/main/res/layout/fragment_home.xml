@@ -38,9 +38,9 @@
 
                     <ImageView
                         android:id="@+id/mypage"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintDimensionRatio="1:1"
                         android:padding="12dp"
                         android:src="@drawable/ic_home_mypage"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,8 +49,8 @@
 
                     <ImageView
                         android:id="@+id/search"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:padding="12dp"
                         android:src="@drawable/ic_home_search"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -102,7 +102,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            app:dotsColor="@color/orange_04"
+                            app:dotsColor="@color/gray_02"
                             app:dotsCornerRadius="8dp"
                             app:dotsSize="6dp"
                             app:dotsSpacing="4dp"
@@ -111,6 +111,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/slider_vp"
                             app:progressMode="true"
+                            tools:selectedItemPosition="1"
                             app:selectedDotColor="@color/orange_04" />
 
                         <View

@@ -36,7 +36,7 @@ class SignUpSchoolFragment :
 
     override fun initView() {
         binding.closeIv.setOnClickListener {
-            requireActivity().finish()
+            requireActivity().onBackPressed()
         }
 
         // school -> email 이동

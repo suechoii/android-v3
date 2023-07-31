@@ -31,7 +31,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/login_emaiL_pw_group"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginHorizontal="32dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,14 +41,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/login_email_group"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
                 android:id="@+id/uni_email"
-                android:layout_width="296dp"
+                android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:hint="학교 이메일 주소"
                 android:text="@={viewModel.email}"
@@ -62,7 +63,7 @@
 
             <View
                 android:id="@+id/email_red"
-                android:layout_width="296dp"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@drawable/textfieldline1"
                 app:layout_constraintBottom_toBottomOf="@id/uni_email"
@@ -71,7 +72,7 @@
 
             <View
                 android:id="@+id/email_grey"
-                android:layout_width="296dp"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@drawable/textfieldline2"
                 app:layout_constraintBottom_toBottomOf="@id/uni_email"
@@ -80,7 +81,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@id/login_email_group"
             app:layout_constraintTop_toTopOf="@id/login_email_group"
@@ -88,7 +89,7 @@
 
             <EditText
                 android:id="@+id/password"
-                android:layout_width="296dp"
+                android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:hint="비밀번호"
                 android:text="@={viewModel.pw}"
@@ -104,7 +105,7 @@
 
             <View
                 android:id="@+id/password_red"
-                android:layout_width="296dp"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@drawable/textfieldline1"
                 app:layout_constraintBottom_toBottomOf="@id/password"
@@ -113,7 +114,7 @@
 
             <View
                 android:id="@+id/password_grey"
-                android:layout_width="296dp"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@drawable/textfieldline2"
                 app:layout_constraintBottom_toBottomOf="@id/password"
@@ -198,7 +199,8 @@
 
     <TextView
         android:id="@+id/next_btn"
-        android:layout_width="296dp"
+        android:layout_width="0dp"
+        android:layout_marginHorizontal="32dp"
         android:layout_height="48dp"
         android:enabled="@{uniEmail.text.length() > 0 &amp;&amp; password.text.length() > 0}"
         android:background="@drawable/bg_btn_signup_next_disabled"
@@ -210,7 +212,7 @@
         android:layout_marginBottom="16dp"
         android:text="로그인"
         android:textSize="14sp"
-        android:textColor="#686868"
+        android:textColor="@color/gray_04"
         android:gravity="center" />
 
     <include

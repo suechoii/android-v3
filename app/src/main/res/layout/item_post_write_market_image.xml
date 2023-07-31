@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -9,16 +10,17 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_post_write_market_image_container"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:background="@android:color/transparent">
+        android:background="@drawable/layout_market_item"
+        android:clipToOutline="true">
 
         <ImageView
             android:id="@+id/iv_image"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:scaleType="centerCrop"
-            android:background="@drawable/layout_market_item"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -26,9 +28,23 @@
             android:id="@+id/bt_delete"
             android:layout_width="16dp"
             android:layout_height="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
             android:src="@drawable/ic_write_cross"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
+        <TextView
+            android:id="@+id/textView_representative_image"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="match_parent"
+            android:text="대표사진"
+            tools:visibility="visible"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:textColor="@color/white"
+            android:background="@color/grayOrange_03"
+            android:layout_height="22dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

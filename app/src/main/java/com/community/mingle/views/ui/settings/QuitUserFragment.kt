@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.CompoundButton
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -79,10 +80,12 @@ class QuitUserFragment :
                 binding.errorTv.visibility = View.INVISIBLE
                 if (binding.uniEmail.text.toString() != "" && binding.password.text.toString() != "" ) {
                     binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+                    binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                     binding.nextBtn.isEnabled = true
                 }
                 else {
                     binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_disabled)
+                    binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_04))
                     binding.nextBtn.isEnabled = false
                 }
             }

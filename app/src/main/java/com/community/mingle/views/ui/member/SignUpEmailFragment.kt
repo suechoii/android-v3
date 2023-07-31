@@ -1,13 +1,22 @@
 package com.community.mingle.views.ui.member
 
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.MarginLayoutParamsCompat
+import androidx.core.view.marginTop
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSignupEmailBinding
 import com.community.mingle.utils.base.BaseSignupFragment
+import com.community.mingle.views.ui_common.ScreenUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,12 +26,11 @@ class SignUpEmailFragment :
     override fun initView() {
         // email -> school 이동
         binding.returnIv.setOnClickListener {
-            //requireActivity().supportFragmentManager.popBackStack()
             requireActivity().onBackPressed()
         }
 
         // email -> code 이동
-        binding.nextBtnEnabled.setOnClickListener {
+        binding.requestAuthBtn.setOnClickListener {
             signupViewModel.validateEmail()
 
             signupViewModel.isEmailVerified.observe(viewLifecycleOwner) {
@@ -35,6 +43,13 @@ class SignUpEmailFragment :
                     }
                 }
             }
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.fragmentSignupEmailContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
         }
     }
 
@@ -81,12 +96,20 @@ class SignUpEmailFragment :
                 p3: Int
             ) {
                 if (binding.enterIdTv.text.toString().isNotEmpty()) {
-                    binding.nextBtnEnabled.visibility = View.VISIBLE
-                    binding.nextBtnDisabled.visibility = View.GONE
+                    binding.requestAuthBtn.isClickable = true
+                    binding.requestAuthBtn.isEnabled = true
+                    binding.requestAuthBtn.isFocusable = true
+                    binding.requestAuthBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+                    binding.requestButtonIv.setColorFilter(ContextCompat.getColor(requireContext(), R.color.black))
+                    binding.requestButtonTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                 }
                 else {
-                    binding.nextBtnEnabled.visibility = View.GONE
-                    binding.nextBtnDisabled.visibility = View.VISIBLE
+                    binding.requestAuthBtn.isClickable = false
+                    binding.requestAuthBtn.isEnabled = false
+                    binding.requestAuthBtn.isFocusable = false
+                    binding.requestAuthBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_disabled)
+                    binding.requestButtonIv.setColorFilter(ContextCompat.getColor(requireContext(), R.color.gray_04))
+                    binding.requestButtonTv.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_04))
                 }
             }
 

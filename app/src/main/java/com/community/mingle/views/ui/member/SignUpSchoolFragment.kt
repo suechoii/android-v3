@@ -2,15 +2,22 @@ package com.community.mingle.views.ui.member
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSignupSchoolinfoBinding
 import com.community.mingle.utils.Constants.toast
 import com.community.mingle.utils.base.BaseSignupFragment
+import com.community.mingle.views.ui_common.ScreenUtil
 import com.google.android.material.textfield.TextInputLayout
 
 class SignUpSchoolFragment :
@@ -34,9 +41,14 @@ class SignUpSchoolFragment :
         callback.remove()
     }
 
+    override fun onResume() {
+        super.onResume()
+        setButtonEnabled()
+    }
+
     override fun initView() {
         binding.closeIv.setOnClickListener {
-            requireActivity().finish()
+            requireActivity().onBackPressed()
         }
 
         // school -> email 이동
@@ -51,6 +63,12 @@ class SignUpSchoolFragment :
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.schoolLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
+    }
     private fun NavController.safeNavigate(id : Int) {
         currentDestination?.getAction(id)?.run {
             navigate(id)
@@ -76,13 +94,12 @@ class SignUpSchoolFragment :
                 isDropdown = false
                 binding.nextBtn.isEnabled = true
                 binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+                binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                 signupViewModel.setUnivId(findUniIdx(signupViewModel.univs,arrayAdapter.getItem(position).toString()))
+
             }
 
-            if (binding.typesFilter.text.toString() != "학교 선택") {
-                binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
-                binding.nextBtn.isEnabled = true
-            }
+            setButtonEnabled()
         }
 
         binding.dropDownLayout.setOnClickListener {
@@ -91,6 +108,14 @@ class SignUpSchoolFragment :
 
         binding.typesFilter.setOnClickListener {
             showUnivList()
+        }
+    }
+
+    private fun setButtonEnabled() {
+        if (binding.typesFilter.text.toString() != "학교 선택") {
+            binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_04))
+            binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+            binding.nextBtn.isEnabled = true
         }
     }
 

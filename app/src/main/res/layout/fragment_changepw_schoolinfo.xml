@@ -13,8 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/school_layout"
-        android:layout_marginTop="30dp">
+        android:id="@+id/school_layout">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -30,8 +29,7 @@
         android:background="@color/gray_02"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="4dp"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"

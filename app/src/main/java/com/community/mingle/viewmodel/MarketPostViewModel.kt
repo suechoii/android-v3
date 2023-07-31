@@ -129,7 +129,7 @@ constructor(
     val searchMarketList: LiveData<List<MarketPostResult>> get() = _searchMarketList
     private val _marketCurrencies = MutableStateFlow(emptyList<String>())
     val marketCurrencies = _marketCurrencies.asStateFlow()
-    var selectedCurrency = ""
+    var selectedCurrency = "HKD"
         private set
     private val _marketPostCurrency = MutableStateFlow("")
     val marketPostCurrency = _marketPostCurrency.asStateFlow()

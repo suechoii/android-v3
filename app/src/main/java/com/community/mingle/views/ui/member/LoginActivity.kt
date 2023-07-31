@@ -2,12 +2,14 @@ package com.community.mingle.views.ui.member
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import com.community.mingle.MainActivity
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
@@ -89,9 +91,11 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
                 binding.errorTv.visibility = View.INVISIBLE
                 if (binding.uniEmail.text.toString() != "" && binding.password.text.toString() != "" ) {
                     binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+                    binding.nextBtn.setTextColor(ContextCompat.getColor(this@LoginActivity, R.color.gray_04))
                 }
                 else {
                     binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_disabled)
+                    binding.nextBtn.setTextColor(Color.BLACK)
                 }
             }
         }

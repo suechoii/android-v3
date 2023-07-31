@@ -128,9 +128,12 @@
                 android:textStyle="bold"
                 tools:text="잔디밭"/>
 
-            <Space
-                android:layout_width="16dp"
-                android:layout_height="16dp"/>
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                app:tint="@color/gray_03"
+                android:src="@drawable/baseline_keyboard_arrow_right_24"
+                android:textColor="@color/gray_03"/>
 
             <TextView
                 android:id="@+id/category_name_tv"
@@ -168,6 +171,7 @@
                     android:layout_height="match_parent">
 
                     <TextView
+                        tools:text="테스트 제목"
                         android:id="@+id/title_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -228,6 +232,7 @@
 
                         <TextView
                             android:id="@+id/anon_tv"
+                            tools:text="익명"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/pretendard_regular"
@@ -264,7 +269,7 @@
                             android:src="@drawable/ic_ellipse"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toEndOf="@id/special_icon"
-                            android:layout_marginTop="7dp"
+                            android:layout_marginTop="8dp"
                             android:layout_marginStart="4dp"
                             android:visibility="gone"/>
 
@@ -316,7 +321,7 @@
                             android:src="@drawable/ic_ellipse"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toEndOf="@id/anon_tv"
-                            android:layout_marginTop="7dp"
+                            android:layout_marginTop="8dp"
                             android:layout_marginStart="4dp"/>
 
                         <TextView

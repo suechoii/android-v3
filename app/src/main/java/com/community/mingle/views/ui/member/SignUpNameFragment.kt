@@ -1,15 +1,22 @@
 package com.community.mingle.views.ui.member
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSignupNameBinding
 import com.community.mingle.utils.Constants.toast
 import com.community.mingle.utils.base.BaseSignupFragment
 import com.community.mingle.views.ui.LoadingDialog
+import com.community.mingle.views.ui_common.ScreenUtil
 
 class SignUpNameFragment :
     BaseSignupFragment<FragmentSignupNameBinding>(R.layout.fragment_signup_name) {
@@ -25,6 +32,12 @@ class SignUpNameFragment :
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.fragmentSignupNameContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
+    }
     override fun initViewModel() {
         binding.viewModel = signupViewModel
 
@@ -78,9 +91,11 @@ class SignUpNameFragment :
                 binding.countTv.text = count.toString() + "/10"
                 if (binding.nameEdit.text.isNotEmpty()) {
                     binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+                    binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                     binding.nextBtn.isEnabled = true
                 } else {
                     binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_disabled)
+                    binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_04))
                     binding.nextBtn.isEnabled = false
                 }
             }

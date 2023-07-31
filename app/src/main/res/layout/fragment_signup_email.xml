@@ -5,94 +5,96 @@
     tools:context=".views.ui.member.SignUpEmailFragment">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.community.mingle.viewmodel.SignupViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragment_signup_email_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="30dp">
+        android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.25"/>
-
-    <View
-        android:id="@+id/progress_bar"
-        android:layout_width="0dp"
-        android:layout_height="4dp"
-        android:background="@color/gray_02"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/guideline"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="4dp"/>
-
-    <ImageView
-        android:id="@+id/return_iv"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:padding="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="13dp"
-        android:src="@drawable/ic_back"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="32dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="76dp">
-
-        <TextView
-            android:id="@+id/enter_inst_tv"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="학교 이메일을\n입력해 주세요."
-            android:textSize="24sp"
-            android:fontFamily="@font/pretendard_regular"
-            android:textColor="@color/black"
-            android:letterSpacing="-0.01"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
+
+        <View
+            android:id="@+id/progress_bar"
+            android:layout_width="0dp"
+            android:layout_height="4dp"
+            android:background="@color/gray_02"
+            app:layout_constraintEnd_toStartOf="@id/guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/enter_desc_tv"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/enter_desc_tv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="1dp"
-            android:textSize="14sp"
-            android:fontFamily="@font/pretendard_regular"
-            android:textColor="@color/gray_03"
-            android:text="인증번호가 발송돼요."
-            app:layout_constraintTop_toBottomOf="@id/enter_inst_tv"
-            app:layout_constraintStart_toStartOf="@id/enter_inst_tv"/>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/return_iv"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="12dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/enter_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
+            android:layout_marginTop="76dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/enter_inst_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pretendard_regular"
+                android:letterSpacing="-0.01"
+                android:text="학교 이메일을\n입력해 주세요."
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@id/enter_desc_tv"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/enter_desc_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:text="인증번호가 발송돼요."
+                android:textColor="@color/gray_03"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@id/enter_inst_tv"
+                app:layout_constraintTop_toBottomOf="@id/enter_inst_tv" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/enter_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="207dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <EditText
                 android:id="@+id/enter_id_tv"
-                android:layout_width="129dp"
+                android:layout_width="0dp"
                 android:layout_height="44dp"
                 android:background="@null"
+                app:layout_constraintEnd_toStartOf="@id/et_symbol_iv"
                 android:fontFamily="@font/pretendard_regular"
                 android:hint="학교 이메일 작성"
                 android:inputType="text"
@@ -107,7 +109,8 @@
 
             <View
                 android:id="@+id/underline_orange_iv"
-                android:layout_width="129dp"
+                android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="@id/enter_id_tv"
                 android:layout_height="1dp"
                 android:background="@color/orange_01"
                 android:visibility="gone"
@@ -116,7 +119,8 @@
 
             <View
                 android:id="@+id/underline_grey_iv"
-                android:layout_width="129dp"
+                android:layout_width="0dp"
+                app:layout_constraintEnd_toEndOf="@id/enter_id_tv"
                 android:layout_height="1dp"
                 android:background="@color/gray_03"
                 app:layout_constraintStart_toStartOf="@id/enter_id_tv"
@@ -135,43 +139,12 @@
                 app:layout_constraintStart_toEndOf="@id/enter_id_tv"
                 app:layout_constraintTop_toTopOf="@id/enter_id_tv" />
 
-
-            // domain이 여러개인 경우는 없나?
-            <!--만약에 response 값의 getItemCount가 1개보다 많을때 textInputLayout의 layout을 설정-->
-            <!--        <com.google.android.material.textfield.TextInputLayout-->
-            <!--            android:id="@+id/domain_layout"-->
-            <!--            style="@style/DropDownTextInputLayoutStyle"-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_height="50dp"-->
-            <!--            android:layout_marginStart="4dp"-->
-            <!--            android:textSize="14sp"-->
-            <!--            android:textColor="@color/black"-->
-            <!--            android:fontFamily="@font/pretendard_regular"-->
-            <!--            app:endIconDrawable="@drawable/ic_down"-->
-            <!--            app:layout_constraintStart_toEndOf="@id/et_symbol_iv"-->
-            <!--            app:layout_constraintBottom_toBottomOf="@id/underline_grey_iv">-->
-
-            <!--            <AutoCompleteTextView-->
-            <!--                android:id="@+id/domain_filter"-->
-            <!--                android:layout_width="144dp"-->
-            <!--                android:layout_height="44dp"-->
-            <!--                android:fontFamily="@font/pretendard_regular"-->
-            <!--                android:ellipsize="end"-->
-            <!--                android:inputType="none"-->
-            <!--                android:maxLines="1"-->
-            <!--                android:singleLine="true"-->
-            <!--                android:paddingTop="14dp"-->
-            <!--                android:paddingStart="12dp"-->
-            <!--                android:text="선택"-->
-            <!--                android:textSize="16sp"-->
-            <!--                android:paddingBottom="11dp"-->
-            <!--                android:textColor="@color/gray_03"-->
-            <!--                tools:ignore="LabelFor"/>-->
-
-            <!--        </com.google.android.material.textfield.TextInputLayout>-->
-
             <TextView
                 android:id="@+id/domain_tv"
+                android:gravity="center_vertical"
+                tools:text="connect.hku.hk"
+                app:layout_constraintBottom_toBottomOf="@id/et_symbol_iv"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -183,80 +156,98 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:id="@+id/next_btn_disabled"
-        android:layout_width="296dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_btn_signup_verify"
-        android:layout_marginBottom="16dp"
-        android:clickable="false"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/request_auth_btn"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_btn_signup_next_disabled"
+            android:clickable="true"
+            android:drawableStart="@drawable/ic_mail"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-    <ImageView
-        android:id="@+id/next_btn_enabled"
-        android:layout_width="296dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_btn_signup_verify_enabled"
-        android:layout_marginBottom="16dp"
-        android:visibility="gone"
-        android:clickable="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+            <ImageView
+                android:id="@+id/request_button_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:src="@drawable/ic_mail"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/request_button_tv"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.55"
+                app:tint="@color/gray_04" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/already_exist_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="275dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="33dp">
+            <TextView
+                android:id="@+id/request_button_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="인증번호 받기"
+                android:textSize="14sp"
+                android:textColor="@color/gray_04"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/request_button_iv"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/already_exist_tv"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/already_exist_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/pretendard_regular"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/gray_03"
-            android:textSize="12sp"
+            android:layout_marginStart="33dp"
+            android:layout_marginTop="275dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/already_exist_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="@color/gray_03"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/signup_login_tv"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:gravity="center_horizontal|center_vertical"
+                android:paddingStart="5dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="6dp"
+                android:paddingBottom="9dp"
+                android:text="@string/login_if_exist"
+                android:textColor="@color/orange_01"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/already_exist_tv" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            android:id="@+id/layout_progress"
+            layout="@layout/progress_dialog_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/signup_login_tv"
-            android:layout_width="72dp"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="@string/login_if_exist"
-            android:textColor="@color/orange_01"
-            android:textSize="14sp"
-            android:visibility="gone"
-            android:fontFamily="@font/pretendard_regular"
-            android:paddingStart="5dp"
-            android:paddingEnd="6dp"
-            android:paddingBottom="9dp"
-            android:paddingTop="6dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@id/already_exist_tv"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <include
-        android:id="@+id/layout_progress"
-        layout="@layout/progress_dialog_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

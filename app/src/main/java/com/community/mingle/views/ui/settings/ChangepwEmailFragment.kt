@@ -1,19 +1,31 @@
 package com.community.mingle.views.ui.settings
 
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentChangepwEmailBinding
 import com.community.mingle.utils.base.BaseChangepwFragment
+import com.community.mingle.views.ui_common.ScreenUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ChangepwEmailFragment :
     BaseChangepwFragment<FragmentChangepwEmailBinding>(R.layout.fragment_changepw_email) {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.passwordChangeEmailContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
+    }
 
     override fun initView() {
         // email -> school 이동
@@ -21,7 +33,6 @@ class ChangepwEmailFragment :
             //requireActivity().supportFragmentManager.popBackStack()
             requireActivity().onBackPressed()
         }
-
         // email -> code 이동
         binding.nextBtnEnabled.setOnClickListener {
             changepwViewModel.validateEmail()
@@ -39,7 +50,7 @@ class ChangepwEmailFragment :
         }
     }
 
-    fun NavController.safeNavigate(id : Int) {
+    fun NavController.safeNavigate(id: Int) {
         currentDestination?.getAction(id)?.run {
             navigate(id)
         }
@@ -52,16 +63,17 @@ class ChangepwEmailFragment :
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     binding.layoutProgress.root.visibility = View.VISIBLE
-                } else {
+                }
+                else {
                     binding.layoutProgress.root.visibility = View.GONE
                 }
             }
         }
-
         /* 이메일 파트 */
         if (MingleApplication.pref.accessToken == null) {
             changepwViewModel.getDomain(changepwViewModel.getUnivId())
-        } else {
+        }
+        else {
             changepwViewModel.getMemberDomain()
         }
 
@@ -72,19 +84,19 @@ class ChangepwEmailFragment :
         binding.nextBtnDisabled.isEnabled = false
 
         binding.enterIdTv.addTextChangedListener(object : TextWatcher {
-
             override fun beforeTextChanged(
                 p0: CharSequence?,
                 p1: Int,
                 p2: Int,
-                p3: Int
-            ) {}
+                p3: Int,
+            ) {
+            }
 
             override fun onTextChanged(
                 p0: CharSequence?,
                 p1: Int,
                 p2: Int,
-                p3: Int
+                p3: Int,
             ) {
                 if (binding.enterIdTv.text.toString().isNotEmpty()) {
                     binding.nextBtnEnabled.visibility = View.VISIBLE

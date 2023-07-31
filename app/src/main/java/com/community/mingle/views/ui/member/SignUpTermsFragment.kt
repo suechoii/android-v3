@@ -1,10 +1,17 @@
 package com.community.mingle.views.ui.member
 
+import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CompoundButton
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSignupTermsBinding
 import com.community.mingle.utils.base.BaseSignupFragment
+import com.community.mingle.views.ui_common.ScreenUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -72,6 +79,13 @@ class SignUpTermsFragment :
 
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.termsContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
+    }
+
     private fun onCheckedChanged(compoundButton: CompoundButton) { when (compoundButton.id) {
         R.id.checkbox_one -> {
             if (binding.checkboxOne.isChecked) {
@@ -94,9 +108,11 @@ class SignUpTermsFragment :
     }
         if (binding.checkboxOne.isChecked) {
             binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+            binding.nextBtn.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
             binding.nextBtn.isEnabled = true
         } else {
             binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_disabled)
+            binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_04))
             binding.nextBtn.isEnabled = false
         }
     }

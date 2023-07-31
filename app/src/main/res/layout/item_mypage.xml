@@ -17,9 +17,10 @@
         <TextView
             android:id="@+id/tv_my_page"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="22dp"
-            android:paddingVertical="12dp"
+            android:layout_height="40dp"
+            tools:text="내용"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
             android:fontFamily="@font/pretendard_regular"
             android:text="@{item.title}"
             android:textColor="@color/black"
@@ -33,7 +34,7 @@
             android:layout_width="6dp"
             android:layout_height="10dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="19dp"
+            android:layout_marginEnd="12dp"
             android:src="@drawable/ic_vector_3"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

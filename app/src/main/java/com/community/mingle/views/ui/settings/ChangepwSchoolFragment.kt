@@ -2,9 +2,14 @@ package com.community.mingle.views.ui.settings
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentChangepwSchoolinfoBinding
@@ -12,6 +17,7 @@ import com.community.mingle.databinding.FragmentSignupSchoolinfoBinding
 import com.community.mingle.utils.Constants.toast
 import com.community.mingle.utils.base.BaseChangepwFragment
 import com.community.mingle.utils.base.BaseSignupFragment
+import com.community.mingle.views.ui_common.ScreenUtil
 import com.google.android.material.textfield.TextInputLayout
 
 class ChangepwSchoolFragment :
@@ -20,6 +26,14 @@ class ChangepwSchoolFragment :
     private lateinit var callback: OnBackPressedCallback
     private var isDropdown = false
 
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.schoolLayout.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
+        binding.closeIv.setImageResource(R.drawable.ic_close)
+    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         callback = object : OnBackPressedCallback(true) {

@@ -1,12 +1,18 @@
 package com.community.mingle.views.ui.member
 
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.findNavController
 import com.community.mingle.R
 import com.community.mingle.databinding.FragmentSignupPasswordBinding
 import com.community.mingle.utils.base.BaseSignupFragment
+import com.community.mingle.views.ui_common.ScreenUtil
 
 class SignUpPasswordFragment :
     BaseSignupFragment<FragmentSignupPasswordBinding>(R.layout.fragment_signup_password){
@@ -24,6 +30,12 @@ class SignUpPasswordFragment :
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.fragmentSignupPasswordContainer.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+            topMargin = ScreenUtil.getStatusBarHeight(requireContext())
+        }
+    }
     override fun initViewModel() {
         binding.viewModel = signupViewModel
 
@@ -111,12 +123,14 @@ class SignUpPasswordFragment :
                     binding.reEnterPwCorrectIv.visibility = View.VISIBLE
                     binding.reEnterPwWrongIv.visibility = View.INVISIBLE
                     binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_enabled)
+                    binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
                     binding.nextBtn.isEnabled = true
                 }
                 else {
                     binding.reEnterPwCorrectIv.visibility = View.INVISIBLE
                     binding.reEnterPwWrongIv.visibility = View.VISIBLE
                     binding.nextBtn.setBackgroundResource(R.drawable.bg_btn_signup_next_disabled)
+                    binding.nextBtn.setTextColor(ContextCompat.getColor(requireContext(), R.color.gray_04))
                     binding.nextBtn.isEnabled = false
                 }
             }

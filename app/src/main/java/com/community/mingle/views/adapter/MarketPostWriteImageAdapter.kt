@@ -5,6 +5,7 @@ import android.media.Image
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.R
@@ -58,6 +59,9 @@ class MarketPostWriteImageAdapter :
         fun bind(bitmap: Bitmap, position: Int) {
             //binding.setVariable(BR.item, uri))
             //images.add()
+            binding.textViewRepresentativeImage.clipToOutline = true
+            binding.textViewRepresentativeImage.isVisible = position == 0
+
             binding.ivImage.apply {
                 setImageBitmap(bitmap)
                 clipToOutline = true

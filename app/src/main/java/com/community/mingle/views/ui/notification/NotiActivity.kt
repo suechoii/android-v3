@@ -3,20 +3,17 @@ package com.community.mingle.views.ui.notification
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.viewModels
-import com.community.mingle.MainActivity
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.ActivityNotificationBinding
 import com.community.mingle.service.models.NotiData
 import com.community.mingle.utils.base.BaseActivity
 import com.community.mingle.viewmodel.HomeViewModel
 import com.community.mingle.views.adapter.NotiRVAdapter
 import com.community.mingle.views.ui.board.PostActivity
+import com.community.mingle.views.ui.market.MarketPostActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class NotiActivity :
@@ -75,19 +72,17 @@ class NotiActivity :
 
 
     private fun changePostFragment(notiData: NotiData) {
-        if (notiData.boardType == "잔디밭") {
-            val intent = Intent(this@NotiActivity, PostActivity::class.java)
-            intent.putExtra("board", "알림")
-            intent.putExtra("type", "잔디밭")
-            intent.putExtra("postId", notiData.postId) //postId 필요하나요?
-            startActivity(intent)
+        val intent : Intent
+        if (notiData.boardType == "밍끼마켓") {
+            intent = Intent(this@NotiActivity, MarketPostActivity::class.java)
+            intent.putExtra("itemId", notiData.postId)
         } else {
-            val intent = Intent(this@NotiActivity, PostActivity::class.java)
-            intent.putExtra("board", "알림")
-            intent.putExtra("type", "광장")
-            intent.putExtra("postId", notiData.postId) //postId 필요하나요?
-            startActivity(intent)
+            intent = Intent(this@NotiActivity, PostActivity::class.java)
+            intent.putExtra(IntentConstants.BoardType, notiData.boardType)
+            intent.putExtra(IntentConstants.CategoryType, notiData.category)
+            intent.putExtra("postId", notiData.postId)
         }
+        startActivity(intent)
     }
 
 }

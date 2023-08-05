@@ -104,19 +104,8 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         postId = intent.getIntExtra("postId", -1000)
         postPosition = intent.getIntExtra("position", 0)
         boardType = intent.getStringExtra(IntentConstants.BoardType)
-            ?.let { if (it == "UnivPost") "잔디밭" else if (it == "TotalPost") "광장" else it }
-            ?: intent.getStringExtra("type")
-                    ?: intent.getStringExtra("board")
-                .let {
-                    when (it) {
-                        "UnivPost" -> "잔디밭"
-                        "TotalPost" -> {
-                            "광장"
-                        }
+            .let { if (it == "UnivPost") "잔디밭" else if (it == "TotalPost") "광장" else it.toString() }
 
-                        else -> it.toString()
-                    }
-                }
         categoryType = intent.getStringExtra(IntentConstants.CategoryType) ?: ""
         isBlind = intent.getBooleanExtra("isBlind", false)
         isReported = intent.getBooleanExtra("isReported", false)

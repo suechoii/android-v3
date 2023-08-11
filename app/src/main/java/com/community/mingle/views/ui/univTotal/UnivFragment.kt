@@ -67,9 +67,8 @@ class UnivFragment : BaseFragment<FragmentUnivBinding>(R.layout.fragment_univ) {
         binding.pen.setOnClickListener {
             val intent = Intent(mContext, PostWriteActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            intent.putExtra(IntentConstants.CategoryType, "잔디밭")
+            intent.putExtra(IntentConstants.BoardType, "잔디밭")
             startActivity(intent)
-            //requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
         }
 
         binding.textExp.text = MingleApplication.pref.univName

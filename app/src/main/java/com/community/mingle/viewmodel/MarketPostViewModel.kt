@@ -148,7 +148,7 @@ constructor(
             _alertMsg.value = Event("제목을 입력해주세요")
             checkValue = false
         }
-        else if (writePrice.value.isNullOrBlank() || writePrice.value!!.toDoubleOrNull() == null) {
+        else if (isFree.value == false && (writePrice.value.isNullOrBlank() || writePrice.value!!.toDoubleOrNull() == null)) {
             _alertMsg.value = Event("가격을 입력해주세요. 반드시 숫자만 입력해주세요.")
         }
         else if (write_content.value.isNullOrBlank()) {

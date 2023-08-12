@@ -54,9 +54,15 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
 
         binding.viewModel = viewModel
 
-        viewModel.loading.observe(binding.lifecycleOwner!!) {
-            hideKeyboard()
-            binding.layoutProgress.root.visibility = View.VISIBLE
+        viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    binding.layoutProgress.root.visibility = View.VISIBLE
+                } else {
+                    binding.layoutProgress.root.visibility = View.GONE
+                }
+                hideKeyboard()
+            }
         }
 
         viewModel.alertMsg.observe(this) { event ->

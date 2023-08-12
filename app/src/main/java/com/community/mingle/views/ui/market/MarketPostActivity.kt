@@ -371,6 +371,16 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
             }
         }
 
+        viewModel.isReportedComment.observe(binding.lifecycleOwner!!) { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    toast("댓글을 신고했습니다.")
+                } else {
+                    toast("이미 신고한 댓글입니다.")
+                }
+            }
+        }
+
         // 대댓글 옵션 다이얼로그 처리
         viewModel.showReplyOptionDialog.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -844,7 +854,7 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
                     }
 
                     REPORT_COMMENT -> {
-                        //showReportCommentDialog(reply.commentId)
+                        showReportCommentDialog(reply.commentId)
                         true
                     }
                 }

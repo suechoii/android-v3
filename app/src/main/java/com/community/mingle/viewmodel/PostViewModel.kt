@@ -691,10 +691,12 @@ constructor(
                             Log.d("tag_success", "likeReply: ${response.body()}")
                             if (response.body()!!.code == 1000) {
                                 reply.likeCount = (reply.likeCount.toInt() + 1).toString()
+                                reply.liked = true
                                 _reply.postValue(reply)
                                 _isLikedComment.postValue(Event(true))
-                            } else {
-                                _isLikedComment.postValue(Event(false))
+                            } else if (response.body()?.code == DUP_LIKE)
+                                unlikeReply(boardType, replyId, reply)
+                            else {
                             }
                         } else {
                             Log.d("tag_fail", "likeReply Error: ${response.code()}")

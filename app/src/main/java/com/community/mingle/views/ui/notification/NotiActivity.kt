@@ -73,7 +73,7 @@ class NotiActivity :
 
     private fun changePostFragment(notiData: NotiData) {
         val intent : Intent
-        if (notiData.boardType == "밍끼마켓") {
+        if (notiData.boardType == "장터") {
             intent = Intent(this@NotiActivity, MarketPostActivity::class.java)
             intent.putExtra("itemId", notiData.postId)
         } else {

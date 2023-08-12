@@ -17,6 +17,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.text.trimmedLength
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.MainActivity
@@ -46,6 +47,9 @@ import com.community.mingle.views.adapter.PostImageAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.net.URL
 import kotlin.properties.Delegates
 
@@ -205,6 +209,10 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                     binding.ellipse2Iv.visibility = View.GONE
                 } else
                     binding.anonTv.text = it.nickname
+            }
+
+            lifecycleScope.launch {
+                updateMenuVisibility()
             }
 
             if (it.liked) {
@@ -732,17 +740,22 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         return super.dispatchTouchEvent(motionEvent)
     }
 
+    private suspend fun updateMenuVisibility() {
+        withContext(Dispatchers.Main) {
+            invalidateOptionsMenu()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.post_detail_menu, menu)
 
         menu!!.findItem(R.id.post_detail_change_status).isVisible = false
-
         if (!myPost) {
-            menu!!.findItem(R.id.post_detail_delete).isVisible = false
+            menu.findItem(R.id.post_detail_delete).isVisible = false
             menu.findItem(R.id.post_detail_edit).isVisible = false
         } else {
-            menu!!.findItem(R.id.post_detail_report).isVisible = false
-            menu!!.findItem(R.id.post_detail_blind).isVisible = false
+            menu.findItem(R.id.post_detail_report).isVisible = false
+            menu.findItem(R.id.post_detail_blind).isVisible = false
         }
 
         return true

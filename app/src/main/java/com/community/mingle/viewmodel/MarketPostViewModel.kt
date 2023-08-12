@@ -70,6 +70,11 @@ constructor(
     // 게시글 신고 완료 여부
     private val _isReportedPost = MutableLiveData<Event<Boolean>>()
     val isReportedPost: LiveData<Event<Boolean>> = _isReportedPost
+
+    // 댓글 신고 완료 여부
+    private val _isReportedComment = MutableLiveData<Event<Boolean>>()
+    val isReportedComment: LiveData<Event<Boolean>> = _isReportedComment
+
     private val _post = MutableLiveData<ItemDetail>()
     val post: LiveData<ItemDetail> get() = _post
     private val _imageList = MutableLiveData<List<URL>>()
@@ -333,12 +338,18 @@ constructor(
                     if (response.isSuccessful) {
                         when (response.body()!!.code) {
                             1000 -> {
-                                _isReportedPost.postValue(Event(true))
+                                if (tableType == "ItemComment")
+                                    _isReportedComment.postValue(Event(true))
+                                else
+                                    _isReportedPost.postValue(Event(true))
                                 Log.d("tag_success", "reportPost: ${response.body()}")
                             }
 
                             2021 -> {
-                                _isReportedPost.postValue(Event(false))
+                                if (tableType == "ItemComment")
+                                    _isReportedComment.postValue(Event(false))
+                                else
+                                    _isReportedPost.postValue(Event(false))
                             }
                         }
                     }

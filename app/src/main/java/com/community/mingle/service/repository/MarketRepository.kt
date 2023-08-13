@@ -1,22 +1,19 @@
 package com.community.mingle.service.repository
 
 import com.community.mingle.api.MarketService
-import com.community.mingle.service.models.CommentList
+import com.community.mingle.service.models.*
 import com.community.mingle.service.models.market.MarketCommentSend
 import com.community.mingle.service.models.market.MarketItemDetailResponse
 import com.community.mingle.service.models.market.MarketListResponse
 import com.community.mingle.service.models.market.MarketReplySend
 import com.community.mingle.service.models.market.MarketWritePostResponse
-import com.community.mingle.service.models.PostCommentResponse
-import com.community.mingle.service.models.ReportPost
-import com.community.mingle.service.models.ReportResponse
-import com.community.mingle.service.models.ResultResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import javax.inject.Inject
+import kotlin.Result
 
 /* 게시물 상세 Repository */
 
@@ -116,6 +113,14 @@ constructor(private val marketService: MarketService) {
 
     suspend fun itemUnlike(itemId: Int): Result<Response<ResultResponse>> = runCatching {
         marketService.itemUnlike(itemId)
+    }
+
+    suspend fun commentLikeMarket(itemId: Int) : Result<Response<LikeResponse>> = runCatching {
+        marketService.likeItemComment(itemId)
+    }
+
+    suspend fun commentUnlikeMarket(itemId: Int) : Result<Response<ResultResponse>> = runCatching {
+        marketService.unlikeItemComment(itemId)
     }
 
     suspend fun itemSearch(keyword: String): Result<Response<MarketListResponse>> = runCatching {

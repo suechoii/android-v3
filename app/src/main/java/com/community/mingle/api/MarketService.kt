@@ -129,6 +129,18 @@ interface MarketService {
         @Query("itemStatus") itemStatus: String,
     ): Response<MarketListResponse>
 
+    /*중고거래 게시물 댓글 좋아요 */
+    @POST("/item/comment/like")
+    suspend fun likeItemComment(
+        @Query("commentId") commentId: Int
+    ) : Response<LikeResponse>
+
+    /*중고거래 게시글 댓글 좋아요 취소 */
+    @DELETE("/item/comment/like/unlike")
+    suspend fun unlikeItemComment(
+        @Query("commentId") commentId: Int
+    ) : Response<ResultResponse>
+
     @GET("/item/currency")
     suspend fun getMarketCurrencies(
     ): MarketCurrencyResponse

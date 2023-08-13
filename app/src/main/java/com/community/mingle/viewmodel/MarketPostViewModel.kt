@@ -63,6 +63,10 @@ constructor(
     private val _isUnlikePost = MutableLiveData<Event<Boolean>>()
     val isUnlikePost: LiveData<Event<Boolean>> = _isUnlikePost
 
+    // 댓글 좋아요 완료 여부
+    private val _isLikedComment = MutableLiveData<Event<Boolean>>()
+    val isLikedComment: LiveData<Event<Boolean>> = _isLikedComment
+
     // 판매 상태 변경 완료 여부
     private val _isChangeStatus = MutableLiveData<Event<Boolean>>()
     val isChangeStatus: LiveData<Event<Boolean>> = _isChangeStatus
@@ -464,6 +468,94 @@ constructor(
                     Log.d("tag_fail", "writeComment Error: $response")
                 }
             }
+        }
+    }
+
+    fun likeComment(commentId: Int, comment: Comment2) {
+        _loading.postValue(Event(true))
+
+        viewModelScope.launch(Dispatchers.Main) {
+            repository.commentLikeMarket(commentId)
+                .onSuccess { response ->
+                    if (response.isSuccessful) {
+                        _loading.postValue(Event(false))
+                        Log.d("tag_success", "likeComment: ${response.body()}")
+                        if (response.body()!!.code == 1000) {
+                            comment.likeCount = ((comment.likeCount.toInt()) + 1).toString()
+                            comment.liked = true
+                            _comment.postValue(comment)
+                            _isLikedComment.postValue(Event(true))
+                        } else if (response.body()?.code == PostViewModel.DUP_LIKE) {
+                            unlikeComment(commentId, comment)
+                        } else {
+                        }
+                    } else {
+                        Log.d("tag_fail", "likeComment Error: ${response.code()}")
+                    }
+                }
+        }
+    }
+
+    fun unlikeComment(commentId: Int, comment: Comment2) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.commentUnlikeMarket(commentId)
+                .onSuccess { response ->
+                    if (response.isSuccessful && response.body()!!.code == PostViewModel.OK) {
+                        _loading.postValue(Event(false))
+                        comment.likeCount = ((comment.likeCount.toInt()) - 1).toString()
+                        comment.liked = false
+                        _comment.postValue(comment)
+                        _isLikedComment.postValue(Event(false))
+                        Log.d("tag_success", "unlikeComment: ${response.body()}")
+                    } else {
+                        Log.d("tag_fail", "unlikeComment Error: ${response.code()}")
+                    }
+                }
+        }
+    }
+
+    fun likeReply(replyId: Int, reply: Reply) {
+        _loading.postValue(Event(true))
+
+        viewModelScope.launch(Dispatchers.Main) {
+
+            repository.commentLikeMarket(replyId)
+                .onSuccess { response ->
+                    if (response.isSuccessful) {
+                        _loading.postValue(Event(false))
+                        Log.d("tag_success", "likeReply: ${response.body()}")
+                        if (response.body()!!.code == 1000) {
+                            reply.likeCount = (reply.likeCount.toInt() + 1).toString()
+                            reply.liked = true
+                            _reply.postValue(reply)
+                            _isLikedComment.postValue(Event(true))
+                        } else if (response.body()?.code == PostViewModel.DUP_LIKE)
+                            unlikeReply(replyId, reply)
+                        else {
+                        }
+                    } else {
+                        Log.d("tag_fail", "likeReply Error: ${response.code()}")
+                    }
+                }
+        }
+    }
+
+    fun unlikeReply(replyId: Int, reply: Reply) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.commentUnlikeMarket(replyId)
+                .onSuccess { response ->
+                    if (response.isSuccessful && response.body()!!.code == PostViewModel.OK) {
+                        _loading.postValue(Event(false))
+                        reply.likeCount = ((reply.likeCount.toInt()) - 1).toString()
+                        reply.liked = false
+                        _reply.postValue(reply)
+                        _isLikedComment.postValue(Event(false))
+                        Log.d("tag_success", "unlikeComment: ${response.body()}")
+                    } else {
+                        Log.d("tag_fail", "unlikeComment Error: ${response.code()}")
+                    }
+                }
+
         }
     }
 

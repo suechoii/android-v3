@@ -2,6 +2,7 @@ package com.community.mingle.views.ui.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +28,6 @@ class SoldFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragment
     private var tempLastPostId: Int = 0
     private var firstPosition: Int = 0
     private var clickedPosition: Int? = 0
-    private var currentStatus: String = "SOLDOUT"
 
     //var isFirstClicked : Boolean = true
 
@@ -41,10 +41,13 @@ class SoldFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragment
         //isFirstClicked = false
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getMarketItemList(true,"SOLDOUT")
+    }
+
     private fun initViewModel() {
         binding.viewModel = viewModel
-
-        viewModel.getMarketItemList(true, "SOLDOUT")
 
         viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -70,14 +73,22 @@ class SoldFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragment
                 tempLastPostId = lastPostId
         }
 
-        viewModel.isChangeStatus.observe(binding.lifecycleOwner!!) { event ->
+        viewModel.isChangeStatusSelling.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
-                    if (currentStatus != "SOLDOUT") {
-                        marketListAdapter.submitList(emptyList())
-                        viewModel.getMarketItemList(true,"SOLDOUT")
-                        viewModel.getMarketItemList(true,currentStatus)
-                    }
+                    marketListAdapter.submitList(emptyList())
+                    viewModel.getMarketItemList(true,"SOLDOUT")
+                    //viewModel.getMarketItemList(true,"SELLING")
+                }
+            }
+        }
+
+        viewModel.isChangeStatusReserved.observe(binding.lifecycleOwner!!) { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    marketListAdapter.submitList(emptyList())
+                    viewModel.getMarketItemList(true,"SOLDOUT")
+                    //viewModel.getMarketItemList(true,"RESERVED")
                 }
             }
         }
@@ -138,12 +149,10 @@ class SoldFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragment
             when (it.itemId) {
                 R.id.status_one -> {
                     viewModel.changeStatus(itemId,"SELLING")
-                    currentStatus = "SELLING"
                     dialog.dismiss()
                 }
                 R.id.status_two -> {
                     viewModel.changeStatus(itemId,"RESERVED")
-                    currentStatus = "RESERVED"
                     dialog.dismiss()
                 }
                 R.id.status_three -> {

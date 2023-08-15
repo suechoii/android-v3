@@ -68,6 +68,15 @@ constructor(
     val isLikedComment: LiveData<Event<Boolean>> = _isLikedComment
 
     // 판매 상태 변경 완료 여부
+    private val _isChangeStatusSelling = MutableLiveData<Event<Boolean>>()
+    val isChangeStatusSelling: LiveData<Event<Boolean>> = _isChangeStatusSelling
+
+    private val _isChangeStatusReserved = MutableLiveData<Event<Boolean>>()
+    val isChangeStatusReserved: LiveData<Event<Boolean>> = _isChangeStatusReserved
+
+    private val _isChangeStatusSoldout = MutableLiveData<Event<Boolean>>()
+    val isChangeStatusSoldout: LiveData<Event<Boolean>> = _isChangeStatusSoldout
+
     private val _isChangeStatus = MutableLiveData<Event<Boolean>>()
     val isChangeStatus: LiveData<Event<Boolean>> = _isChangeStatus
 
@@ -637,11 +646,22 @@ constructor(
                     if (response.isSuccessful) {
                         when (response.body()!!.code) {
                             PostViewModel.OK -> {
+                                when (itemStatus) {
+                                    "SELLING" -> {
+                                        _isChangeStatusSelling.postValue(Event(true))
+                                    }
+                                    "RESERVED" -> {
+                                        _isChangeStatusReserved.postValue(Event(true))
+                                    }
+                                    else -> {
+                                        _isChangeStatusSoldout.postValue(Event(true))
+                                    }
+                                }
                                 _isChangeStatus.postValue(Event(true))
                             }
 
                             else -> {
-                                _isChangeStatus.postValue(Event(false))
+                                //_isChangeStatus.postValue(Event(false))
                             }
                         }
                     }
@@ -664,8 +684,7 @@ constructor(
                         if (response.body()!!.code == 1000 && response.body()!!.result.itemListDTO.isNotEmpty()) {
                             when (itemStatus) {
                                 "SELLING" -> {
-                                    val list = _marketSellingList.value?.plus(response.body()!!.result.itemListDTO)
-                                        ?: response.body()!!.result.itemListDTO
+                                    val list = response.body()!!.result.itemListDTO
                                     _marketSellingList.postValue(list)
                                     val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                                     _lastMarketSellingPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
@@ -673,8 +692,7 @@ constructor(
                                 }
 
                                 "RESERVED" -> {
-                                    val list = _marketReservedList.value?.plus(response.body()!!.result.itemListDTO)
-                                        ?: response.body()!!.result.itemListDTO
+                                    val list = response.body()!!.result.itemListDTO
                                     _marketReservedList.postValue(list)
                                     val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                                     _lastMarketReservedPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)
@@ -682,8 +700,7 @@ constructor(
                                 }
 
                                 else -> {
-                                    val list = _marketSoldoutList.value?.plus(response.body()!!.result.itemListDTO)
-                                        ?: response.body()!!.result.itemListDTO
+                                    val list = response.body()!!.result.itemListDTO
                                     _marketSoldoutList.postValue(list)
                                     val lastIdx = response.body()!!.result.itemListDTO.lastIndex
                                     _lastMarketSoldoutPostId.postValue(response.body()!!.result.itemListDTO[lastIdx].id)

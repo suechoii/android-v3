@@ -27,7 +27,6 @@ class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragm
     private var tempLastPostId: Int = 0
     private var firstPosition: Int = 0
     private var clickedPosition: Int? = 0
-    private var currentStatus: String = "SELLING"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,10 +35,16 @@ class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragm
         initRV()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getMarketItemList(true,"SELLING")
+    }
+
+
     private fun initViewModel() {
         binding.viewModel = viewModel
 
-        viewModel.getMarketItemList(true, "SELLING")
+//        viewModel.getMarketItemList(true, "SELLING")
 
         viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -62,14 +67,22 @@ class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragm
                 tempLastPostId = lastPostId
         }
 
-        viewModel.isChangeStatus.observe(binding.lifecycleOwner!!) { event ->
+        viewModel.isChangeStatusSoldout.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
-                    if (currentStatus != "SELLING") {
-                        marketListAdapter.submitList(emptyList())
-                        viewModel.getMarketItemList(true, "SELLING")
-                        viewModel.getMarketItemList(true, currentStatus)
-                    }
+                    marketListAdapter.submitList(emptyList())
+                    viewModel.getMarketItemList(true,"SELLING")
+                   // viewModel.getMarketItemList(true,"SOLDOUT")
+                }
+            }
+        }
+
+        viewModel.isChangeStatusReserved.observe(binding.lifecycleOwner!!) { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    marketListAdapter.submitList(emptyList())
+                    viewModel.getMarketItemList(true,"SELLING")
+                   // viewModel.getMarketItemList(true,"RESERVED")
                 }
             }
         }
@@ -132,13 +145,11 @@ class SellingFragment : BaseFragment<FragmentMarketMypageBinding>(R.layout.fragm
 
                 R.id.status_two -> {
                     viewModel.changeStatus(itemId, "RESERVED")
-                    currentStatus = "RESERVED"
                     dialog.dismiss()
                 }
 
                 R.id.status_three -> {
                     viewModel.changeStatus(itemId, "SOLDOUT")
-                    currentStatus = "SOLDOUT"
                     dialog.dismiss()
                 }
             }

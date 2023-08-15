@@ -561,6 +561,16 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             android:layout_marginEnd="20dp"/>
 
+                        <ImageView
+                            android:id="@+id/btn_fav_filled_post"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ic_fav_btn_filled"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginEnd="20dp"
+                            android:visibility="gone"
+                            android:padding="9dp"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

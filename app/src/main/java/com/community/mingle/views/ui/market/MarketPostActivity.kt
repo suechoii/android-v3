@@ -202,12 +202,8 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
             }
 
             if (it.liked) {
-                binding.btnFavPost.setColorFilter(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.orange_02
-                    )
-                )
+                binding.btnFavPost.visibility = View.GONE
+                binding.btnFavFilledPost.visibility = View.VISIBLE
             }
 
             if (it.commentCount.toInt() == 0) {
@@ -223,13 +219,18 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
             viewModel.likeMarketPost(itemId)
         }
 
+        binding.btnFavFilledPost.setOnClickListener {
+            viewModel.unlikeMarketPost(itemId)
+        }
+
         // 게시글 좋아요 처리
         viewModel.isLikedPost.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
                     val likesNum = binding.likeCountTv.text.toString()
                     binding.likeCountTv.text = (likesNum.toInt() + 1).toString()
-                    binding.btnFavPost.setColorFilter(ResUtils.getColor(R.color.orange_02))
+                    binding.btnFavPost.visibility = View.GONE
+                    binding.btnFavFilledPost.visibility = View.VISIBLE
                     requestUpdate = true
                 }
             }
@@ -241,7 +242,8 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
                 if (it) {
                     val likesNum = binding.likeCountTv.text.toString()
                     binding.likeCountTv.text = (likesNum.toInt() - 1).toString()
-                    binding.btnFavPost.setColorFilter(ResUtils.getColor(R.color.gray_02))
+                    binding.btnFavPost.visibility = View.VISIBLE
+                    binding.btnFavFilledPost.visibility = View.GONE
                     requestUpdate = true
                 }
             }
@@ -500,8 +502,8 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
             }
 
             override fun onLikeComment(position: Int, comment: Comment2) {
-                //                commentPosition = position
-                //                viewModel.likeComment(boardType,comment.commentId, comment)
+                commentPosition = position
+                viewModel.likeComment(comment.commentId, comment)
             }
 
             override fun onWriteReply(position: Int, parentPosition: Int?, parentCommentId: Int, mentionNickname: String, mentionId: Int) {
@@ -531,10 +533,10 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
             }
 
             override fun onLikeReply(position: Int, parentPosition: Int, reply: Reply, comment: Comment2) {
-                //                commentPosition = parentPosition
-                //                replyPosition = position
-                //                parentComment = comment
-                //                viewModel.likeReply(boardType, reply.commentId, reply)
+                commentPosition = parentPosition
+                replyPosition = position
+                parentComment = comment
+                viewModel.likeReply(reply.commentId, reply)
             }
         })
 
@@ -717,13 +719,14 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
 
         menuInflater.inflate(R.menu.post_detail_menu, menu)
 
+        menu!!.findItem(R.id.post_detail_blind).isVisible = false
+
         if (!myPost) {
             menu!!.findItem(R.id.post_detail_change_status).isVisible = false
             menu!!.findItem(R.id.post_detail_delete).isVisible = false
             menu.findItem(R.id.post_detail_edit).isVisible = false
         } else {
             menu!!.findItem(R.id.post_detail_report).isVisible = false
-            menu!!.findItem(R.id.post_detail_blind).isVisible = false
         }
 
         return true

@@ -69,20 +69,15 @@ class HotPostsBoardActivity : BaseActivity<ActivityHotPostsBoardBinding>(R.layou
             adapter = UnivTotalListAdapter()
                 .apply {
                     setMyItemClickListener(object : UnivTotalListAdapter.MyItemClickListener {
-                        override fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
+                        override fun onItemClick(post: PostResult, position: Int, isReported: Boolean, reportText: String?) {
                             val intent = Intent(context, PostActivity::class.java)
                             intent.putExtra("postId", post.postId)
                             intent.putExtra(IntentConstants.BoardType, post.boardType)
                             intent.putExtra(IntentConstants.CategoryType, post.categoryType)
-                            intent.putExtra("isBlind", isBlind)
+                            //intent.putExtra("isBlind", isBlind)
                             intent.putExtra("isReported", isReported)
                             intent.putExtra("reportText", reportText)
                             startActivity(intent)
-                        }
-
-                        override fun onCancelClick(post: PostResult, position: Int) {
-                            postViewModel.unblindPost(post.boardType ?: "", post.postId)
-
                         }
                     })
                 }

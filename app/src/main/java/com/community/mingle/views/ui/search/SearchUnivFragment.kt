@@ -90,23 +90,17 @@ class SearchUnivFragment() : BaseSearchFragment<FragmentSearchPageBinding>(R.lay
         univListAdapter.setMyItemClickListener(object :
             UnivTotalListAdapter.MyItemClickListener {
 
-            override fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
+            override fun onItemClick(post: PostResult, position: Int, isReported: Boolean, reportText: String?) {
                 clickedPosition = position
 
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
                 intent.putExtra("type","잔디밭")
-                intent.putExtra("isBlind",isBlind)
+                //intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)
 
                 startActivity(intent)
-            }
-
-            override fun onCancelClick(post: PostResult, position: Int) {
-                clickedPosition = position
-                viewModel2.unblindPost("잔디밭",post.postId)
-                isFirst = true
             }
         })
 

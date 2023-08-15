@@ -18,6 +18,9 @@ import com.community.mingle.service.models.market.MarketReplySend
 import com.community.mingle.service.repository.MarketRepository
 import com.community.mingle.utils.Event
 import com.community.mingle.utils.ImageUtils
+import com.community.mingle.utils.OtherUtils.LINK_ERROR
+import com.community.mingle.utils.OtherUtils.LINK_REGEX
+import com.community.mingle.utils.OtherUtils.validate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -157,6 +160,17 @@ constructor(
 
     init {
         loadMarketCurrencies()
+    }
+
+    private val _isLinkVerified = MutableLiveData<String>()
+    val isLinkVerified: LiveData<String> get() = _isLinkVerified
+
+    fun validateLink() {
+        if (!write_chatUrl.value.isNullOrBlank() && !validate(write_chatUrl, LINK_REGEX)) {
+            _isLinkVerified.postValue(LINK_ERROR)
+        } else {
+            _isLinkVerified.postValue("")
+        }
     }
 
     private fun check(): Boolean {

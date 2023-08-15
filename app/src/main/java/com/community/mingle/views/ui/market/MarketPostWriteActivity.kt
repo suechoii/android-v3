@@ -55,8 +55,6 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
     private val viewModel: MarketPostViewModel by viewModels()
     private lateinit var imageAdapter: MarketPostWriteImageAdapter
     private lateinit var loadingDialog: LoadingDialog
-    private lateinit var boardType: String
-    private lateinit var boardName: String
     private var uriPaths: ArrayList<Uri> = ArrayList()
     var imageList: MutableList<MultipartBody.Part>? = null
     private var uriList: ArrayList<Uri> = ArrayList() // 이미지에 대한 Uri 리스트
@@ -140,13 +138,6 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
         setMarketCurrenciesListener()
         setSellOrShareChangedListener()
         initRV()
-        processIntent()
-    }
-
-    private fun processIntent() {
-        // 이 부분은 이제 어떤 탭에서 넘어오는지에 따라 정해짐
-        boardName = intent.getStringExtra("boardName").toString()
-        boardType = intent.getStringExtra("type").toString()
     }
 
     private fun initView() {

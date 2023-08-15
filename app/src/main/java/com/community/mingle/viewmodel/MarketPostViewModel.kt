@@ -292,7 +292,7 @@ constructor(
             _loading.postValue(Event(true))
 
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getItemList(100000000)
+            repository.getItemList(Int.MAX_VALUE)
                 .onSuccess { response ->
                     if (response.isSuccessful) {
                         if (!isRefreshing)

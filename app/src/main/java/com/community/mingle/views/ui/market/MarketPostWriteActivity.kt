@@ -64,6 +64,8 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
     private var postTitleFilled: Boolean = false
     private var postContentFilled: Boolean = false
     private var postPriceFilled: Boolean = false
+    private var postLocationFilled: Boolean = false
+    private var postUrlFilled: Boolean = false
     private var fileNameList: ArrayList<String> = ArrayList<String>()  // 미디어 파일명 리스트 초기화
 
     /*
@@ -219,16 +221,22 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
         }
         binding.postSendTv.setOnClickListener {
             hideKeyboard()
-            runBlocking {
-                getImageList()
+            if (binding.writeImageRv.adapter!!.itemCount > 0) {
+                runBlocking {
+                    getImageList()
+                }
+            }
+            else {
+                showDialog("사진 1장 이상 필수입니다")
             }
         }
+
         // 게시글 제목 리스너
-        viewModel.write_title.observe(binding.lifecycleOwner!!) {
+        viewModel.write_title.observe (binding.lifecycleOwner!!) {
             if (it.trimmedLength() > 0) {
                 postTitleFilled = true
                 // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530
-                if (postContentFilled && postPriceFilled) {
+                if (postContentFilled && postPriceFilled && postLocationFilled && postUrlFilled) {
                     binding.postSendTv.setTextColor(Color.parseColor("#FF5530"))
                     binding.postSendTv.isEnabled = true
                 }
@@ -239,14 +247,14 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
             }
         }
         // 게시글 본문 리스너
-        viewModel.write_content.observe(binding.lifecycleOwner!!) {
+        viewModel.write_content.observe (binding.lifecycleOwner!!) {
             if (it.isNotEmpty()) {
-                binding.wordCountTv.text = it.length.toString() + "/1000"
+                binding.wordCountTv.text = it.length.toString()+"/1000"
             }
             if (it.trimmedLength() > 0) {
                 postContentFilled = true
                 // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530
-                if (postTitleFilled && postPriceFilled) {
+                if (postTitleFilled && postPriceFilled && postLocationFilled && postUrlFilled) {
                     binding.postSendTv.setTextColor(Color.parseColor("#FF5530"))
                     binding.postSendTv.isEnabled = true
                 }
@@ -261,7 +269,7 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
             if (it.trimmedLength() > 0) {
                 postPriceFilled = true
                 // 게시글 본문도 한글자 이상이면 게시 버튼 컬러 #FF5530
-                if (postTitleFilled && postContentFilled) {
+                if (postTitleFilled && postContentFilled && postLocationFilled && postUrlFilled) {
                     binding.postSendTv.setTextColor(Color.parseColor("#FF5530"))
                     binding.postSendTv.isEnabled = true
                 }
@@ -275,6 +283,38 @@ class MarketPostWriteActivity : BaseActivity<ActivityPostWriteMarketBinding>(R.l
         viewModel.write_location.observe(binding.lifecycleOwner!!) {
             if (it.isNotEmpty()) {
                 binding.wordCount2Tv.text = it.length.toString() + "/1000"
+            }
+            if (it.trimmedLength() > 0) {
+                postLocationFilled = true
+                if (postTitleFilled && postPriceFilled && postContentFilled && postUrlFilled) {
+                    binding.postSendTv.setTextColor(Color.parseColor("#FF5530"))
+                    binding.postSendTv.isEnabled = true
+                }
+            } else {
+                postLocationFilled = false
+                binding.postSendTv.setTextColor(Color.parseColor("#959595"))
+                binding.postSendTv.isEnabled = false
+            }
+        }
+
+        viewModel.write_chatUrl.observe(binding.lifecycleOwner!!) {
+            viewModel.validateLink()
+        }
+
+        viewModel.isLinkVerified.observe(binding.lifecycleOwner!!) {
+            binding.linkErrorTv.text = it
+            if (it.isNullOrEmpty()) {
+                binding.linkErrorTv.text = ""
+                postUrlFilled = true
+                if (postTitleFilled && postPriceFilled && postContentFilled && postLocationFilled) {
+                    binding.postSendTv.setTextColor(Color.parseColor("#FF5530"))
+                    binding.postSendTv.isEnabled = true
+                }
+            }
+            else {
+                postUrlFilled = false
+                binding.postSendTv.setTextColor(Color.parseColor("#959595"))
+                binding.postSendTv.isEnabled = false
             }
         }
 

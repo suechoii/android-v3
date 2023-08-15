@@ -158,7 +158,6 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
                 clickedPosition = position
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
-                intent.putExtra("type","광장")
 //                intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)

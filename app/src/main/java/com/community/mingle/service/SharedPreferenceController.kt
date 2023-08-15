@@ -59,12 +59,6 @@ class SharedPreferenceController(context: Context) {
             pref.edit().putBoolean("isBlind",value).apply()
         }
 
-    var isUpdate: Boolean
-        get() = pref.getBoolean("isUpdate",false)
-        set(value) {
-            pref.edit().putBoolean("isUpdate",value).apply()
-        }
-
     var keyword: String?
         get() = pref.getString("keyword", null)
         set(value) {

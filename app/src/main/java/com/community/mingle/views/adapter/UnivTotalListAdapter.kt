@@ -32,8 +32,7 @@ class UnivTotalListAdapter : ListAdapter<PostListItem, UnivTotalListAdapter.Univ
     // 클릭 인터페이스 정의
     interface MyItemClickListener {
 
-        fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?)
-        fun onCancelClick(post: PostResult, position: Int)
+        fun onItemClick(post: PostResult, position: Int, isReported: Boolean, reportText: String?)
     }
 
     // 리스너 객체를 전달받는 함수랑 리스너 객체를 저장할 변수
@@ -101,31 +100,32 @@ class UnivTotalListAdapter : ListAdapter<PostListItem, UnivTotalListAdapter.Univ
             fun bind(postResult: PostResult) {
                 binding.setVariable(BR.item, postResult)
 
-                if (postResult.blinded) {
-                    binding.likeimg.visibility = View.INVISIBLE
-                    binding.commentimg.visibility = View.INVISIBLE
-                    binding.photo.visibility = View.INVISIBLE
-                    binding.contenttext.visibility = View.INVISIBLE
-                    binding.titletext.visibility = View.INVISIBLE
-                    binding.liketext.visibility = View.INVISIBLE
-                    binding.commenttext.visibility = View.INVISIBLE
-                    binding.anonymous.visibility = View.INVISIBLE
-                    binding.time.visibility = View.INVISIBLE
-                    binding.dot.visibility = View.INVISIBLE
-
-                    binding.blindedText.visibility = View.VISIBLE
-                    binding.cancelBlindTv.visibility = View.VISIBLE
-
-                    binding.root.setOnClickListener {
-                        itemClickListener.onItemClick(
-                            post = postResult,
-                            position = absoluteAdapterPosition,
-                            isBlind = true,
-                            isReported = false,
-                            reportText = null,
-                        )
-                    }
-                } else if (postResult.reported) {
+//                if (postResult.blinded) {
+//                    binding.likeimg.visibility = View.INVISIBLE
+//                    binding.commentimg.visibility = View.INVISIBLE
+//                    binding.photo.visibility = View.INVISIBLE
+//                    binding.contenttext.visibility = View.INVISIBLE
+//                    binding.titletext.visibility = View.INVISIBLE
+//                    binding.liketext.visibility = View.INVISIBLE
+//                    binding.commenttext.visibility = View.INVISIBLE
+//                    binding.anonymous.visibility = View.INVISIBLE
+//                    binding.time.visibility = View.INVISIBLE
+//                    binding.dot.visibility = View.INVISIBLE
+//
+//                    binding.blindedText.visibility = View.VISIBLE
+//                    binding.cancelBlindTv.visibility = View.VISIBLE
+//
+//                    binding.root.setOnClickListener {
+//                        itemClickListener.onItemClick(
+//                            post = postResult,
+//                            position = absoluteAdapterPosition,
+//                            isBlind = true,
+//                            isReported = false,
+//                            reportText = null,
+//                        )
+//                    }
+//                } else
+                if (postResult.reported) {
                     binding.likeimg.visibility = View.INVISIBLE
                     binding.commentimg.visibility = View.INVISIBLE
                     binding.photo.visibility = View.INVISIBLE
@@ -144,7 +144,6 @@ class UnivTotalListAdapter : ListAdapter<PostListItem, UnivTotalListAdapter.Univ
                         itemClickListener.onItemClick(
                             post = postResult,
                             position = absoluteAdapterPosition,
-                            isBlind = false,
                             isReported = true,
                             reportText = postResult.title
                         )
@@ -174,18 +173,10 @@ class UnivTotalListAdapter : ListAdapter<PostListItem, UnivTotalListAdapter.Univ
                         itemClickListener.onItemClick(
                             post = postResult,
                             position = absoluteAdapterPosition,
-                            isBlind = false,
                             isReported = false,
                             reportText = null
                         )
                     }
-                }
-
-                binding.cancelBlindTv.setOnClickListener {
-                    itemClickListener.onCancelClick(
-                        post = postResult,
-                        position = absoluteAdapterPosition
-                    )
                 }
 
                 binding.executePendingBindings()

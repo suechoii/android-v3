@@ -38,34 +38,9 @@ class UnivFragment(private val option: String) : BaseFragment<FragmentUnivtotalM
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MingleApplication.pref.isUpdate = false
 
         initRV()
         initViewModel()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (MingleApplication.pref.isUpdate) {
-            when (option) {
-                MY_POST -> {
-                    isFirst = true
-                    viewModel.getMyUnivPostList(10000000, true)
-                }
-                MY_COMMENT_POST -> {
-                    isFirst = true
-                    viewModel.getMyUnivCommentPostList(10000000,true)
-                }
-                MY_SCRAP_POST -> {
-                    isFirst = true
-                    viewModel.getMyScrapUnivPostList(10000000,true)
-                }
-                MY_LIKE_POST -> {
-                    isFirst = true
-                    viewModel.getMyLikedUnivPostList(10000000,true)
-                }
-            }
-        }
     }
 
     private fun initViewModel() {
@@ -73,16 +48,16 @@ class UnivFragment(private val option: String) : BaseFragment<FragmentUnivtotalM
 
         when (option) {
             MY_POST -> {
-                viewModel.getMyUnivPostList(10000000, false)
+                viewModel.getMyUnivPostList(Int.MAX_VALUE, false)
             }
             MY_COMMENT_POST -> {
-                viewModel.getMyUnivCommentPostList(10000000,false)
+                viewModel.getMyUnivCommentPostList(Int.MAX_VALUE,false)
             }
             MY_SCRAP_POST -> {
-                viewModel.getMyScrapUnivPostList(10000000,false)
+                viewModel.getMyScrapUnivPostList(Int.MAX_VALUE,false)
             }
             MY_LIKE_POST -> {
-                viewModel.getMyLikedUnivPostList(10000000,false)
+                viewModel.getMyLikedUnivPostList(Int.MAX_VALUE,false)
             }
         }
 
@@ -127,30 +102,30 @@ class UnivFragment(private val option: String) : BaseFragment<FragmentUnivtotalM
                 tempLastPostId = lastPostId
         }
 
-        viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it) {
-                    when (option) {
-                        MY_POST -> {
-                            isFirst = true
-                            viewModel.getMyUnivPostList(10000000, true)
-                        }
-                        MY_COMMENT_POST -> {
-                            isFirst = true
-                            viewModel.getMyUnivCommentPostList(10000000,true)
-                        }
-                        MY_SCRAP_POST -> {
-                            isFirst = true
-                            viewModel.getMyScrapUnivPostList(10000000,true)
-                        }
-                        MY_LIKE_POST -> {
-                            isFirst = true
-                            viewModel.getMyLikedUnivPostList(10000000,true)
-                        }
-                    }
-                }
-            }
-        }
+//        viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
+//            event.getContentIfNotHandled()?.let {
+//                if (it) {
+//                    when (option) {
+//                        MY_POST -> {
+//                            isFirst = true
+//                            viewModel.getMyUnivPostList(10000000, true)
+//                        }
+//                        MY_COMMENT_POST -> {
+//                            isFirst = true
+//                            viewModel.getMyUnivCommentPostList(10000000,true)
+//                        }
+//                        MY_SCRAP_POST -> {
+//                            isFirst = true
+//                            viewModel.getMyScrapUnivPostList(10000000,true)
+//                        }
+//                        MY_LIKE_POST -> {
+//                            isFirst = true
+//                            viewModel.getMyLikedUnivPostList(10000000,true)
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
     }
 
@@ -165,12 +140,12 @@ class UnivFragment(private val option: String) : BaseFragment<FragmentUnivtotalM
 
         postListAdapter.setMyItemClickListener(object :
             UnivTotalListAdapter.MyItemClickListener {
-            override fun onItemClick(item: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
+            override fun onItemClick(item: PostResult, position: Int, isReported: Boolean, reportText: String?) {
                 clickedPosition = position
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", item.postId)
                 intent.putExtra("type","잔디밭")
-                intent.putExtra("isBlind",isBlind)
+               // intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)
                 intent.putExtra(IntentConstants.BoardType, item.boardType)
@@ -178,26 +153,26 @@ class UnivFragment(private val option: String) : BaseFragment<FragmentUnivtotalM
                 startActivity(intent)
             }
 
-            override fun onCancelClick(post: PostResult, position: Int) {
-                clickedPosition = position
-                viewModel2.unblindPost("잔디밭",post.postId)
-            }
+//            override fun onCancelClick(post: PostResult, position: Int) {
+//                clickedPosition = position
+//                viewModel2.unblindPost("잔디밭",post.postId)
+//            }
         })
 
         binding.swipeRefresh.setOnRefreshListener {
             isFirst = true
             when (option) {
                 MY_POST -> {
-                    viewModel.getMyUnivPostList(10000000, true)
+                    viewModel.getMyUnivPostList(Int.MAX_VALUE, true)
                 }
                 MY_COMMENT_POST -> {
-                    viewModel.getMyUnivCommentPostList(10000000,true)
+                    viewModel.getMyUnivCommentPostList(Int.MAX_VALUE,true)
                 }
                 MY_SCRAP_POST -> {
-                    viewModel.getMyScrapUnivPostList(10000000,true)
+                    viewModel.getMyScrapUnivPostList(Int.MAX_VALUE,true)
                 }
                 MY_LIKE_POST -> {
-                    viewModel.getMyLikedUnivPostList(10000000,true)
+                    viewModel.getMyLikedUnivPostList(Int.MAX_VALUE,true)
                 }
             }
             binding.swipeRefresh.isRefreshing = false

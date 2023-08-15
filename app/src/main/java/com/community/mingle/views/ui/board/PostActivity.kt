@@ -64,7 +64,7 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     private var postId by Delegates.notNull<Int>()
     var boardType: String = ""
     var categoryType: String = ""
-    private var isBlind: Boolean = false
+    //private var isBlind: Boolean = false
     private var isReported: Boolean = false
     private var reportText: String? = null
     private var post: PostDetail? = null
@@ -111,29 +111,30 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
             .let { if (it == "UnivPost") "잔디밭" else if (it == "TotalPost") "광장" else it.toString() }
 
         categoryType = intent.getStringExtra(IntentConstants.CategoryType) ?: ""
-        isBlind = intent.getBooleanExtra("isBlind", false)
+        //isBlind = intent.getBooleanExtra("isBlind", false)
         isReported = intent.getBooleanExtra("isReported", false)
         reportText = intent.getStringExtra("reportText")
 
 
-        if (isBlind) {
-            MingleApplication.pref.isBlind = true
-            binding.unhiddenLayout.visibility = View.GONE
-            binding.hiddenLayout.visibility = View.VISIBLE
-            val toolbar2: Toolbar = binding.postDetailToolbar2
-            toolbar2.overflowIcon = null
-            setSupportActionBar(toolbar2)
-            supportActionBar?.apply {
-                binding.boardNameTv2.text = boardType
-                setDisplayShowTitleEnabled(false)
-                setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
-                setHomeAsUpIndicator(R.drawable.ic_back)
-            }
-
-            binding.cancelBlindTv.setOnClickListener {
-                viewModel.unblindPost(boardType, postId)
-            }
-        } else if (isReported) {
+//        if (isBlind) {
+//            MingleApplication.pref.isBlind = true
+//            binding.unhiddenLayout.visibility = View.GONE
+//            binding.hiddenLayout.visibility = View.VISIBLE
+//            val toolbar2: Toolbar = binding.postDetailToolbar2
+//            toolbar2.overflowIcon = null
+//            setSupportActionBar(toolbar2)
+//            supportActionBar?.apply {
+//                binding.boardNameTv2.text = boardType
+//                setDisplayShowTitleEnabled(false)
+//                setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
+//                setHomeAsUpIndicator(R.drawable.ic_back)
+//            }
+//
+//            binding.cancelBlindTv.setOnClickListener {
+//                viewModel.unblindPost(boardType, postId)
+//            }
+//        } else
+        if (isReported) {
             binding.unhiddenLayout.visibility = View.GONE
             binding.hiddenLayout.visibility = View.VISIBLE
             binding.cancelBlindTv.visibility = View.VISIBLE
@@ -296,43 +297,43 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
             }
         }
 
-        viewModel.isBlindedPost.observe(binding.lifecycleOwner!!) { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it) {
-                    toast("게시물을 가렸습니다.")
-                    binding.unhiddenLayout.visibility = View.GONE
-                    binding.hiddenLayout.visibility = View.VISIBLE
-                    val toolbar2: Toolbar = binding.postDetailToolbar2
-                    toolbar2.overflowIcon = null
-                    setSupportActionBar(toolbar2)
-                    supportActionBar?.apply {
-                        binding.boardNameTv2.text = boardType
-                        binding.categoryNameTv2.text = categoryType
-                        setDisplayShowTitleEnabled(false)
-                        setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
-                        setHomeAsUpIndicator(R.drawable.ic_back)
-                    }
-                    MingleApplication.pref.isBlind = true
-                    binding.cancelBlindTv.setOnClickListener {
-                        viewModel.unblindPost(boardType, postId)
-                    }
-                } else {
-                    toast("이미 게시물을 가렸습니다.")
-                }
-            }
-        }
-
-        viewModel.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it) {
-                    toast("게시물 가리기를 취소했습니다.")
-                    binding.hiddenLayout.visibility = View.GONE
-                    binding.unhiddenLayout.visibility = View.VISIBLE
-                    MingleApplication.pref.isBlind = false
-                    initToolbar()
-                }
-            }
-        }
+//        viewModel.isBlindedPost.observe(binding.lifecycleOwner!!) { event ->
+//            event.getContentIfNotHandled()?.let {
+//                if (it) {
+//                    toast("게시물을 가렸습니다.")
+//                    binding.unhiddenLayout.visibility = View.GONE
+//                    binding.hiddenLayout.visibility = View.VISIBLE
+//                    val toolbar2: Toolbar = binding.postDetailToolbar2
+//                    toolbar2.overflowIcon = null
+//                    setSupportActionBar(toolbar2)
+//                    supportActionBar?.apply {
+//                        binding.boardNameTv2.text = boardType
+//                        binding.categoryNameTv2.text = categoryType
+//                        setDisplayShowTitleEnabled(false)
+//                        setDisplayHomeAsUpEnabled(true) // 뒤로가기 버튼 생성
+//                        setHomeAsUpIndicator(R.drawable.ic_back)
+//                    }
+//                    MingleApplication.pref.isBlind = true
+//                    binding.cancelBlindTv.setOnClickListener {
+//                        viewModel.unblindPost(boardType, postId)
+//                    }
+//                } else {
+//                    toast("이미 게시물을 가렸습니다.")
+//                }
+//            }
+//        }
+//
+//        viewModel.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
+//            event.getContentIfNotHandled()?.let {
+//                if (it) {
+//                    toast("게시물 가리기를 취소했습니다.")
+//                    binding.hiddenLayout.visibility = View.GONE
+//                    binding.unhiddenLayout.visibility = View.VISIBLE
+//                    MingleApplication.pref.isBlind = false
+//                    initToolbar()
+//                }
+//            }
+//        }
         // 게시글 스크랩 취소 처리
         viewModel.isDelScrapPost.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
@@ -633,19 +634,19 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
     }
 
     // 게시물 가리기 다이얼로그
-    private fun showBlindPostDialog(message: String) {
-        showYesNoDialog(this, message, onPositiveClick = { dialog, which ->
-            viewModel.blindPost(boardType, postId)
-            // 우선은 다 홈으로 돌아가는걸로 설정, 나중에 잔디밭이나 광장에서 클릭한 경우라면 어떻게 해야할지도 생각
-            //            val intent = Intent(applicationContext, MainActivity::class.java)
-            //            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-            //            startActivity(intent)
-            //            finish()
-        },
-            onNegativeClick = { _, _ ->
-                //                do nothing
-            })
-    }
+//    private fun showBlindPostDialog(message: String) {
+//        showYesNoDialog(this, message, onPositiveClick = { dialog, which ->
+//            viewModel.blindPost(boardType, postId)
+//            // 우선은 다 홈으로 돌아가는걸로 설정, 나중에 잔디밭이나 광장에서 클릭한 경우라면 어떻게 해야할지도 생각
+//            //            val intent = Intent(applicationContext, MainActivity::class.java)
+//            //            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+//            //            startActivity(intent)
+//            //            finish()
+//        },
+//            onNegativeClick = { _, _ ->
+//                //                do nothing
+//            })
+//    }
 
     // 게시물 신고 다이얼로그
     private fun showReportPostDialog() {
@@ -750,6 +751,8 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         menuInflater.inflate(R.menu.post_detail_menu, menu)
 
         menu!!.findItem(R.id.post_detail_change_status).isVisible = false
+        menu.findItem(R.id.post_detail_blind).isVisible = false
+
         if (!myPost) {
             menu.findItem(R.id.post_detail_delete).isVisible = false
             menu.findItem(R.id.post_detail_edit).isVisible = false
@@ -789,10 +792,10 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 true
             }
 
-            R.id.post_detail_blind -> {
-                showBlindPostDialog("게시글을 가리겠습니까?")
-                true
-            }
+//            R.id.post_detail_blind -> {
+//                showBlindPostDialog("게시글을 가리겠습니까?")
+//                true
+//            }
 
             android.R.id.home -> {
                 onBackPressedDispatcher.onBackPressed()
@@ -801,11 +804,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
 
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onBackPressed() {
-        MingleApplication.pref.isUpdate = isBlind != MingleApplication.pref.isBlind
-        super.onBackPressed()
     }
 
     // 댓글 옵션 다이얼로그

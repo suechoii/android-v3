@@ -30,7 +30,6 @@ class MarketSearchActivity : BaseActivity<ActivitySearchMarketBinding>(R.layout.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MingleApplication.pref.isUpdate = false
 
         initView()
         initViewModel()
@@ -76,17 +75,16 @@ class MarketSearchActivity : BaseActivity<ActivitySearchMarketBinding>(R.layout.
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (MingleApplication.pref.isUpdate) {
-            Log.d("hi","lol")
-            if (searchingQuery != null) {
-                viewModel.getMarketSearchList(searchingQuery!!, false)
-            }
-        }
-
-    }
+//    override fun onResume() {
+//        super.onResume()
+//
+//        if (MingleApplication.pref.isUpdate) {
+//            Log.d("hi","lol")
+//            if (searchingQuery != null) {
+//                viewModel.getMarketSearchList(searchingQuery!!, false)
+//            }
+//        }
+//    }
 
     private fun initView() {
         binding.returnIv.setOnClickListener {

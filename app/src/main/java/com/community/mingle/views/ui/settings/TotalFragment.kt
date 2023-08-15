@@ -37,51 +37,48 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MingleApplication.pref.isUpdate = false
 
         initRV()
         initViewModel()
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (MingleApplication.pref.isUpdate) {
-            when (option) {
-                MY_POST -> {
-                    isFirst = true
-                    viewModel.getMyTotalPostList(10000000)
-                }
-                MY_COMMENT_POST -> {
-                    isFirst = true
-                    viewModel.getMyTotalCommentPostList(10000000,true)
-                }
-                MY_SCRAP_POST -> {
-                    isFirst = true
-                    viewModel.getMyTotalPostList(10000000)
-                }
-                MY_LIKE_POST -> {
-                    isFirst = true
-                    viewModel.getMyLikedTotalPostList(10000000,true)
-                }
-            }
-        }
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        when (option) {
+//            MY_POST -> {
+//                isFirst = true
+//                viewModel.getMyTotalPostList(10000000)
+//            }
+//            MY_COMMENT_POST -> {
+//                isFirst = true
+//                viewModel.getMyTotalCommentPostList(10000000,true)
+//            }
+//            MY_SCRAP_POST -> {
+//                isFirst = true
+//                viewModel.getMyTotalPostList(10000000)
+//            }
+//            MY_LIKE_POST -> {
+//                isFirst = true
+//                viewModel.getMyLikedTotalPostList(10000000,true)
+//            }
+//        }
+//    }
 
     private fun initViewModel() {
         binding.viewModel = viewModel
 
         when (option) {
             MY_POST -> {
-                viewModel.getMyTotalPostList(10000000)
+                viewModel.getMyTotalPostList(Int.MAX_VALUE)
             }
             MY_COMMENT_POST -> {
-                viewModel.getMyTotalCommentPostList(10000000,false)
+                viewModel.getMyTotalCommentPostList(Int.MAX_VALUE,false)
             }
             MY_SCRAP_POST -> {
-                viewModel.getMyScrapTotalPostList(10000000,false)
+                viewModel.getMyScrapTotalPostList(Int.MAX_VALUE,false)
             }
             MY_LIKE_POST -> {
-                viewModel.getMyLikedTotalPostList(10000000,false)
+                viewModel.getMyLikedTotalPostList(Int.MAX_VALUE,false)
             }
         }
 
@@ -119,30 +116,30 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
             currentPostList = it.toTypedArray()
         }
 
-        viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it) {
-                    when (option) {
-                        MY_POST -> {
-                            isFirst = true
-                            viewModel.getMyTotalPostList(10000000)
-                        }
-                        MY_COMMENT_POST -> {
-                            isFirst = true
-                            viewModel.getMyTotalCommentPostList(10000000,true)
-                        }
-                        MY_SCRAP_POST -> {
-                            isFirst = true
-                            viewModel.getMyScrapTotalPostList(10000000,true)
-                        }
-                        MY_LIKE_POST -> {
-                            isFirst = true
-                            viewModel.getMyLikedTotalPostList(10000000,true)
-                        }
-                    }
-                }
-            }
-        }
+//        viewModel2.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
+//            event.getContentIfNotHandled()?.let {
+//                if (it) {
+//                    when (option) {
+//                        MY_POST -> {
+//                            isFirst = true
+//                            viewModel.getMyTotalPostList(10000000)
+//                        }
+//                        MY_COMMENT_POST -> {
+//                            isFirst = true
+//                            viewModel.getMyTotalCommentPostList(10000000,true)
+//                        }
+//                        MY_SCRAP_POST -> {
+//                            isFirst = true
+//                            viewModel.getMyScrapTotalPostList(10000000,true)
+//                        }
+//                        MY_LIKE_POST -> {
+//                            isFirst = true
+//                            viewModel.getMyLikedTotalPostList(10000000,true)
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
     }
 
@@ -157,12 +154,12 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
 
         postListAdapter.setMyItemClickListener(object :
             UnivTotalListAdapter.MyItemClickListener {
-            override fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
+            override fun onItemClick(post: PostResult, position: Int, isReported: Boolean, reportText: String?) {
                 clickedPosition = position
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
                 intent.putExtra("type","광장")
-                intent.putExtra("isBlind",isBlind)
+//                intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)
                 intent.putExtra(IntentConstants.BoardType, post.boardType)
@@ -170,26 +167,26 @@ class TotalFragment(private val option: String) : BaseFragment<FragmentUnivtotal
                 startActivity(intent)
             }
 
-            override fun onCancelClick(post: PostResult, position: Int) {
-                clickedPosition = position
-                viewModel2.unblindPost("광장", post.postId)
-            }
+//            override fun onCancelClick(post: PostResult, position: Int) {
+//                clickedPosition = position
+//                viewModel2.unblindPost("광장", post.postId)
+//            }
         })
 
         binding.swipeRefresh.setOnRefreshListener {
             isFirst = true
             when (option) {
                 MY_POST -> {
-                    viewModel.getMyTotalPostList(10000000)
+                    viewModel.getMyTotalPostList(Int.MAX_VALUE)
                 }
                 MY_COMMENT_POST -> {
-                    viewModel.getMyTotalCommentPostList(10000000,true)
+                    viewModel.getMyTotalCommentPostList(Int.MAX_VALUE,true)
                 }
                 MY_SCRAP_POST -> {
-                    viewModel.getMyScrapTotalPostList(10000000,true)
+                    viewModel.getMyScrapTotalPostList(Int.MAX_VALUE,true)
                 }
                 MY_LIKE_POST -> {
-                    viewModel.getMyLikedTotalPostList(10000000,true)
+                    viewModel.getMyLikedTotalPostList(Int.MAX_VALUE,true)
                 }
             }
             binding.swipeRefresh.isRefreshing = false

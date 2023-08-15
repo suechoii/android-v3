@@ -36,24 +36,23 @@ class UnivQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layou
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MingleApplication.pref.isUpdate = false
 
         initViewModel()
         initRV()
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        if (MingleApplication.pref.isUpdate) {
-            if (firstPosition != 0) {
-                viewModel.getUnivNextPosts(2, tempLastPostId)
-            } else {
-                isFirst = true
-                viewModel.getUnivList(2, true)
-            }
-        }
-    }
+//    override fun onResume() {
+//        super.onResume()
+//
+//        if (MingleApplication.pref.isUpdate) {
+//            if (firstPosition != 0) {
+//                viewModel.getUnivNextPosts(2, tempLastPostId)
+//            } else {
+//                isFirst = true
+//                viewModel.getUnivList(2, true)
+//            }
+//        }
+//    }
 
     private fun initViewModel() {
         binding.viewModel = viewModel
@@ -127,24 +126,19 @@ class UnivQuestionsFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layou
         univListAdapter.setMyItemClickListener(object :
             UnivTotalListAdapter.MyItemClickListener {
 
-            override fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
+            override fun onItemClick(post: PostResult, position: Int, isReported: Boolean, reportText: String?) {
                 clickedPosition = position
 
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
                 intent.putExtra(IntentConstants.BoardType,post.boardType)
                 intent.putExtra(IntentConstants.CategoryType,post.categoryType)
-                intent.putExtra("isBlind",isBlind)
+               // intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)
                 intent.putExtra("tabName", "질문게시판")
 
                 startActivity(intent)
-            }
-
-            override fun onCancelClick(post: PostResult, position: Int) {
-                clickedPosition = position
-                viewModel2.unblindPost("잔디밭",post.postId)
             }
         })
 

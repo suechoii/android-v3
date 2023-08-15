@@ -35,25 +35,23 @@ class TotalFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MingleApplication.pref.isUpdate = false
 
         initViewModel()
         initRV()
     }
 
-    override fun onResume() {
-        Log.d("is it onResume", MingleApplication.pref.isUpdate.toString())
-        super.onResume()
-
-        if (MingleApplication.pref.isUpdate) {
-            if (firstPosition != 0) {
-                viewModel.getTotalNextPosts(1, tempLastPostId)
-            } else {
-                isFirst = true
-                viewModel.getTotalList(1, true)
-            }
-        }
-    }
+//    override fun onResume() {
+//        super.onResume()
+//
+//        if (MingleApplication.pref.isUpdate) {
+//            if (firstPosition != 0) {
+//                viewModel.getTotalNextPosts(1, tempLastPostId)
+//            } else {
+//                isFirst = true
+//                viewModel.getTotalList(1, true)
+//            }
+//        }
+//    }
 
     private fun initViewModel() {
         binding.viewModel = viewModel
@@ -128,23 +126,18 @@ class TotalFreeFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fr
         totalListAdapter.setMyItemClickListener(object :
             UnivTotalListAdapter.MyItemClickListener {
 
-            override fun onItemClick(post: PostResult, position: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
+            override fun onItemClick(post: PostResult, position: Int,isReported: Boolean, reportText: String?) {
                 clickedPosition = position
 
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
                 intent.putExtra(IntentConstants.BoardType,post.boardType)
                 intent.putExtra(IntentConstants.CategoryType,post.categoryType)
-                intent.putExtra("isBlind",isBlind)
+                //intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)
 
                 startActivity(intent)
-            }
-
-            override fun onCancelClick(post: PostResult, position: Int) {
-                clickedPosition = position
-                viewModel2.unblindPost("광장",post.postId)
             }
         })
 

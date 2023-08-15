@@ -31,7 +31,6 @@ class MarketFragment : BaseFragment<FragmentMarketBinding>(R.layout.fragment_mar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MingleApplication.pref.isUpdate = false
 
         initView()
         initViewModel()

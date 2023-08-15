@@ -784,11 +784,6 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
         }
     }
 
-    override fun onBackPressed() {
-        MingleApplication.pref.isUpdate = isBlind != MingleApplication.pref.isBlind
-        super.onBackPressed()
-    }
-
     // 댓글 옵션 다이얼로그
     private fun showCommentOptionDialog(comment: Comment2, isMine: Boolean) {
         val cw = ContextThemeWrapper(this, R.style.AlertDialogTheme)

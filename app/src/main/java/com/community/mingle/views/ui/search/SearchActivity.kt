@@ -36,7 +36,6 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_sea
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MingleApplication.pref.isUpdate = false
 
         initView()
         initVP()
@@ -95,19 +94,19 @@ class SearchActivity : BaseActivity<ActivitySearchBinding>(R.layout.activity_sea
             }
         })
     }
-
-    override fun onResume() {
-        super.onResume()
-
-        if (MingleApplication.pref.isUpdate) {
-            Log.d("hi","lol")
-            if (searchingQuery != null) {
-                viewModel.getUnivSearchList(searchingQuery!!, false)
-                viewModel.getTotalSearchList(searchingQuery!!, false)
-            }
-        }
-
-    }
+//
+//    override fun onResume() {
+//        super.onResume()
+//
+//        if (MingleApplication.pref.isUpdate) {
+//            Log.d("hi","lol")
+//            if (searchingQuery != null) {
+//                viewModel.getUnivSearchList(searchingQuery!!, false)
+//                viewModel.getTotalSearchList(searchingQuery!!, false)
+//            }
+//        }
+//
+//    }
 
     private fun initView() {
         binding.returnIv.setOnClickListener {

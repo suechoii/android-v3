@@ -95,23 +95,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MingleApplication.pref.isUpdate = false
         initViewModel()
         initRV()
         initView()
     }
 
-    override fun onResume() {
-        Log.d("is it onResume", MingleApplication.pref.isUpdate.toString())
-        super.onResume()
-        isRunning = true
-
-        if (MingleApplication.pref.isUpdate) {
-            homeViewModel.getHomeList()
-            //initRV()
-        }
-
-    }
+//    override fun onResume() {
+//        super.onResume()
+//        isRunning = true
+//
+//        if (MingleApplication.pref.isUpdate) {
+//            homeViewModel.getHomeList()
+//            //initRV()
+//        }
+//
+//    }
 
     private fun initView() {
         // 마이 페이지 및 알림 연결

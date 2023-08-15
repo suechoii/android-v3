@@ -32,7 +32,6 @@ class ReservedFragment() : BaseFragment<FragmentMarketMypageBinding>(R.layout.fr
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        MingleApplication.pref.isUpdate = false
 
         initViewModel()
         initRV()

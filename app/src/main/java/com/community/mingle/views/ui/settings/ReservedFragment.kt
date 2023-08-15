@@ -2,6 +2,7 @@ package com.community.mingle.views.ui.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,7 +29,6 @@ class ReservedFragment() : BaseFragment<FragmentMarketMypageBinding>(R.layout.fr
     private var tempLastPostId: Int = 0
     private var firstPosition: Int = 0
     private var clickedPosition: Int? = 0
-    private var currentStatus: String = "RESERVED"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,12 +38,18 @@ class ReservedFragment() : BaseFragment<FragmentMarketMypageBinding>(R.layout.fr
         initRV()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getMarketItemList(true,"RESERVED")
+    }
+
     private fun initViewModel() {
         binding.viewModel = viewModel
-        viewModel.getMarketItemList(true, "RESERVED")
+       // viewModel.getMarketItemList(true, "RESERVED")
 
         viewModel.marketReservedList.observe(binding.lifecycleOwner!!) {
             marketListAdapter.submitList(it)
+            marketListAdapter.notifyDataSetChanged()
         }
 
         viewModel.clearMarketList.observe(binding.lifecycleOwner!!) {
@@ -56,14 +62,22 @@ class ReservedFragment() : BaseFragment<FragmentMarketMypageBinding>(R.layout.fr
                 tempLastPostId = lastPostId
         }
 
-        viewModel.isChangeStatus.observe(binding.lifecycleOwner!!) { event ->
+        viewModel.isChangeStatusSelling.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
-                    if (currentStatus != "RESERVED") {
-                        marketListAdapter.submitList(emptyList())
-                        viewModel.getMarketItemList(true, "RESERVED")
-                        viewModel.getMarketItemList(true, currentStatus)
-                    }
+                    marketListAdapter.submitList(emptyList())
+                    viewModel.getMarketItemList(true,"RESERVED")
+                    //viewModel.getMarketItemList(true,"SELLING")
+                }
+            }
+        }
+
+        viewModel.isChangeStatusSoldout.observe(binding.lifecycleOwner!!) { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it) {
+                    marketListAdapter.submitList(emptyList())
+                    viewModel.getMarketItemList(true,"RESERVED")
+                    //viewModel.getMarketItemList(true,"SOLDOUT")
                 }
             }
         }
@@ -124,7 +138,6 @@ class ReservedFragment() : BaseFragment<FragmentMarketMypageBinding>(R.layout.fr
             when (it.itemId) {
                 R.id.status_one -> {
                     viewModel.changeStatus(itemId, "SELLING")
-                    currentStatus = "SELLING"
                     dialog.dismiss()
                 }
 
@@ -135,7 +148,6 @@ class ReservedFragment() : BaseFragment<FragmentMarketMypageBinding>(R.layout.fr
 
                 R.id.status_three -> {
                     viewModel.changeStatus(itemId, "SOLDOUT")
-                    currentStatus = "SOLDOUT"
                     dialog.dismiss()
                 }
             }

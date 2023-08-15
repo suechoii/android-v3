@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
+import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.FragmentSearchPageBinding
 import com.community.mingle.service.models.PostResult
 import com.community.mingle.utils.base.BaseSearchFragment
@@ -88,7 +89,8 @@ class SearchTotalFragment() : BaseSearchFragment<FragmentSearchPageBinding>(R.la
 
                 val intent = Intent(activity, PostActivity::class.java)
                 intent.putExtra("postId", post.postId)
-                intent.putExtra("type","광장")
+                intent.putExtra(IntentConstants.BoardType,"광장")
+                intent.putExtra(IntentConstants.CategoryType, post.categoryType)
                 //intent.putExtra("isBlind",isBlind)
                 intent.putExtra("isReported",isReported)
                 intent.putExtra("reportText",reportText)

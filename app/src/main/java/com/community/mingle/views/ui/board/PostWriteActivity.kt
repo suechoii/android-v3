@@ -53,7 +53,6 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
     private lateinit var imageAdapter: PostWriteImageAdapter
     private lateinit var loadingDialog: LoadingDialog
     private lateinit var boardType: String
-    private lateinit var boardName: String
     private lateinit var categoryType: String
     private var uriPaths: ArrayList<Uri> = ArrayList()
     var imageList: MutableList<MultipartBody.Part>? = null
@@ -176,10 +175,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
     }
 
     private fun processIntent() {
-        // 이 부분은 이제 어떤 탭에서 넘어오는지에 따라 정해짐
-        boardName = intent.getStringExtra("boardName").toString()
         boardType = intent.getStringExtra(IntentConstants.BoardType).toString()
-        categoryType = intent.getStringExtra(IntentConstants.CategoryType).toString()
     }
 
     private fun initView() {
@@ -198,7 +194,6 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
         }
 
         binding.postReturnIv.setOnClickListener {
-            // 게시글 임시 저장할지, 삭제할지
             finish()
         }
     }
@@ -303,6 +298,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
                 val intent = Intent(this@PostWriteActivity, PostActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 intent.putExtra("postId", it)
+                intent.putExtra(IntentConstants.CategoryType, categoryType)
                 intent.putExtra(IntentConstants.BoardType, boardType)
                 startActivity(intent)
                 loadingDialog.dismiss()
@@ -423,6 +419,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
             dialog.dismiss()
             binding.postTypeTv.text = bottomDialogBinding.postTypeOneTv.text.toString()
             viewModel.categoryInt.value = 1
+            categoryType = "자유"
             if (postTitleFilled && postContentFilled) {
                 binding.postSendTv.isEnabled = true
                 binding.postSendTv.setTextColor(Color.parseColor("#FF5530"))
@@ -432,6 +429,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
             dialog.dismiss()
             binding.postTypeTv.text = bottomDialogBinding.postTypeTwoTv.text.toString()
             viewModel.categoryInt.value = 2
+            categoryType = "질문"
             if (postTitleFilled && postContentFilled) {
                 binding.postSendTv.isEnabled = true
                 binding.postSendTv.setTextColor(Color.parseColor("#FF5530"))
@@ -441,6 +439,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
             dialog.dismiss()
             binding.postTypeTv.text = bottomDialogBinding.postTypeThreeTv.text.toString()
             viewModel.categoryInt.value = 3
+            categoryType = "진로"
             if (postTitleFilled && postContentFilled) {
                 binding.postSendTv.isEnabled = true
                 binding.postSendTv.setTextColor(Color.parseColor("#FF5530"))
@@ -450,6 +449,7 @@ class PostWriteActivity : BaseActivity<ActivityPostWriteBinding>(R.layout.activi
             dialog.dismiss()
             binding.postTypeTv.text = bottomDialogBinding.postTypeFourTv.text.toString()
             viewModel.categoryInt.value = 4
+            if (boardType == "잔디밭") categoryType = "한인회" else categoryType = "밍글소식"
             if (postTitleFilled && postContentFilled) {
                 binding.postSendTv.isEnabled = true
                 binding.postSendTv.setTextColor(Color.parseColor("#FF5530"))

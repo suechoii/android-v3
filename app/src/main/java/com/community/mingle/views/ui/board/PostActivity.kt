@@ -96,7 +96,6 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MingleApplication.pref.isBlind = false
 
         processIntent()
         initViewModel()
@@ -197,7 +196,7 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 binding.anonTv.text = it.nickname + " (나)"
                 binding.anonTv.setTextColor(ContextCompat.getColor(this, R.color.orange_02))
             } else {
-                if (categoryType == "학생회" || categoryType == "밍글소식") {
+                if (categoryType == "한인회" || categoryType == "밍글소식") {
                     binding.anonSpecialTv.text = it.nickname
                     binding.specialIcon.visibility = View.VISIBLE
                     binding.viewTv.visibility = View.VISIBLE

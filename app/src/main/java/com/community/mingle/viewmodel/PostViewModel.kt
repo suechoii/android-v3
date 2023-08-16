@@ -69,8 +69,8 @@ constructor(
     val isReportedComment: LiveData<Event<Boolean>> = _isReportedComment
 
     // 게시글 가리기 완료 여부
-    private val _isBlindedPost = MutableLiveData<Event<Boolean>>()
-    val isBlindedPost: LiveData<Event<Boolean>> = _isBlindedPost
+//    private val _isBlindedPost = MutableLiveData<Event<Boolean>>()
+//    val isBlindedPost: LiveData<Event<Boolean>> = _isBlindedPost
 
     // 게시글 가리기 취소 완료 여부
     private val _isUnblindPost = MutableLiveData<Event<Boolean>>()
@@ -357,58 +357,58 @@ constructor(
         }
     }
 
-    fun blindPost(boardType: String, postId: Int) {
-        _loading.postValue(Event(true))
-
-        viewModelScope.launch(Dispatchers.IO) {
-            var req = repository.blindUnivPost(postId)
-            if (boardType == "광장")
-                req = repository.blindTotalPost(postId)
-
-            req.onSuccess { response ->
-                if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
-
-                    when (response.body()!!.code) {
-                        OK -> {
-                            _isBlindedPost.postValue(Event(true))
-                            Log.d("tag_success", "blindPost: ${response.body()}")
-                        }
-                    }
-                } else {
-                    if (response.code() == 500) {
-                        _isBlindedPost.postValue(Event(false))
-                    }
-                    Log.d("tag_fail", "blindPost Error: ${response.code()}")
-                }
-            }
-        }
-    }
-
-    fun unblindPost(boardType: String, postId: Int) {
-        _loading.postValue(Event(true))
-
-        viewModelScope.launch(Dispatchers.IO) {
-            var req = repository.unblindUnivPost(postId)
-            if (boardType == "광장")
-                req = repository.unblindTotalPost(postId)
-
-            req.onSuccess { response ->
-                if (response.isSuccessful) {
-                    _loading.postValue(Event(false))
-
-                    when (response.body()!!.code) {
-                        OK -> {
-                            _isUnblindPost.postValue(Event(true))
-                            Log.d("tag_success", "unblindPost: ${response.body()}")
-                        }
-                    }
-                } else {
-                    Log.d("tag_fail", "unblindPost Error: ${response.code()}")
-                }
-            }
-        }
-    }
+//    fun blindPost(boardType: String, postId: Int) {
+//        _loading.postValue(Event(true))
+//
+//        viewModelScope.launch(Dispatchers.IO) {
+//            var req = repository.blindUnivPost(postId)
+//            if (boardType == "광장")
+//                req = repository.blindTotalPost(postId)
+//
+//            req.onSuccess { response ->
+//                if (response.isSuccessful) {
+//                    _loading.postValue(Event(false))
+//
+//                    when (response.body()!!.code) {
+//                        OK -> {
+//                            _isBlindedPost.postValue(Event(true))
+//                            Log.d("tag_success", "blindPost: ${response.body()}")
+//                        }
+//                    }
+//                } else {
+//                    if (response.code() == 500) {
+//                        _isBlindedPost.postValue(Event(false))
+//                    }
+//                    Log.d("tag_fail", "blindPost Error: ${response.code()}")
+//                }
+//            }
+//        }
+//    }
+//
+//    fun unblindPost(boardType: String, postId: Int) {
+//        _loading.postValue(Event(true))
+//
+//        viewModelScope.launch(Dispatchers.IO) {
+//            var req = repository.unblindUnivPost(postId)
+//            if (boardType == "광장")
+//                req = repository.unblindTotalPost(postId)
+//
+//            req.onSuccess { response ->
+//                if (response.isSuccessful) {
+//                    _loading.postValue(Event(false))
+//
+//                    when (response.body()!!.code) {
+//                        OK -> {
+//                            _isUnblindPost.postValue(Event(true))
+//                            Log.d("tag_success", "unblindPost: ${response.body()}")
+//                        }
+//                    }
+//                } else {
+//                    Log.d("tag_fail", "unblindPost Error: ${response.code()}")
+//                }
+//            }
+//        }
+//    }
 
     fun getComments(boardType: String, postId: Int, isRefreshing: Boolean) {
         _loading.postValue(Event(true))

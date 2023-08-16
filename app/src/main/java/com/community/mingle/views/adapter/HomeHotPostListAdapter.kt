@@ -11,7 +11,6 @@ import com.community.mingle.model.post.HomeHotPost
 
 class HomeHotPostListAdapter(
     private val onItemClick: (HomeHotPost, Int) -> Unit,
-    private val onCancelBlindClick: (HomeHotPost, Int) -> Unit,
 ) : ListAdapter<HomeHotPost, HomeHotPostListAdapter.HomeHotPostViewHolder>(
     object : DiffUtil.ItemCallback<HomeHotPost>() {
         override fun areItemsTheSame(oldItem: HomeHotPost, newItem: HomeHotPost): Boolean {
@@ -27,8 +26,7 @@ class HomeHotPostListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeHotPostViewHolder {
         return HomeHotPostViewHolder(
             binding = ItemHomeHotPostBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onItemClick = onItemClick,
-            onCancelBlindClick = onCancelBlindClick,
+            onItemClick = onItemClick
         )
     }
 
@@ -40,15 +38,12 @@ class HomeHotPostListAdapter(
     class HomeHotPostViewHolder(
         private val binding: ItemHomeHotPostBinding,
         private val onItemClick: (HomeHotPost, Int) -> Unit,
-        private val onCancelBlindClick: (HomeHotPost, Int) -> Unit,
     ) : ViewHolder(binding.root) {
 
         fun bind(item: HomeHotPost) {
             binding.item = item
 
-            if (item.blinded) {
-                blindedPost(item)
-            } else if (item.reported) {
+            if (item.reported) {
                 reportedPost(item)
             } else {
                 normalPost(item)
@@ -57,29 +52,29 @@ class HomeHotPostListAdapter(
             binding.executePendingBindings()
         }
 
-        private fun blindedPost(item: HomeHotPost) {
-            binding.likeimg.visibility = View.INVISIBLE
-            binding.commentimg.visibility = View.INVISIBLE
-            binding.photo.visibility = View.INVISIBLE
-            binding.contenttext.visibility = View.INVISIBLE
-            binding.titletext.visibility = View.INVISIBLE
-            binding.liketext.visibility = View.INVISIBLE
-            binding.commenttext.visibility = View.INVISIBLE
-            binding.anonymous.visibility = View.INVISIBLE
-            binding.time.visibility = View.INVISIBLE
-            binding.dot.visibility = View.INVISIBLE
-
-            binding.blindedText.visibility = View.VISIBLE
-            binding.cancelBlindTv.visibility = View.VISIBLE
-
-            binding.cancelBlindTv.setOnClickListener {
-                onCancelBlindClick(item, absoluteAdapterPosition)
-            }
-
-            binding.root.setOnClickListener {
-                onItemClick(item, absoluteAdapterPosition)
-            }
-        }
+//        private fun blindedPost(item: HomeHotPost) {
+//            binding.likeimg.visibility = View.INVISIBLE
+//            binding.commentimg.visibility = View.INVISIBLE
+//            binding.photo.visibility = View.INVISIBLE
+//            binding.contenttext.visibility = View.INVISIBLE
+//            binding.titletext.visibility = View.INVISIBLE
+//            binding.liketext.visibility = View.INVISIBLE
+//            binding.commenttext.visibility = View.INVISIBLE
+//            binding.anonymous.visibility = View.INVISIBLE
+//            binding.time.visibility = View.INVISIBLE
+//            binding.dot.visibility = View.INVISIBLE
+//
+//            binding.blindedText.visibility = View.VISIBLE
+//            binding.cancelBlindTv.visibility = View.VISIBLE
+//
+//            binding.cancelBlindTv.setOnClickListener {
+//                onCancelBlindClick(item, absoluteAdapterPosition)
+//            }
+//
+//            binding.root.setOnClickListener {
+//                onItemClick(item, absoluteAdapterPosition)
+//            }
+//        }
 
         private fun reportedPost(item: HomeHotPost) {
             binding.likeimg.visibility = View.INVISIBLE
@@ -121,10 +116,6 @@ class HomeHotPostListAdapter(
 
             binding.blindedText.visibility = View.GONE
             binding.cancelBlindTv.visibility = View.GONE
-
-            binding.cancelBlindTv.setOnClickListener {
-                onCancelBlindClick(item, absoluteAdapterPosition)
-            }
 
             binding.root.setOnClickListener {
                 onItemClick(item, absoluteAdapterPosition)

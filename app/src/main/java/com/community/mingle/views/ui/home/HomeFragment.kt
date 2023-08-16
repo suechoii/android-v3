@@ -58,13 +58,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private lateinit var homeTotalRecentListAdapter: HomeListAdapter
     private val homeHotPostListAdapter: HomeHotPostListAdapter by lazy {
         HomeHotPostListAdapter(
-            onItemClick = ::onHomeHotPostClick,
-            onCancelBlindClick = { hotPost, position ->
-                onHomeHotPostCancelBlind(
-                    hotPost = hotPost,
-                    position = position,
-                )
-            }
+            onItemClick = ::onHomeHotPostClick
         )
     }
     private lateinit var currentHomeUnivRecentList: List<HomeResult>
@@ -234,23 +228,16 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
         homeUnivRecentListAdapter.setMyItemClickListener(object :
             HomeListAdapter.MyItemClickListener {
-            override fun onItemClick(post: HomeResult, pos: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
+            override fun onItemClick(post: HomeResult, pos: Int, isReported: Boolean, reportText: String?) {
                 clickedPosition = pos
                 tempAdapter = homeUnivRecentListAdapter
                 startPostActivity(
                     postId = post.postId,
-                    authorNickName = post.nickname,
                     boardTypeName = "잔디밭",
-                    isBlind = isBlind,
                     isReported = isReported,
                     reportText = reportText,
                     categoryType = post.categoryType,
                 )
-            }
-
-            override fun onCancelClick(post: HomeResult, pos: Int) {
-                unBlindPosition = pos
-                postViewModel.unblindPost("잔디밭", post.postId)
             }
         })
         /* 지금 광장에서는 */
@@ -263,24 +250,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
         homeTotalRecentListAdapter.setMyItemClickListener(object :
             HomeListAdapter.MyItemClickListener {
-            override fun onItemClick(post: HomeResult, pos: Int, isBlind: Boolean, isReported: Boolean, reportText: String?) {
+            override fun onItemClick(post: HomeResult, pos: Int, isReported: Boolean, reportText: String?) {
                 clickedPosition = pos
                 tempAdapter = homeTotalRecentListAdapter
                 startPostActivity(
                     postId = post.postId,
-                    authorNickName = post.nickname,
                     boardTypeName = "광장",
-                    isBlind = isBlind,
                     isReported = isReported,
                     reportText = reportText,
                     categoryType = post.categoryType,
                 )
             }
 
-            override fun onCancelClick(post: HomeResult, pos: Int) {
-                unBlindPosition = pos
-                postViewModel.unblindPost("잔디밭", post.postId)
-            }
         })
         initHotPostRecyclerView()
         val view = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
@@ -337,23 +318,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private fun startPostActivity(
         postId: Int,
-        authorNickName: String,
         boardTypeName: String,
         categoryType: String,
-        isBlind: Boolean,
         isReported: Boolean,
         reportText: String?,
     ) {
         val intent = Intent(requireActivity(), PostActivity::class.java)
             .apply {
                 putExtra("postId", postId)
-                if (authorNickName == "HKUKSA")
-                    putExtra("board", "학생회")
-                if (authorNickName == "팀 밍글")
-                    putExtra("board", "밍글소식")
                 putExtra(IntentConstants.BoardType, boardTypeName)
                 putExtra(IntentConstants.CategoryType, categoryType)
-                putExtra("isBlind", isBlind)
+                //putExtra("isBlind", isBlind)
                 putExtra("isReported", isReported)
                 putExtra("reportText", reportText)
             }
@@ -365,27 +340,25 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         tempAdapter = homeUnivRecentListAdapter
         startPostActivity(
             postId = post.postId,
-            authorNickName = post.nickname,
             boardTypeName = when (post.postType) {
                 PostType.Total -> "광장"
                 PostType.Univ -> "잔디밭"
                 null -> ""
             },
-            isBlind = post.blinded,
             isReported = post.reported,
             reportText = post.title,
             categoryType = post.categoryType,
         )
     }
 
-    private fun onHomeHotPostCancelBlind(hotPost: HomeHotPost, position: Int) {
-        unBlindPosition = position
-        postViewModel.unblindPost(
-            when (hotPost.postType) {
-                null -> return
-                PostType.Total -> "광장"
-                PostType.Univ -> "잔디밭"
-            }, hotPost.postId
-        )
-    }
+//    private fun onHomeHotPostCancelBlind(hotPost: HomeHotPost, position: Int) {
+//        unBlindPosition = position
+//        postViewModel.unblindPost(
+//            when (hotPost.postType) {
+//                null -> return
+//                PostType.Total -> "광장"
+//                PostType.Univ -> "잔디밭"
+//            }, hotPost.postId
+//        )
+//    }
 }

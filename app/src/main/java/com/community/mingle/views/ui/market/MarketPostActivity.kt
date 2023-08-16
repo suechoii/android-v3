@@ -65,7 +65,7 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
     private lateinit var postImageListAdapter: MarketImageVPAdapter
 
     private var itemId by Delegates.notNull<Int>()
-    private var isBlind: Boolean = false
+    //private var isBlind: Boolean = false
     private var isReported: Boolean = false
     private var reportText: String? = null
     private var item: ItemDetail? = null
@@ -97,7 +97,6 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        MingleApplication.pref.isBlind = false
         imageList = ArrayList()
 
         processIntent()

@@ -17,8 +17,7 @@ class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
 
     // 클릭 인터페이스 정의
     interface MyItemClickListener{
-        fun onItemClick(post: HomeResult, pos: Int, isBlind: Boolean, isReported: Boolean, reportText: String?)
-        fun onCancelClick(post: HomeResult, pos: Int)
+        fun onItemClick(post: HomeResult, pos: Int, isReported: Boolean, reportText: String?)
     }
 
     // 리스너 객체를 전달받는 함수랑 리스너 객체를 저장할 변수
@@ -50,33 +49,7 @@ class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
         fun bind(homeResult: HomeResult, position: Int) {
             binding.setVariable(BR.item, homeResult)
 
-            if (homeResult.blinded) {
-
-                binding.likeimg.visibility = View.INVISIBLE
-                binding.commentimg.visibility = View.INVISIBLE
-                binding.photo.visibility = View.INVISIBLE
-                binding.contenttext.visibility = View.INVISIBLE
-                binding.titletext.visibility = View.INVISIBLE
-                binding.liketext.visibility = View.INVISIBLE
-                binding.commenttext.visibility = View.INVISIBLE
-                binding.anonymous.visibility = View.INVISIBLE
-                binding.time.visibility = View.INVISIBLE
-                binding.dot.visibility = View.INVISIBLE
-
-                binding.blindedText.visibility = View.VISIBLE
-                binding.cancelBlindTv.visibility = View.VISIBLE
-
-                binding.cancelBlindTv.setOnClickListener {
-                    mItemClickListener.onCancelClick(homeResult, position)
-                }
-
-                binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(homeResult, position, true, false, null)
-
-                }
-            }
-
-            else if (homeResult.reported) {
+             if (homeResult.reported) {
                 binding.likeimg.visibility = View.INVISIBLE
                 binding.commentimg.visibility = View.INVISIBLE
                 binding.photo.visibility = View.INVISIBLE
@@ -92,12 +65,11 @@ class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
                 binding.blindedText.text = homeResult.title
 
                 binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(homeResult, position, false, true, homeResult.title)
+                    mItemClickListener.onItemClick(homeResult, position, true, homeResult.title)
                 }
             }
 
             else {
-
                 val fileattached = homeResult.fileAttached
                 if (fileattached) {
                     binding.photo.visibility = View.VISIBLE
@@ -118,12 +90,8 @@ class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
                 binding.blindedText.visibility = View.GONE
                 binding.cancelBlindTv.visibility = View.GONE
 
-                binding.cancelBlindTv.setOnClickListener {
-                    mItemClickListener.onCancelClick(homeResult, position)
-                }
-
                 binding.root.setOnClickListener {
-                    mItemClickListener.onItemClick(homeResult, position, false, false, null)
+                    mItemClickListener.onItemClick(homeResult, position,  false, null)
                 }
             }
 

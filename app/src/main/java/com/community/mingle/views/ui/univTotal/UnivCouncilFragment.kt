@@ -54,7 +54,7 @@ class UnivCouncilFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.
 
     private fun initViewModel() {
         binding.viewModel = viewModel
-        viewModel.getUnivList(4, false)
+        viewModel.getUnivList(5, false)
 
         viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {

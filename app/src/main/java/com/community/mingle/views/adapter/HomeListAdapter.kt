@@ -58,8 +58,8 @@ class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
                 binding.liketext.visibility = View.INVISIBLE
                 binding.commenttext.visibility = View.INVISIBLE
                 binding.anonymous.visibility = View.INVISIBLE
-                binding.time.visibility = View.INVISIBLE
-                binding.dot.visibility = View.INVISIBLE
+                binding.time2Tv.visibility = View.INVISIBLE
+                binding.ellipse2Iv.visibility = View.INVISIBLE
 
                 binding.blindedText.visibility = View.VISIBLE
                 binding.blindedText.text = homeResult.title
@@ -70,25 +70,35 @@ class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
             }
 
             else {
-                val fileattached = homeResult.fileAttached
-                if (fileattached) {
-                    binding.photo.visibility = View.VISIBLE
-                } else {
-                    binding.photo.visibility = View.GONE
-                }
+                 val fileattached = homeResult.fileAttached
+                 if (fileattached) {
+                     binding.photo.visibility = View.VISIBLE
+                 } else {
+                     binding.photo.visibility = View.GONE
+                 }
 
-                binding.likeimg.visibility = View.VISIBLE
-                binding.commentimg.visibility = View.VISIBLE
-                binding.contenttext.visibility = View.VISIBLE
-                binding.titletext.visibility = View.VISIBLE
-                binding.liketext.visibility = View.VISIBLE
-                binding.commenttext.visibility = View.VISIBLE
-                binding.anonymous.visibility = View.VISIBLE
-                binding.time.visibility = View.VISIBLE
-                binding.dot.visibility = View.VISIBLE
+                 binding.likeimg.visibility = View.VISIBLE
+                 binding.commentimg.visibility = View.VISIBLE
+                 binding.contenttext.visibility = View.VISIBLE
+                 binding.titletext.visibility = View.VISIBLE
+                 binding.liketext.visibility = View.VISIBLE
+                 binding.commenttext.visibility = View.VISIBLE
+
+                 if (homeResult.categoryType == "한인회" || homeResult.categoryType == "밍글소식") {
+                     binding.anonSpecialTv.visibility = View.VISIBLE
+                     binding.anonymous.visibility = View.GONE
+                     binding.specialIcon.visibility = View.VISIBLE
+                     binding.ellipseIv.visibility = View.VISIBLE
+                     binding.ellipse2Iv.visibility = View.GONE
+                     binding.timeTv.visibility = View.VISIBLE
+                     binding.time2Tv.visibility = View.GONE
+                 } else {
+                     binding.anonymous.visibility = View.VISIBLE
+                     binding.ellipse2Iv.visibility = View.VISIBLE
+                     binding.time2Tv.visibility = View.VISIBLE
+                 }
 
                 binding.blindedText.visibility = View.GONE
-                binding.cancelBlindTv.visibility = View.GONE
 
                 binding.root.setOnClickListener {
                     mItemClickListener.onItemClick(homeResult, position,  false, null)

@@ -125,13 +125,6 @@
         android:minWidth="12dp"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <View
-        android:id="@+id/botview2"
-        android:layout_width="match_parent"
-        android:layout_height="16dp"
-        android:maxHeight="20dp"
-        android:minHeight="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/pen"
@@ -139,14 +132,13 @@
         android:layout_height="48dp"
         app:fabCustomSize="48dp"
         android:src="@drawable/ic_pen"
-        app:tint="#FF7663"
-        android:backgroundTint="#F6F6F6"
+        app:tint="@color/white"
+        android:backgroundTint="@color/orange_02"
         app:elevation="6dp"
         app:borderWidth="0dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/endview"
-        app:layout_constraintBottom_toTopOf="@id/botview2"/>
+        app:layout_constraintEnd_toStartOf="@id/endview"/>
 
     <include
         android:id="@+id/layout_progress"

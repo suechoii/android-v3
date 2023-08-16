@@ -119,7 +119,6 @@ class TotalAllFragment : BaseFragment<FragmentUnivtotalPageBinding>(R.layout.fra
                 intent.putExtra("postId", post.postId)
                 intent.putExtra(IntentConstants.BoardType,post.boardType)
                 intent.putExtra(IntentConstants.CategoryType,post.categoryType)
-                intent.putExtra("tabName", "학생회게시판")
                 //intent.putExtra("isBlind",isBlind)
                 intent.putExtra("reportText",reportText)
 

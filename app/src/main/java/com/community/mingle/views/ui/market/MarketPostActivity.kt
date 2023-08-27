@@ -505,29 +505,19 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
                 viewModel.likeComment(comment.commentId, comment)
             }
 
-            override fun onWriteReply(position: Int, parentPosition: Int?, parentCommentId: Int, mentionNickname: String, mentionId: Int) {
-                if (selectedCommentPosition != null) {
-                    commentListAdapter.notifyItemChanged(selectedCommentPosition!!)
-                }
-
+            override fun onWriteReply(position: Int?, parentCommentId: Int, mentionNickname: String, mentionId: Int) {
                 parentReplyId = parentCommentId
                 commentMentionId = mentionId
-                if (parentPosition != null) {
-                    commentPosition = parentPosition
-                } else {
-                    commentPosition = position
-                }
                 //replyPosition = position
                 commentMentionNickname = mentionNickname
                 selectedCommentPosition = position
                 binding.writeCommentEt.isFocusableInTouchMode = true
                 binding.writeCommentEt.requestFocusAndShowKeyboard(this@MarketPostActivity)
-
-
-                //commentPosition, replyPosition 연구해보기
-                // 선택한 댓글이 키보드 위로 보이도록
-                binding.commentRv.post {
-                    binding.commentRv.smoothScrollToPosition(commentPosition)
+                // 선택한 댓글이 키보드 위로 보이도록 if parent reply button is clicked ONLY
+                if (position != null) {
+                    binding.commentRv.post{
+                        binding.commentRv.smoothScrollToPosition(binding.commentRv.y.toInt())
+                    }
                 }
             }
 

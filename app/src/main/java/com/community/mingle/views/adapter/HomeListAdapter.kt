@@ -96,6 +96,10 @@ class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
                      binding.anonymous.visibility = View.VISIBLE
                      binding.ellipse2Iv.visibility = View.VISIBLE
                      binding.time2Tv.visibility = View.VISIBLE
+                     binding.timeTv.visibility = View.GONE
+                     binding.ellipseIv.visibility = View.GONE
+                     binding.anonSpecialTv.visibility = View.GONE
+                     binding.specialIcon.visibility = View.GONE
                  }
 
                 binding.blindedText.visibility = View.GONE

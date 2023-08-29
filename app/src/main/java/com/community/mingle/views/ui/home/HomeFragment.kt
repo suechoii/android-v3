@@ -134,9 +134,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         homeViewModel.loading.observe(binding.lifecycleOwner!!) { event ->
             event.getContentIfNotHandled()?.let {
                 if (it) {
-                    binding.layoutProgress.root.visibility = View.VISIBLE
+                    //binding.layoutProgress.root.visibility = View.VISIBLE
                 } else {
-                    binding.layoutProgress.root.visibility = View.GONE
+                    //binding.layoutProgress.root.visibility = View.GONE
                     binding.swipeRefresh.isRefreshing = false
                 }
             }
@@ -153,14 +153,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
 
         homeViewModel.homeUnivRecentList.observe(binding.lifecycleOwner!!) {
-            Log.d("called again?", "check")
-            homeUnivRecentListAdapter.addHomeList(it)
+            Log.d("What is this huh",homeUnivRecentListAdapter.differ.currentList.toString())
+            homeUnivRecentListAdapter.differ.submitList(it)
             binding.swipeRefresh.isRefreshing = false
             currentHomeUnivRecentList = it
         }
 
         homeViewModel.homeTotalRecentList.observe(viewLifecycleOwner) {
-            with(homeTotalRecentListAdapter) { addHomeList(it.toMutableList()) }
+            //with(homeTotalRecentListAdapter) { addHomeList(it.toMutableList()) }
+            homeTotalRecentListAdapter.differ.submitList(it)
             currentHomeTotalRecentList = it
         }
 
@@ -206,14 +207,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 }
             }
         }
-
-        postViewModel.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it) {
-                    homeViewModel.getHomeList()
-                }
-            }
-        }
+//
+//        postViewModel.isUnblindPost.observe(binding.lifecycleOwner!!) { event ->
+//            event.getContentIfNotHandled()?.let {
+//                if (it) {
+//                    homeViewModel.getHomeList()
+//                }
+//            }
+//        }
     }
 
     private fun initRV() {
@@ -226,6 +227,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             adapter = homeUnivRecentListAdapter
             hasFixedSize()
         }
+
         homeUnivRecentListAdapter.setMyItemClickListener(object :
             HomeListAdapter.MyItemClickListener {
             override fun onItemClick(post: HomeResult, pos: Int, isReported: Boolean, reportText: String?) {

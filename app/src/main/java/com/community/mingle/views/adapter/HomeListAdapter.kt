@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.community.mingle.R
 import com.community.mingle.databinding.ItemHomeBinding
@@ -13,7 +15,24 @@ import com.community.mingle.service.models.Comment2
 import com.community.mingle.service.models.PostResult
 
 class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
-    private var homeList = ArrayList<HomeResult>()
+    private var first = ArrayList<HomeResult>()
+
+    // 추가
+    private val differCallback = object : DiffUtil.ItemCallback<HomeResult>() {
+        override fun areItemsTheSame(oldItem: HomeResult, newItem: HomeResult): Boolean {
+            // User의 id를 비교해서 같으면 areContentsTheSame으로 이동
+            return oldItem.postId == newItem.postId
+        }
+
+        override fun areContentsTheSame(oldItem: HomeResult, newItem: HomeResult): Boolean {
+            // User의 내용을 비교해서 같으면 true -> UI 변경 없음
+            // User의 내용을 비교해서 다르면 false -> UI 변경
+            return oldItem == newItem
+        }
+    }
+
+    // 리스트가 많으면 백그라운드에서 실행하는 게 좋은데 AsyncListDiffer은 자동으로 백그라운드에서 실행
+    val differ = AsyncListDiffer(this, differCallback)
 
     // 클릭 인터페이스 정의
     interface MyItemClickListener{
@@ -27,7 +46,7 @@ class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
         mItemClickListener = itemClickListener
     }
 
-    override fun getItemCount(): Int = homeList.size
+    override fun getItemCount(): Int = differ.currentList.size
 
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
@@ -42,7 +61,13 @@ class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: HomeViewHolder, position: Int) {
-        holder.bind(homeList[position], position)
+        // 수정 후
+        if (first.isNotEmpty()) {
+            holder.bind(first[position], position)
+        } else {
+            val updatedList = differ.currentList[position]
+            holder.bind(updatedList, position)
+        }
     }
 
     inner class HomeViewHolder(val binding : ItemHomeBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -114,15 +139,13 @@ class HomeListAdapter : RecyclerView.Adapter<HomeListAdapter.HomeViewHolder>() {
         }
     }
 
-    fun updateItem(homeResult: HomeResult, position: Int) {
-        homeList[position] = homeResult
-        notifyItemChanged(position)
-    }
+//    fun updateItem(homeResult: HomeResult, position: Int) {
+//        homeList[position] = homeResult
+//        notifyItemChanged(position)
+//    }
 
 
-    fun addHomeList(boardList: List<HomeResult>) {
-        this.homeList.clear()
-        this.homeList.addAll(boardList)
-        notifyDataSetChanged()
+    fun addFirstHomeList(boardList: List<HomeResult>) {
+        this.first = boardList as ArrayList<HomeResult>
     }
 }

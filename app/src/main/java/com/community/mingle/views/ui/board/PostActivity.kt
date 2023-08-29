@@ -7,11 +7,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
-import android.view.ContextThemeWrapper
-import android.view.Menu
-import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
@@ -21,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.MainActivity
-import com.community.mingle.MingleApplication
 import com.community.mingle.R
 import com.community.mingle.common.IntentConstants
 import com.community.mingle.databinding.ActivityPost2Binding
@@ -161,15 +156,15 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         viewModel.getPost(boardType, postId, false)
         viewModel.getComments(boardType, postId, false)
         // 로딩 화면 가시화 여부
-        viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it) {
-                    binding.layoutProgress.root.visibility = View.VISIBLE
-                } else {
-                    binding.layoutProgress.root.visibility = View.GONE
-                }
-            }
-        }
+//        viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
+//            event.getContentIfNotHandled()?.let {
+//                if (it) {
+//                    binding.layoutProgress.root.visibility = View.VISIBLE
+//                } else {
+//                    binding.layoutProgress.root.visibility = View.GONE
+//                }
+//            }
+//        }
 
         viewModel.post.observe(binding.lifecycleOwner!!) {
             if (it == null) return@observe
@@ -388,8 +383,11 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 binding.emptyFrame.visibility = View.VISIBLE
             }
             // 해당 댓글로 스크롤 이동
-            binding.commentRv.post {
-                binding.commentRv.smoothScrollToPosition(commentListAdapter.itemCount - 1)
+//            binding.commentRv.post {
+//                binding.commentRv.scrollToPosition()
+//            }
+            binding.scrollview.post {
+                binding.scrollview.fullScroll(View.FOCUS_DOWN)
             }
         }
         // 새로 작성된 대댓글 처리
@@ -397,21 +395,21 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
             with(commentListAdapter) { addCommentList(it.toMutableList()) }
             currentCommentList = it.toTypedArray()
 
-            if (!isFirst)
-                calculateCommentNum(it)
-
-            isFirst = false
-            binding.swipeRefresh.isRefreshing = false
+//            if (!isFirst)
+//                calculateCommentNum(it)
+//
+//            isFirst = false
+//            binding.swipeRefresh.isRefreshing = false
             // 해당 댓글로 스크롤 이동
-            if (commentPosition >= commentListAdapter.itemCount - 1) {
-                binding.commentRv.post {
-                    binding.commentRv.smoothScrollToPosition(commentListAdapter.itemCount - 1)
-                }
-            } else {
-                binding.commentRv.post {
-                    binding.commentRv.smoothScrollToPosition(commentPosition)
-                }
-            }
+//            if (commentPosition >= commentListAdapter.itemCount - 1) {
+//                binding.commentRv.post {
+//                    binding.commentRv.smoothScrollToPosition(commentListAdapter.itemCount - 1)
+//                }
+//            } else {
+//                binding.commentRv.post {
+//                    binding.commentRv.smoothScrollToPosition(commentPosition)
+//                }
+//            }
         }
         // 댓글 좋아요 처리
         viewModel.comment.observe(binding.lifecycleOwner!!) {
@@ -445,6 +443,7 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
         }
 
         binding.sendIv.setOnClickListener {
+
             if (!binding.writeCommentEt.text.isNullOrBlank()) {
                 if (parentReplyId == null) {
                     isFirst = false
@@ -510,19 +509,19 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
             isFirst = true
         }
 
-        keyboardVisibilityUtils = KeyboardUtils.KeyboardVisibilityUtils(window,
-            onHideKeyboard = {
-                binding.layout.run {
-                    //키보드 내려갔을때 원하는 동작
-                    //commentListAdapter.notifyDataSetChanged()
-                    if (selectedCommentPosition != null) {
-                        Log.d("tag_reply", selectedCommentPosition.toString())
-                        commentListAdapter.notifyItemChanged(selectedCommentPosition!!)
-                        parentReplyId = null
-                    }
-                }
-            }
-        )
+//        keyboardVisibilityUtils = KeyboardUtils.KeyboardVisibilityUtils(window,
+//            onHideKeyboard = {
+//                binding.layout.run {
+//                    //키보드 내려갔을때 원하는 동작
+//                    //commentListAdapter.notifyDataSetChanged()
+//                    if (selectedCommentPosition != null) {
+//                        Log.d("tag_reply", selectedCommentPosition.toString())
+//                        commentListAdapter.notifyItemChanged(selectedCommentPosition!!)
+//                        parentReplyId = null
+//                    }
+//                }
+//            }
+//        )
     }
 
     private fun initRV() {
@@ -559,28 +558,25 @@ class PostActivity : BaseActivity<ActivityPost2Binding>(R.layout.activity_post2)
                 viewModel.likeComment(boardType, comment.commentId, comment)
             }
 
-            override fun onWriteReply(position: Int, parentPosition: Int?, parentCommentId: Int, mentionNickname: String, mentionId: Int) {
-                if (selectedCommentPosition != null) {
-                    commentListAdapter.notifyItemChanged(selectedCommentPosition!!)
-                }
-
+            /* 필요한것 : parentCommentId, mentionNickname,  mentionId, replyPosition or parentPosition*/
+            override fun onWriteReply(parentCommentId: Int, mentionNickname: String, mentionId: Int) {
                 parentReplyId = parentCommentId
                 commentMentionId = mentionId
-                if (parentPosition != null) {
-                    commentPosition = parentPosition
-                } else {
-                    commentPosition = position
-                }
                 //replyPosition = position
                 commentMentionNickname = mentionNickname
-                selectedCommentPosition = position
                 binding.writeCommentEt.isFocusableInTouchMode = true
                 binding.writeCommentEt.requestFocusAndShowKeyboard(this@PostActivity)
-                //commentPosition, replyPosition 연구해보기
-                // 선택한 댓글이 키보드 위로 보이도록
-                binding.commentRv.post {
-                    binding.commentRv.smoothScrollToPosition(commentPosition)
-                }
+                // 선택한 댓글이 키보드 위로 보이도록 if parent reply button is clicked ONLY
+//                if (position != null) {
+//                    binding.commentRv.post{
+//                        binding.commentRv.smoothScrollToPosition(position)
+//                    }
+//                }
+//                binding.commentRv.post {
+//                    val y: Float =
+//                        binding.commentRv.y + binding.commentRv.getChildAt(position).y
+//                    binding.scrollview.smoothScrollTo(0, y.toInt())
+//                }
             }
 
             override fun onLikeReply(position: Int, parentPosition: Int, reply: Reply, comment: Comment2) {

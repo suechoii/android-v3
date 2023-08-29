@@ -24,7 +24,7 @@ class ReplyListAdapter(private val parentPosition: Int) :
     interface OnReplyClickListener {
         fun onClickOption(item: Reply, position: Int)
         fun onLikeReply(position: Int, parentPosition: Int, reply: Reply)
-        fun onWriteReply(position: Int, parentPosition: Int, replyId: Int, replyNickname: String)
+        fun onWriteReply(replyId: Int, replyNickname: String)
     }
 
     private lateinit var replyClickListener: OnReplyClickListener
@@ -99,7 +99,7 @@ class ReplyListAdapter(private val parentPosition: Int) :
                 replyClickListener.onLikeReply(position, parentPosition, item)
             }
             binding.btnReplyReply.setOnClickListener {
-                replyClickListener.onWriteReply(position, parentPosition, item.commentId, item.nickname)
+                replyClickListener.onWriteReply(item.commentId, item.nickname)
             }
         }
     }

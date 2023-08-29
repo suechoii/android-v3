@@ -120,15 +120,15 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
         viewModel.getComments(itemId, false)
 
         // 로딩 화면 가시화 여부
-        viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it) {
-                    binding.layoutProgress.root.visibility = View.VISIBLE
-                } else {
-                    binding.layoutProgress.root.visibility = View.GONE
-                }
-            }
-        }
+//        viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
+//            event.getContentIfNotHandled()?.let {
+//                if (it) {
+//                    binding.layoutProgress.root.visibility = View.VISIBLE
+//                } else {
+//                    binding.layoutProgress.root.visibility = View.GONE
+//                }
+//            }
+//        }
 
         binding.sliderVp.apply {
             postImageListAdapter = MarketImageVPAdapter()
@@ -505,30 +505,14 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
                 viewModel.likeComment(comment.commentId, comment)
             }
 
-            override fun onWriteReply(position: Int, parentPosition: Int?, parentCommentId: Int, mentionNickname: String, mentionId: Int) {
-                if (selectedCommentPosition != null) {
-                    commentListAdapter.notifyItemChanged(selectedCommentPosition!!)
-                }
-
+            override fun onWriteReply(parentCommentId: Int, mentionNickname: String, mentionId: Int) {
                 parentReplyId = parentCommentId
                 commentMentionId = mentionId
-                if (parentPosition != null) {
-                    commentPosition = parentPosition
-                } else {
-                    commentPosition = position
-                }
                 //replyPosition = position
                 commentMentionNickname = mentionNickname
-                selectedCommentPosition = position
+                //selectedCommentPosition = position
                 binding.writeCommentEt.isFocusableInTouchMode = true
                 binding.writeCommentEt.requestFocusAndShowKeyboard(this@MarketPostActivity)
-
-
-                //commentPosition, replyPosition 연구해보기
-                // 선택한 댓글이 키보드 위로 보이도록
-                binding.commentRv.post {
-                    binding.commentRv.smoothScrollToPosition(commentPosition)
-                }
             }
 
             override fun onLikeReply(position: Int, parentPosition: Int, reply: Reply, comment: Comment2) {

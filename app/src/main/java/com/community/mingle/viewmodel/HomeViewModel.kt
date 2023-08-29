@@ -48,6 +48,8 @@ constructor(
 
     init {
         getHomeList()
+        getUnivRecent()
+        getTotalRecent()
         loadBestPostList()
     }
 
@@ -59,7 +61,7 @@ constructor(
                 if (response.isSuccessful && response.body()?.code == 1000) {
                     Log.d("tag_success", "getBannerList: ${response.body()}")
                     _banner.postValue(response.body()!!.result)
-                    getUnivRecent()
+                    //getUnivRecent()
                 }
             }.onFailure {
                 // TODO: 배너 불러오기 실패 오류
@@ -76,7 +78,7 @@ constructor(
                         if (response.body()!!.result.isNotEmpty()) {
                             Log.d("tag_success", "getUnivRecentList: ${response.body()}")
                             _homeUnivRecentList.postValue(response.body()!!.result)
-                            getTotalRecent()
+                            //getTotalRecent()
                         }
                     }
                 } else {

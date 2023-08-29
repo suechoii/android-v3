@@ -263,7 +263,7 @@
                         android:fontFamily="@font/pretendard_semibold"
                         android:paddingEnd="20dp"
                         android:paddingStart="20dp"
-                        android:text="희망 거래장고/시간대"
+                        android:text="희망 거래장소/시간대"
                         app:layout_constraintHorizontal_bias="0"
                         android:textColor="@color/gray_03"
                         android:textSize="14sp"

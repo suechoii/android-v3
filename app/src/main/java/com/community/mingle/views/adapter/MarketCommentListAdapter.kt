@@ -28,7 +28,7 @@ class MarketCommentListAdapter(private val context: Context, private val menuInf
     interface OnCommentClickListener {
         fun onClickCommentOption(comment: Comment2)
         fun onLikeComment(position: Int, comment: Comment2)
-        fun onWriteReply(position: Int?, parentCommentId: Int, mentionNickname: String, mentionId: Int)
+        fun onWriteReply(parentCommentId: Int, mentionNickname: String, mentionId: Int)
         fun onLikeReply(position: Int, parentPosition: Int, reply: Reply, comment: Comment2)
     }
 
@@ -121,8 +121,8 @@ class MarketCommentListAdapter(private val context: Context, private val menuInf
                         commentClickListener.onLikeReply(position, parentPosition, reply, item)
                     }
 
-                    override fun onWriteReply(position: Int, replyId: Int, replyNickname: String) {
-                        commentClickListener.onWriteReply(position, item.commentId,replyNickname,replyId)
+                    override fun onWriteReply(replyId: Int, replyNickname: String) {
+                        commentClickListener.onWriteReply(item.commentId,replyNickname,replyId)
                     }
                 })
             } else if (item.commentReported){
@@ -157,8 +157,8 @@ class MarketCommentListAdapter(private val context: Context, private val menuInf
                         commentClickListener.onLikeReply(position, parentPosition, reply, item)
                     }
 
-                    override fun onWriteReply(position: Int, replyId: Int, replyNickname: String) {
-                        commentClickListener.onWriteReply(position, item.commentId,replyNickname,replyId)
+                    override fun onWriteReply( replyId: Int, replyNickname: String) {
+                        commentClickListener.onWriteReply(item.commentId,replyNickname,replyId)
                     }
                 })
             }
@@ -172,7 +172,7 @@ class MarketCommentListAdapter(private val context: Context, private val menuInf
             }
 
             binding.btnCommentReply.setOnClickListener {
-                commentClickListener.onWriteReply(null, item.commentId, item.nickname,item.commentId)
+                commentClickListener.onWriteReply(item.commentId, item.nickname,item.commentId)
             }
         }
     }

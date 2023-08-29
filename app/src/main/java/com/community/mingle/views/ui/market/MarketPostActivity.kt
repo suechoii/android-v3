@@ -120,15 +120,15 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
         viewModel.getComments(itemId, false)
 
         // 로딩 화면 가시화 여부
-        viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it) {
-                    binding.layoutProgress.root.visibility = View.VISIBLE
-                } else {
-                    binding.layoutProgress.root.visibility = View.GONE
-                }
-            }
-        }
+//        viewModel.loading.observe(binding.lifecycleOwner!!) { event ->
+//            event.getContentIfNotHandled()?.let {
+//                if (it) {
+//                    binding.layoutProgress.root.visibility = View.VISIBLE
+//                } else {
+//                    binding.layoutProgress.root.visibility = View.GONE
+//                }
+//            }
+//        }
 
         binding.sliderVp.apply {
             postImageListAdapter = MarketImageVPAdapter()
@@ -505,20 +505,14 @@ class MarketPostActivity : BaseActivity<ActivityPostMarketBinding>(R.layout.acti
                 viewModel.likeComment(comment.commentId, comment)
             }
 
-            override fun onWriteReply(position: Int?, parentCommentId: Int, mentionNickname: String, mentionId: Int) {
+            override fun onWriteReply(parentCommentId: Int, mentionNickname: String, mentionId: Int) {
                 parentReplyId = parentCommentId
                 commentMentionId = mentionId
                 //replyPosition = position
                 commentMentionNickname = mentionNickname
-                selectedCommentPosition = position
+                //selectedCommentPosition = position
                 binding.writeCommentEt.isFocusableInTouchMode = true
                 binding.writeCommentEt.requestFocusAndShowKeyboard(this@MarketPostActivity)
-                // 선택한 댓글이 키보드 위로 보이도록 if parent reply button is clicked ONLY
-                if (position != null) {
-                    binding.commentRv.post{
-                        binding.commentRv.smoothScrollToPosition(binding.commentRv.y.toInt())
-                    }
-                }
             }
 
             override fun onLikeReply(position: Int, parentPosition: Int, reply: Reply, comment: Comment2) {

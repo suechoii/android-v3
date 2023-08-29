@@ -64,7 +64,8 @@
             android:windowSoftInputMode="stateHidden|adjustPan"
             />
         <activity
-            android:name=".views.ui.market.MarketPostActivity"/>
+            android:name=".views.ui.market.MarketPostActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".views.ui.market.MarketPostEditActivity"
             android:windowSoftInputMode="adjustPan"

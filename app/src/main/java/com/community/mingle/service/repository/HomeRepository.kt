@@ -2,17 +2,14 @@ package com.community.mingle.service.repository
 
 import com.community.mingle.api.HomeService
 import com.community.mingle.model.post.HomeHotPost
-import com.community.mingle.service.models.BannerResponse
-import com.community.mingle.service.models.HomeListResponse
-import com.community.mingle.service.models.NotificationResponse
-import com.community.mingle.service.models.Notifications
-import com.community.mingle.service.models.ResultResponse
+import com.community.mingle.service.models.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
 import javax.inject.Inject
+import kotlin.Result
 
 class HomeRepository
 @Inject
@@ -37,10 +34,10 @@ constructor(private val homeService: HomeService) {
         homeService.readNotification(notifications)
     }
 
-    suspend fun getUniteBestList(): Flow<List<HomeHotPost>> = flow {
+    suspend fun getUniteBestList(): Flow<List<HomeResult>> = flow {
         val response = homeService.getUniteBestList()
         if(response.code == 1000) {
-            emit(response.result.map { it.toHotPost() })
+            emit(response.result)
         }
         else {
             throw IllegalStateException(response.message)

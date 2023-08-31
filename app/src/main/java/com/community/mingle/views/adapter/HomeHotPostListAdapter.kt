@@ -96,6 +96,7 @@ class HomeHotPostListAdapter(
             }
         }
 
+
         private fun normalPost(item: HomeHotPost) {
             val fileAttached = item.fileAttached
             if (fileAttached) {

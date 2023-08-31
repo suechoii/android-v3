@@ -56,18 +56,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private var backPressedTime: Long = 0
     private lateinit var homeUnivRecentListAdapter: HomeListAdapter
     private lateinit var homeTotalRecentListAdapter: HomeListAdapter
-    private val homeHotPostListAdapter: HomeHotPostListAdapter by lazy {
-        HomeHotPostListAdapter(
-            onItemClick = ::onHomeHotPostClick
-        )
-    }
+    private lateinit var homeHotPostListAdapter : HomeListAdapter
     private lateinit var currentHomeUnivRecentList: List<HomeResult>
     private lateinit var currentHomeTotalRecentList: List<HomeResult>
     private lateinit var viewPagerAdapter: BannerVPAdapter
     private var unBlindPosition: Int = 0
     private var clickedPosition: Int = 0
     private var bannerList = arrayListOf<Banner>()
-    private lateinit var tempAdapter: HomeListAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -153,7 +148,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         }
 
         homeViewModel.homeUnivRecentList.observe(binding.lifecycleOwner!!) {
-            Log.d("What is this huh",homeUnivRecentListAdapter.differ.currentList.toString())
             homeUnivRecentListAdapter.differ.submitList(it)
             binding.swipeRefresh.isRefreshing = false
             currentHomeUnivRecentList = it
@@ -164,6 +158,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             homeTotalRecentListAdapter.differ.submitList(it)
             currentHomeTotalRecentList = it
         }
+
+                lifecycleScope.launch {
+                    repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        homeViewModel.homeHotPostList.collectLatest {
+                            homeHotPostListAdapter.differ.submitList(it)
+                        }
+                    }
+                }
 
         binding.sliderVp.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
@@ -220,6 +222,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
     private fun initRV() {
         homeUnivRecentListAdapter = HomeListAdapter()
         homeTotalRecentListAdapter = HomeListAdapter()
+        homeHotPostListAdapter = HomeListAdapter()
+
         /* 지금 잔디밭 화젯거리 */
         binding.nowUnivRv.apply {
             layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
@@ -232,7 +236,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             HomeListAdapter.MyItemClickListener {
             override fun onItemClick(post: HomeResult, pos: Int, isReported: Boolean, reportText: String?) {
                 clickedPosition = pos
-                tempAdapter = homeUnivRecentListAdapter
                 startPostActivity(
                     postId = post.postId,
                     boardTypeName = "잔디밭",
@@ -254,7 +257,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             HomeListAdapter.MyItemClickListener {
             override fun onItemClick(post: HomeResult, pos: Int, isReported: Boolean, reportText: String?) {
                 clickedPosition = pos
-                tempAdapter = homeTotalRecentListAdapter
                 startPostActivity(
                     postId = post.postId,
                     boardTypeName = "광장",
@@ -265,7 +267,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             }
 
         })
-        initHotPostRecyclerView()
+
+        binding.hotPostsRv.apply {
+            layoutManager = LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(RecyclerViewUtils.DividerItemDecorator(ResUtils.getDrawable(R.drawable.divider_comment)!!))
+            adapter = homeHotPostListAdapter
+            hasFixedSize()
+        }
         val view = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
         /* 지금 잔디밭에서는 바로가기 연결 */
         binding.nowUnivTitle.setOnClickListener {
@@ -297,26 +305,45 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 }).commitAllowingStateLoss()
         }
 
-        binding.swipeRefresh.setOnRefreshListener {
-            homeViewModel.getHomeList()
-        }
-    }
-
-    private fun initHotPostRecyclerView() {
-        binding.hotPostsRv.apply {
-            adapter = homeHotPostListAdapter
-            addItemDecoration(RecyclerViewUtils.DividerItemDecorator(ResUtils.getDrawable(R.drawable.divider_comment)!!))
-            hasFixedSize()
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                homeViewModel.homeHotPostList.collectLatest {
-                    homeHotPostListAdapter.submitList(it)
+        homeHotPostListAdapter.setMyItemClickListener(object :
+            HomeListAdapter.MyItemClickListener {
+            override fun onItemClick(post: HomeResult, pos: Int, isReported: Boolean, reportText: String?) {
+                clickedPosition = pos
+                post.boardType?.let {
+                    startPostActivity(
+                        postId = post.postId,
+                        boardTypeName = it,
+                        isReported = post.reported,
+                        reportText = post.title,
+                        categoryType = post.categoryType,
+                    )
                 }
             }
+        })
+
+        binding.swipeRefresh.setOnRefreshListener {
+            homeViewModel.getHomeList()
+            homeViewModel.getUnivRecent()
+            homeViewModel.getTotalRecent()
+            homeViewModel.loadBestPostList()
         }
     }
+
+//    private fun initHotPostRecyclerView() {
+//        binding.hotPostsRv.apply {
+//            adapter = homeHotPostListAdapter
+//            addItemDecoration(RecyclerViewUtils.DividerItemDecorator(ResUtils.getDrawable(R.drawable.divider_comment)!!))
+//            hasFixedSize()
+//        }
+
+    //        lifecycleScope.launch {
+    //            repeatOnLifecycle(Lifecycle.State.STARTED) {
+    //                homeViewModel.homeHotPostList.collectLatest {
+    //                    homeHotPostListAdapter.submitList(it)
+    //                }
+    //            }
+    //        }`
+   // }
 
     private fun startPostActivity(
         postId: Int,
@@ -337,21 +364,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         startActivity(intent)
     }
 
-    private fun onHomeHotPostClick(post: HomeHotPost, position: Int) {
-        clickedPosition = position
-        tempAdapter = homeUnivRecentListAdapter
-        startPostActivity(
-            postId = post.postId,
-            boardTypeName = when (post.postType) {
-                PostType.Total -> "광장"
-                PostType.Univ -> "잔디밭"
-                null -> ""
-            },
-            isReported = post.reported,
-            reportText = post.title,
-            categoryType = post.categoryType,
-        )
-    }
+
+//    private fun onHomeHotPostClick(post: HomeHotPost, position: Int) {
+//        clickedPosition = position
+//        tempAdapter = homeUnivRecentListAdapter
+//        startPostActivity(
+//            postId = post.postId,
+//            boardTypeName = when (post.postType) {
+//                PostType.Total -> "광장"
+//                PostType.Univ -> "잔디밭"
+//                null -> ""
+//            },
+//            isReported = post.reported,
+//            reportText = post.title,
+//            categoryType = post.categoryType,
+//        )
+//    }
 
 //    private fun onHomeHotPostCancelBlind(hotPost: HomeHotPost, position: Int) {
 //        unBlindPosition = position

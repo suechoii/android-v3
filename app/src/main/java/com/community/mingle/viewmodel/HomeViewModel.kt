@@ -35,7 +35,7 @@ constructor(
     val homeUnivRecentList: LiveData<List<HomeResult>> get() = _homeUnivRecentList
     private val _homeTotalRecentList = MutableLiveData<List<HomeResult>>()
     val homeTotalRecentList: LiveData<List<HomeResult>> get() = _homeTotalRecentList
-    private val _homeHotPostList = MutableStateFlow<List<HomeHotPost>>(emptyList())
+    private val _homeHotPostList = MutableStateFlow<List<HomeResult>>(emptyList())
     val homeHotPostList = _homeHotPostList.asStateFlow()
     private val _getNotificationSuccess = MutableLiveData<Event<Boolean>>()
     val getNotificationSuccess: LiveData<Event<Boolean>> = _getNotificationSuccess
@@ -70,7 +70,7 @@ constructor(
         }
     }
 
-    private fun getUnivRecent() {
+    fun getUnivRecent() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getUnivRecentPost().onSuccess { response ->
                 if (response.isSuccessful) {
@@ -91,7 +91,7 @@ constructor(
         }
     }
 
-    private fun getTotalRecent() {
+    fun getTotalRecent() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.getTotalRecentPost().onSuccess { response ->
                 if (response.isSuccessful) {
@@ -131,7 +131,7 @@ constructor(
     }
 
 
-    private fun loadBestPostList() {
+    fun loadBestPostList() {
         viewModelScope.launch {
             repository.getUniteBestList()
                 .catch {

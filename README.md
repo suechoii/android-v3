@@ -10,13 +10,6 @@
 ![image](https://user-images.githubusercontent.com/93398875/219706462-708024d1-85e7-4afb-93e7-72cb62ef5094.png)
 
 
-## 💻 Tech Stacks
-`JAVA` `Spring Boot` `Spring Security` `JPA` `Hibernate` `JWT`
-
-`AWS ECS` `AWS RDS` `AWS S3` `AWS ElastiCache (Redis)` `AWS Route53` 
-
-`MySQL` `Gradle` `Swagger 3.0` `Firebase` `Git/GitHub` `GitHub Action` `Docker`
-
 ## 💥 Key Features
 🏡 **Lawn**: A bulletin board for students from the same university to post, comment, and interact. Serves as a community hub for sharing insights, news, and building connections within the same institution.
 

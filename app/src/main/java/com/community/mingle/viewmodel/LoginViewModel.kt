@@ -82,7 +82,7 @@ constructor(
                                 response.body()!!.result!!.accessToken
                             MingleApplication.pref.refreshToken =
                                 response.body()!!.result!!.refreshToken
-                            MingleApplication.pref.email = response.body()!!.result!!.email
+                            MingleApplication.pref.email = response.body()!!.result!!.hashedEmail
                             MingleApplication.pref.nickname = response.body()!!.result!!.nickName
                             MingleApplication.pref.univName = response.body()!!.result!!.univName
                             Log.d("tag_success", "login: ${response.body()}")
@@ -110,9 +110,9 @@ constructor(
         }
     }
 
-    fun fcmRefresh() {
+    fun fcmRefresh(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            MingleApplication.pref.fcmToken?.let { FcmToken(it) }?.let {
+            FcmToken(token).let {
                 repository.fcmRefresh(it).onSuccess { response ->
                     if (response.isSuccessful) {
                         when (response.body()!!.code) {

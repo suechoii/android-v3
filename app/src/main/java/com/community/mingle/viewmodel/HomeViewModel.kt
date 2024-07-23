@@ -26,7 +26,6 @@ class HomeViewModel
 constructor(
     private val repository: HomeRepository,
 ) : ViewModel() {
-
     private val _loading = MutableLiveData<Event<Boolean>>()
     val loading: LiveData<Event<Boolean>> = _loading
     private val _banner = MutableLiveData<List<Banner>>()

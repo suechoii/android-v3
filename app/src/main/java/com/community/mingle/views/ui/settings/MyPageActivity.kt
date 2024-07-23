@@ -3,7 +3,9 @@ package com.community.mingle.views.ui.settings
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.community.mingle.MingleApplication
 import com.community.mingle.R
@@ -14,12 +16,14 @@ import com.community.mingle.utils.RecyclerViewUtils
 import com.community.mingle.utils.ResUtils
 import com.community.mingle.utils.UserPostType
 import com.community.mingle.utils.base.BaseActivity
+import com.community.mingle.viewmodel.MyPageViewModel
 import com.community.mingle.views.adapter.OptionListAdapter
 import com.community.mingle.views.ui.member.StartActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MyPageActivity : BaseActivity<ActivityMypageBinding>(R.layout.activity_mypage) {
+    private val viewModel: MyPageViewModel by viewModels()
 
     private lateinit var optionListAdapter1: OptionListAdapter
     private lateinit var optionListAdapter2: OptionListAdapter
@@ -50,6 +54,8 @@ class MyPageActivity : BaseActivity<ActivityMypageBinding>(R.layout.activity_myp
     }
 
     private fun initView() {
+        binding.viewModel = viewModel
+
         binding.nicknameTv.text = "${MingleApplication.pref.nickname} 님"
         binding.univnameTv.text = "${MingleApplication.pref.univName} 재학 중인"
 
@@ -59,10 +65,13 @@ class MyPageActivity : BaseActivity<ActivityMypageBinding>(R.layout.activity_myp
         }
 
         binding.logout.setOnClickListener {
-            MingleApplication.pref.deleteToken() // 저장된 토큰 삭제
+            viewModel.logout()
+        }
 
+        viewModel.logoutSuccess.observe(binding.lifecycleOwner!!) {
             val intent = Intent(this, StartActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+
             startActivity(intent)
             finish()
             toast("로그아웃되었습니다.")

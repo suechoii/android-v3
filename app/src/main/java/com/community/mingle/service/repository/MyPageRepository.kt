@@ -10,8 +10,9 @@ class MyPageRepository
 @Inject
 constructor(private val myPageService: MyPageService) {
 
-    suspend fun logout() =
+    suspend fun logout(): Result<Response<ResultResponse>> = runCatching {
         myPageService.logout()
+    }
 
     suspend fun deleteAccount(user: OldUser): Result<Response<ResultResponse>> = runCatching {
         myPageService.deleteAccount(user)

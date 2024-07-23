@@ -29,16 +29,17 @@ data class LoginResponse(
 
 data class LoginResult(
     @SerializedName("memberId") val memberId: Int,
-    @SerializedName("email") val email: String,
+    @SerializedName("hashedEmail") val hashedEmail: String,
     @SerializedName("nickName") val nickName: String,
     @SerializedName("univName") val univName: String,
+    @SerializedName("country") val country: String,
     @SerializedName("accessToken") val accessToken: String,
     @SerializedName("refreshToken") val refreshToken: String
 )
 
 data class OldUser(
     @SerializedName(value = "email") var email: String,
-    @SerializedName(value = "pwd") var pwd: String,
+    @SerializedName(value = "password") var pwd: String,
     @SerializedName(value = "fcmToken") var fcmToken: String
 )
 

@@ -14,6 +14,7 @@ import com.community.mingle.utils.SignupChangepwUtils
 import com.community.mingle.utils.SignupChangepwUtils.EMAIL_ERROR
 import com.community.mingle.utils.SignupChangepwUtils.NICKNAME_DUP
 import com.community.mingle.utils.SignupChangepwUtils.USER_ERROR
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,6 +95,11 @@ constructor(
     val isTermSuccess: LiveData<Event<Boolean>> = _isTermSuccess
     private val _isDeleteAccount = MutableLiveData<String>()
     val isDeleteAccount: LiveData<String> get() = _isDeleteAccount
+    private val _logoutSuccess = MutableLiveData<Event<Boolean>>()
+    val logoutSuccess: LiveData<Event<Boolean>> = _logoutSuccess
+
+    private val _alertMsg = MutableLiveData<Event<String>>()
+    val alertMsg: LiveData<Event<String>> = _alertMsg
     private var univId: Int = 0
     private var userEmail = ""
     var domain = ""
@@ -124,6 +130,31 @@ constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.logout().onSuccess { response ->
+                if (response.isSuccessful) {
+                    when (response.body()!!.code) {
+                        1000 -> {
+                            _logoutSuccess.postValue(Event(true))
+                            MingleApplication.pref.deleteToken() // 저장된 토큰 삭제
+                            FirebaseMessaging.getInstance().deleteToken()
+                            Log.d("tag_success", "login: ${response.body()}")
+                        }
+                        else -> {}
+                    }
+                } else {
+                    Log.d("tag_fail", "login Error: ${response.code()}")
+                    _loading.postValue(Event(false))
+                }
+            }
+                .onFailure {
+                    _alertMsg.postValue(Event("네트워크 상태가 좋지 않습니다."))
+                    _loading.postValue(Event(false))
+                }
         }
     }
 

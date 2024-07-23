@@ -5,7 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
-    id "com.google.protobuf" version "0.8.12"
+    id "com.google.protobuf" version '0.9.0'
 }
 
 Properties properties = new Properties()
@@ -19,8 +19,8 @@ android {
         applicationId "com.community.mingle"
         minSdk 21
         targetSdk 33
-        versionCode 32
-        versionName "2.2"
+        versionCode 33
+        versionName "2.3"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -44,6 +44,7 @@ android {
         viewBinding true
         dataBinding true
     }
+    namespace 'com.community.mingle'
 }
 
 dependencies {

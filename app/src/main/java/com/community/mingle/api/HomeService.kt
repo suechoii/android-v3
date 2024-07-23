@@ -8,7 +8,6 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 
 interface HomeService {
-
     /* 홈 화면 잔디밭 최신 게시글 */
     @GET("/home/univ/recent")
     suspend fun getUnivRecentPost(

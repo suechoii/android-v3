@@ -24,7 +24,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     private const val DEV_BASE_URL = "https://dev.api.mingle.community/"
-    private const val PROD_BASE_URL = "https://prod.api.mingle.community/"
+    private const val PROD_BASE_URL = "https://api.prod.mingle.community/"
 
     /* Retrofit2 통신 모듈 */
     @Singleton
@@ -150,7 +150,7 @@ object NetworkModule {
     fun getBaseUrl(): String {
         return when (BuildConfig.BUILD_TYPE) {
             "release" -> PROD_BASE_URL
-            else -> DEV_BASE_URL
+            else -> PROD_BASE_URL
         }
     }
 }

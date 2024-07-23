@@ -109,6 +109,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
 
         binding.uniEmail.addTextChangedListener(loginWatcher)
         binding.password.addTextChangedListener(loginWatcher)
+
+//        viewModel.fcmRefreshSuccess.observe(this) { event ->
+//            event.getContentIfNotHandled()?.let {
+//                if (it) {
+//                    Log.d("new Fcm: ", MingleApplication.pref.fcmToken.toString())
+//                }
+//            }
+//        }
     }
 
     private fun getFcmToken() {
@@ -126,16 +134,9 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(R.layout.activity_login
                 val token = task.result
                 viewModel.fcmtoken.value = token
                 MingleApplication.pref.fcmToken = token
+                //viewModel.fcmRefresh(token)
                 Log.d("fcmToken", token)
             })
 
-        viewModel.fcmRefresh()
-//        viewModel.fcmRefreshSuccess.observe(this) { event ->
-//            event.getContentIfNotHandled()?.let {
-//                if (it) {
-//                    Log.d("hi","")
-//                }
-//            }
-//        }
     }
 }
